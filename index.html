@@ -1,0 +1,4560 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>研途408 · 11408 备考博客</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<script>try{var _t=JSON.parse(localStorage.getItem('ky408_v1')||'{}').theme;if(_t)document.documentElement.dataset.theme=_t;}catch(e){}</script>
+<style>
+/* =====================================================================
+   研途408 · head-css.css —— 全局样式层
+   低饱和深蓝 / 默认暗色(html[data-theme="dark"] 即 :root) / 日间(data-theme="light")
+   所有颜色走变量；七科标识色与状态色除外
+   ===================================================================== */
+
+/* ---------------- 主题变量 ---------------- */
+/* 梵高《星月夜》× 普鲁士蓝：深夜=普鲁士蓝夜空+星芒金；日间=同一色系的昼版 */
+:root,
+html[data-theme="dark"] {
+  --bg: #081222;      --bg2: #0e1e36;     --bg3: #15304f;
+  --text: #d9e6f7;    --text2: #7e95b5;   --line: #1f3c63;
+  --primary: #3f7cbf; --primary2: rgba(63, 124, 191, 0.16);
+  --star: #f0cf6b;    --star2: #ffe9a8;
+  --shadow: 0 2px 12px rgba(2, 8, 20, 0.5);
+  /* 七科标识色（低饱和，彼此可区分） */
+  --c-ds: #6fa3dc;   /* 数据结构 · 群青 */
+  --c-comp: #c99a63; /* 组成原理 · 赭 */
+  --c-os: #7cbd9b;   /* 操作系统 · 绿 */
+  --c-net: #a493d4;  /* 计算机网络 · 紫 */
+  --c-math: #d18aa2; /* 数学一 · 玫 */
+  --c-eng: #e0bd66;  /* 英语一 · 星金 */
+  --c-pol: #93a3b8;  /* 政治 · 灰褐 */
+  --ok: #7cbd9b; --warn: #d8a552; --err: #d97a7a;
+  color-scheme: dark;
+}
+
+html[data-theme="light"] {
+  --bg: #edf2f8;      --bg2: #ffffff;     --bg3: #e2eaf3;
+  --text: #1b2b40;    --text2: #5d7188;   --line: #cdd9e7;
+  --primary: #0d3b63; --primary2: rgba(13, 59, 99, 0.08);
+  --star: #b8860b;    --star2: #8a6a14;
+  --shadow: 0 2px 10px rgba(20, 45, 80, 0.10);
+  --c-ds: #2e6ca8; --c-comp: #8f5f2e; --c-os: #3f7d5c; --c-net: #6b57a3;
+  --c-math: #a04e68; --c-eng: #8f6f1c; --c-pol: #5f7286;
+  --ok: #3f7d5c; --warn: #a5711f; --err: #ad4d4d;
+  color-scheme: light;
+}
+
+/* ---------------- 基础重置 ---------------- */
+* { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; height: 100%; }
+
+body {
+  font-family: system-ui, "Microsoft YaHei", "PingFang SC", sans-serif;
+  font-size: 14px; line-height: 1.6;
+  background: var(--bg); color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---------------- 星月夜 · 纯 CSS 星野与涡旋 ---------------- */
+html[data-theme="dark"] body {
+  background:
+    /* 星芒：大小不一的亮点，少量带星金 */
+    radial-gradient(2px 2px at 12% 14%, rgba(255, 244, 214, 0.9), transparent 60%),
+    radial-gradient(1.6px 1.6px at 28% 38%, rgba(255, 255, 255, 0.55), transparent 60%),
+    radial-gradient(1.4px 1.4px at 41% 8%, rgba(214, 231, 255, 0.7), transparent 60%),
+    radial-gradient(1.8px 1.8px at 55% 30%, rgba(255, 244, 214, 0.5), transparent 60%),
+    radial-gradient(1.3px 1.3px at 64% 55%, rgba(255, 255, 255, 0.4), transparent 60%),
+    radial-gradient(2.2px 2.2px at 76% 16%, rgba(240, 207, 107, 0.9), transparent 60%),
+    radial-gradient(1.4px 1.4px at 86% 44%, rgba(255, 255, 255, 0.45), transparent 60%),
+    radial-gradient(1.5px 1.5px at 8% 62%, rgba(214, 231, 255, 0.5), transparent 60%),
+    radial-gradient(1.6px 1.6px at 33% 76%, rgba(255, 255, 255, 0.35), transparent 60%),
+    radial-gradient(1.7px 1.7px at 58% 84%, rgba(240, 207, 107, 0.5), transparent 60%),
+    radial-gradient(1.2px 1.2px at 92% 72%, rgba(255, 255, 255, 0.4), transparent 60%),
+    /* 星月夜式涡旋：几道极淡的圆环笔触 */
+    radial-gradient(circle at 18% 85%, transparent 88px, rgba(120, 170, 220, 0.05) 89px 98px, transparent 99px),
+    radial-gradient(circle at 30% 60%, transparent 58px, rgba(120, 170, 220, 0.045) 59px 66px, transparent 67px),
+    radial-gradient(circle at 70% 78%, transparent 118px, rgba(240, 207, 107, 0.04) 119px 130px, transparent 131px),
+    /* 月亮光晕 + 夜空深浅 */
+    radial-gradient(240px 240px at 82% 4%, rgba(240, 207, 107, 0.10), transparent 70%),
+    radial-gradient(120% 80% at 100% 0%, rgba(63, 124, 191, 0.13), transparent 60%),
+    radial-gradient(130% 90% at 0% 100%, rgba(13, 42, 82, 0.45), transparent 65%),
+    var(--bg);
+}
+
+html[data-theme="light"] body {
+  background:
+    radial-gradient(160% 100% at 100% 0%, rgba(63, 124, 191, 0.10), transparent 55%),
+    radial-gradient(130% 90% at 0% 100%, rgba(13, 59, 99, 0.08), transparent 60%),
+    var(--bg);
+}
+
+h1, h2, h3, h4 { margin: 0; font-weight: 600; line-height: 1.35; }
+p { margin: 0; }
+button { font-family: inherit; font-size: inherit; color: inherit; cursor: pointer; }
+a { color: var(--primary); text-decoration: none; }
+::selection { background: color-mix(in srgb, var(--primary) 32%, transparent); }
+.muted { color: var(--text2); }
+
+.mono {
+  font-family: ui-monospace, Consolas, "Courier New", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+kbd {
+  display: inline-block; min-width: 20px; padding: 1px 6px; text-align: center;
+  font-family: ui-monospace, Consolas, monospace; font-size: 12px; line-height: 1.5;
+  color: var(--text); background: var(--bg3);
+  border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 4px;
+}
+
+/* ---------------- 滚动条 ---------------- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--text2) 35%, transparent);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--text2) 55%, transparent); }
+
+/* ---------------- 布局骨架 ---------------- */
+#app {
+  display: grid;
+  grid-template-areas:
+    "top top"
+    "side main"
+    "side foot";
+  grid-template-columns: 236px 1fr;
+  grid-template-rows: 56px 1fr 36px;
+  height: 100vh; overflow: hidden;
+}
+
+#topbar {
+  grid-area: top;
+  display: flex; align-items: center; gap: 12px; padding: 0 16px;
+  background: var(--bg2); border-bottom: 1px solid var(--line); z-index: 30;
+}
+
+#sidebar {
+  grid-area: side;
+  display: flex; flex-direction: column;
+  background: var(--bg2); border-right: 1px solid var(--line);
+  overflow: hidden; z-index: 40;
+}
+
+#main { grid-area: main; overflow-y: auto; padding: 18px; min-width: 0; }
+
+#statusbar {
+  grid-area: foot;
+  display: flex; align-items: center; gap: 18px; padding: 0 16px;
+  font-size: 12px; color: var(--text2);
+  background: var(--bg2); border-top: 1px solid var(--line);
+  white-space: nowrap; overflow: hidden;
+}
+
+#statusbar b { color: var(--text); font-weight: 600; }
+
+/* ---------------- 顶栏 ---------------- */
+.brand-t { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.brand-t h1 { font-size: 17px; letter-spacing: 1px; white-space: nowrap; }
+.brand-t h1 i { font-style: normal; font-size: 12px; color: var(--text2); margin-left: 6px; }
+.tb-spacer { flex: 1; }
+#tb-date { font-size: 12px; color: var(--text2); white-space: nowrap; }
+
+#tb-count {
+  padding: 4px 14px; border-radius: 999px; font-size: 13px; white-space: nowrap;
+  background: color-mix(in srgb, var(--star) 13%, transparent);
+  color: var(--star);
+  border: 1px solid color-mix(in srgb, var(--star) 36%, transparent);
+  font-variant-numeric: tabular-nums;
+}
+
+#tb-count b { font-size: 16px; font-weight: 700; color: var(--star); }
+#tb-count span { font-family: ui-monospace, Consolas, monospace; font-size: 12px; opacity: 0.9; }
+
+#tb-pomo {
+  padding: 4px 12px; border-radius: 999px; font-size: 13px; white-space: nowrap; cursor: pointer;
+  background: color-mix(in srgb, var(--c-os) 16%, transparent); color: var(--c-os);
+  border: 1px solid color-mix(in srgb, var(--c-os) 35%, transparent);
+  font-family: ui-monospace, Consolas, monospace;
+}
+
+#tb-pomo:empty { display: none; }
+
+/* ---------------- 侧栏 ---------------- */
+#nav-list {
+  flex: 1; display: flex; flex-direction: column; gap: 2px;
+  padding: 10px 8px; overflow-y: auto;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  padding: 9px 12px; text-align: left; background: none; border: none;
+  border-left: 3px solid transparent; border-radius: 8px; color: var(--text2);
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+
+.nav-item.active {
+  background: var(--primary2); border-left-color: var(--primary);
+  color: var(--primary); font-weight: 600;
+}
+
+.ni-icon { flex: none; width: 24px; text-align: center; font-size: 16px; }
+.ni-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.sb-foot {
+  padding: 12px 14px; border-top: 1px solid var(--line);
+  font-size: 12px; color: var(--text2); white-space: nowrap; overflow: hidden;
+}
+
+/* 折叠态 */
+#app.sb-mini { grid-template-columns: 58px 1fr; }
+#app.sb-mini .ni-name { display: none; }
+#app.sb-mini .sb-foot { font-size: 0; text-align: center; padding: 12px 4px; }
+#app.sb-mini .nav-item { justify-content: center; padding: 9px 0; }
+#app.sb-mini .ni-icon { width: 100%; }
+
+/* 遮罩（移动抽屉用） */
+#backdrop { display: none; }
+
+/* ---------------- 按钮 ---------------- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 7px 16px; border-radius: 8px; font-size: 13px; line-height: 1.4;
+  border: 1px solid var(--line); background: var(--bg3); color: var(--text);
+  white-space: nowrap; user-select: none;
+  transition: background 0.15s, border-color 0.15s, transform 0.08s;
+}
+
+.btn:hover {
+  border-color: color-mix(in srgb, var(--primary) 45%, var(--line));
+  background: color-mix(in srgb, var(--primary) 8%, var(--bg3));
+}
+
+.btn:active { transform: translateY(1px) scale(0.98); }
+
+.btn:focus-visible,
+.nav-item:focus-visible,
+.icon-btn:focus-visible,
+.tab:focus-visible,
+.date-strip button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--primary) 60%, transparent);
+  outline-offset: 1px;
+}
+
+.btn.primary { background: var(--primary); border-color: var(--primary); color: #fff; }
+.btn.primary:hover {
+  background: color-mix(in srgb, var(--primary) 85%, #fff);
+  border-color: color-mix(in srgb, var(--primary) 85%, #fff);
+}
+
+.btn.danger {
+  background: transparent; border-color: color-mix(in srgb, var(--err) 50%, transparent); color: var(--err);
+}
+.btn.danger:hover { background: color-mix(in srgb, var(--err) 14%, transparent); }
+
+.btn.ghost { background: transparent; border-color: transparent; color: var(--text2); }
+.btn.ghost:hover { background: var(--bg3); color: var(--text); }
+.btn.sm { padding: 3px 10px; font-size: 12px; border-radius: 6px; }
+
+.icon-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 28px; height: 28px; padding: 0 6px;
+  border: none; border-radius: 6px; background: transparent;
+  color: var(--text2); font-size: 14px; line-height: 1;
+  transition: background 0.15s, color 0.15s;
+}
+
+.icon-btn:hover { background: var(--bg3); color: var(--text); }
+.icon-btn:active { transform: scale(0.92); }
+
+/* ---------------- 徽章 / 标签 / 状态片 ---------------- */
+.badge {
+  display: inline-block; padding: 1px 9px; border-radius: 999px;
+  background: color-mix(in srgb, var(--b) 16%, transparent); color: var(--b);
+  font-size: 12px; font-weight: 600; line-height: 1.6; white-space: nowrap;
+}
+
+.tag {
+  display: inline-block; padding: 1px 8px; border-radius: 5px; font-size: 11px; white-space: nowrap;
+  background: var(--bg3); color: var(--text2); border: 1px solid var(--line);
+}
+
+.chip {
+  display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; white-space: nowrap;
+  background: var(--bg3); border: 1px solid var(--line);
+}
+
+/* 学习状态色（.st-* 彩色淡底片） */
+.st-已掌握, .st-学习中, .st-薄弱, .st-未学 {
+  display: inline-block; padding: 1px 9px; border-radius: 999px;
+  border: 1px solid transparent; font-size: 12px; font-weight: 600; white-space: nowrap;
+}
+
+.st-已掌握 {
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 14%, transparent);
+  border-color: color-mix(in srgb, var(--ok) 30%, transparent);
+}
+
+.st-学习中 {
+  color: var(--c-ds);
+  background: color-mix(in srgb, var(--c-ds) 14%, transparent);
+  border-color: color-mix(in srgb, var(--c-ds) 30%, transparent);
+}
+
+.st-薄弱 {
+  color: var(--err);
+  background: color-mix(in srgb, var(--err) 14%, transparent);
+  border-color: color-mix(in srgb, var(--err) 30%, transparent);
+}
+
+.st-未学 { color: var(--text2); background: var(--bg3); border-color: var(--line); }
+
+/* 难度色 */
+.diff-简单, .diff-中等, .diff-困难 {
+  display: inline-block; padding: 1px 9px; border-radius: 999px;
+  border: 1px solid transparent; font-size: 12px; font-weight: 600; white-space: nowrap;
+}
+
+.diff-简单 {
+  color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 13%, transparent);
+  border-color: color-mix(in srgb, var(--ok) 28%, transparent);
+}
+
+.diff-中等 {
+  color: var(--warn);
+  background: color-mix(in srgb, var(--warn) 14%, transparent);
+  border-color: color-mix(in srgb, var(--warn) 30%, transparent);
+}
+
+.diff-困难 {
+  color: var(--err);
+  background: color-mix(in srgb, var(--err) 14%, transparent);
+  border-color: color-mix(in srgb, var(--err) 32%, transparent);
+}
+
+/* ---------------- 卡片 ---------------- */
+.card {
+  background: var(--bg2); border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: var(--shadow); overflow: hidden;
+  animation: card-in 0.28s ease both;
+}
+
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+
+.card-h {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 11px 16px; border-bottom: 1px solid var(--line);
+}
+
+.card-h h3 { font-size: 14px; flex: 1; min-width: 0; }
+.card-b { padding: 14px 16px; }
+.card-b > * + * { margin-top: 10px; }
+
+/* ---------------- 进度条 ---------------- */
+.pbar { position: relative; display: flex; align-items: center; gap: 8px; }
+
+.pbar::before {
+  content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: calc(100% - 44px); height: 8px; border-radius: 4px;
+  background: var(--bg3); box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.pbar i {
+  position: relative; display: block; width: 0; height: 8px; max-width: calc(100% - 52px);
+  border-radius: 4px; background: var(--primary); transition: width 0.4s ease;
+}
+
+.pbar span {
+  margin-left: auto; width: 44px; flex: none; text-align: right;
+  font-size: 12px; color: var(--text2);
+}
+
+/* ---------------- 统计卡 ---------------- */
+.stat {
+  display: flex; flex-direction: column; gap: 2px; position: relative;
+  padding: 12px 14px 12px 18px; background: var(--bg3);
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden;
+}
+
+.stat::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0;
+  width: 4px; background: var(--sc, var(--primary));
+}
+
+.stat-v {
+  font-size: 24px; font-weight: 700; line-height: 1.25;
+  color: var(--sc, var(--primary));
+}
+
+.stat-l { font-size: 13px; color: var(--text); }
+.stat-s { font-size: 11px; }
+
+/* ---------------- 空状态 ---------------- */
+.empty {
+  padding: 26px 16px; text-align: center; color: var(--text2);
+  border: 1.5px dashed var(--line); border-radius: 10px; font-size: 13px;
+}
+
+/* ---------------- 页头 ---------------- */
+.page-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap; margin-bottom: 16px;
+}
+
+.ph-l h2 { font-size: 20px; }
+.ph-l p { margin-top: 3px; font-size: 13px; }
+.ph-r { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* ---------------- 弹窗 ---------------- */
+.modal-mask {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: center; padding: 20px;
+  background: rgba(6, 10, 16, 0.62);
+  animation: mask-in 0.18s ease both;
+}
+
+@keyframes mask-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  display: flex; flex-direction: column; max-height: 86vh; max-width: 94vw;
+  background: var(--bg2); border: 1px solid var(--line); border-radius: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  animation: modal-in 0.2s ease both;
+}
+
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.94) translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.modal.m-form { width: 520px; }
+.modal.m-form.wide { width: 720px; }
+.modal.m-confirm { width: 400px; }
+
+.modal-head {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 14px 18px; border-bottom: 1px solid var(--line);
+}
+
+.modal-head h3 { font-size: 15px; }
+.modal-body { padding: 16px 18px; overflow-y: auto; font-size: 14px; }
+
+.modal-foot {
+  display: flex; justify-content: flex-end; gap: 10px;
+  padding: 12px 18px; border-top: 1px solid var(--line);
+}
+
+/* 弹窗表单行 */
+.mf-row { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.mf-row:last-of-type { margin-bottom: 0; }
+.mf-label { font-size: 12px; color: var(--text2); }
+.mf-label em { color: var(--err); font-style: normal; font-weight: 700; }
+
+/* ---------------- 轻提示 ---------------- */
+.toast {
+  padding: 10px 16px; margin-top: 10px; font-size: 13px; max-width: 340px;
+  background: var(--bg2); border: 1px solid var(--line);
+  border-left: 3px solid var(--primary); border-radius: 8px; box-shadow: var(--shadow);
+  animation: toast-in 0.2s ease both;
+  transition: opacity 0.35s, transform 0.35s;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(24px); }
+  to { opacity: 1; transform: none; }
+}
+
+.toast.ok { border-left-color: var(--ok); }
+.toast.err { border-left-color: var(--err); }
+.toast.out { opacity: 0; transform: translateX(24px); }
+
+#toast-root {
+  position: fixed; right: 18px; bottom: 48px; z-index: 200;
+  display: flex; flex-direction: column; align-items: flex-end;
+}
+
+/* ---------------- 图例 ---------------- */
+.legend {
+  display: flex; flex-wrap: wrap; gap: 6px 16px;
+  font-size: 12px; color: var(--text2);
+}
+
+.lg-item { display: inline-flex; align-items: center; gap: 6px; }
+.lg-item i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; background: var(--text2); }
+.lg-item b { color: var(--text); font-weight: 600; }
+
+/* ---------------- 表单控件 ---------------- */
+input, select, textarea {
+  width: 100%; padding: 7px 10px; border-radius: 8px;
+  background: var(--bg3); border: 1px solid var(--line); color: var(--text);
+  font-family: inherit; font-size: 13px; line-height: 1.5;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+input::placeholder, textarea::placeholder {
+  color: color-mix(in srgb, var(--text2) 75%, transparent);
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 22%, transparent);
+}
+
+textarea { resize: vertical; min-height: 64px; }
+select { cursor: pointer; }
+input[type="date"], input[type="time"] { font-family: ui-monospace, Consolas, monospace; }
+
+.cbx {
+  width: 15px; height: 15px; flex: none; padding: 0;
+  accent-color: var(--primary); cursor: pointer;
+}
+
+/* ---------------- 表格 ---------------- */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+th, td {
+  padding: 8px 10px; text-align: left; vertical-align: middle;
+  border-bottom: 1px solid var(--line);
+}
+
+th { font-size: 12px; font-weight: 600; color: var(--text2); white-space: nowrap; }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr { transition: background 0.12s; }
+tbody tr:hover { background: var(--bg3); }
+
+.mini-table { font-size: 12px; }
+.mini-table th, .mini-table td { padding: 5px 8px; }
+
+/* ---------------- 页面通用布局 ---------------- */
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; align-items: start; }
+.grid-dash { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 14px; align-items: start; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.rowlist { display: flex; flex-direction: column; }
+
+.row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 9px 10px; border-radius: 8px;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.12s;
+}
+
+.row:hover { background: var(--bg3); }
+.row:last-child { border-bottom: none; }
+
+.grow { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+
+.row-main { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.row-acts { display: flex; align-items: center; gap: 4px; flex: none; white-space: nowrap; }
+
+/* ---------------- Tabs ---------------- */
+.tabs {
+  display: flex; gap: 4px; flex-wrap: wrap;
+  border-bottom: 1px solid var(--line); margin-bottom: 12px;
+}
+
+.tab {
+  padding: 7px 16px; background: none; border: none;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  color: var(--text2); font-size: 13px; border-radius: 6px 6px 0 0;
+  transition: color 0.15s, background 0.15s;
+}
+
+.tab:hover { color: var(--text); background: var(--bg3); }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); font-weight: 600; }
+
+/* ---------------- 大倒计时 ---------------- */
+.big-count {
+  font-family: ui-monospace, Consolas, monospace; font-variant-numeric: tabular-nums;
+  font-size: 42px; font-weight: 700; color: var(--star);
+  line-height: 1.2; letter-spacing: 1px;
+  text-shadow: 0 0 24px color-mix(in srgb, var(--star) 30%, transparent);
+}
+
+/* ---------------- 到期强调 ---------------- */
+.due { color: var(--err); font-weight: 600; }
+
+.due::before {
+  content: ""; display: inline-block; width: 7px; height: 7px;
+  border-radius: 50%; background: var(--err); margin-right: 5px; vertical-align: 1px;
+}
+
+/* ---------------- 星级行 ---------------- */
+.lv {
+  display: inline-flex; align-items: center; gap: 2px;
+  color: var(--c-eng); font-size: 13px; letter-spacing: 1px;
+}
+
+/* ---------------- 周条 ---------------- */
+.date-strip { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+
+.date-strip button {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 8px 4px; background: var(--bg3);
+  border: 1px solid var(--line); border-radius: 8px;
+  color: var(--text2); font-size: 11px; line-height: 1.4;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.date-strip button:hover { border-color: color-mix(in srgb, var(--primary) 45%, var(--line)); }
+.date-strip button b { font-size: 14px; color: var(--text); font-weight: 600; }
+
+.date-strip button.on {
+  background: var(--primary2); border-color: var(--primary); color: var(--primary);
+}
+
+.date-strip button.on b { color: var(--primary); }
+
+/* ---------------- 科目进度行 ---------------- */
+.sub-bar { display: flex; align-items: center; gap: 10px; }
+
+.sub-bar > .sb-name {
+  flex: none; width: 90px; font-size: 13px; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.sub-bar .pbar { flex: 1; min-width: 0; }
+
+/* ---------------- 心态表情 ---------------- */
+.mood-face { display: flex; gap: 8px; }
+
+.mood-face button {
+  flex: 1; padding: 8px 0; font-size: 22px; line-height: 1;
+  background: var(--bg3); border: 2px solid var(--line); border-radius: 10px;
+  transition: border-color 0.15s, transform 0.1s, background 0.15s;
+}
+
+.mood-face button:hover { transform: scale(1.08); }
+.mood-face button.on { border-color: var(--primary); background: var(--primary2); }
+
+/* ---------------- 院校卡 ---------------- */
+.school-card { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; font-size: 13px; }
+.school-card dt, .school-card .sc-k { color: var(--text2); white-space: nowrap; }
+
+.school-card dd, .school-card .sc-v {
+  margin: 0; color: var(--text); min-width: 0; overflow-wrap: anywhere;
+}
+
+/* ---------------- 快捷键说明 ---------------- */
+.help-kbd-list { display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+.help-kbd-list .hk-row { display: flex; align-items: center; gap: 10px; }
+.help-kbd-list .hk-keys { flex: none; min-width: 110px; }
+
+/* ---------------- 每日一题 ---------------- */
+.q-opt {
+  display: block; width: 100%; text-align: left;
+  padding: 9px 14px; margin-top: 8px; font-size: 13px; line-height: 1.5;
+  background: var(--bg3); border: 1px solid var(--line); border-radius: 8px; color: var(--text);
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.q-opt:hover { border-color: color-mix(in srgb, var(--primary) 45%, var(--line)); }
+
+.q-opt.right {
+  border-color: var(--ok);
+  background: color-mix(in srgb, var(--ok) 12%, transparent);
+  color: var(--ok);
+}
+
+.q-opt.wrong {
+  border-color: var(--err);
+  background: color-mix(in srgb, var(--err) 12%, transparent);
+  color: var(--err);
+}
+
+.q-explain {
+  margin-top: 12px; padding: 12px 14px; font-size: 13px;
+  background: var(--primary2); border-left: 3px solid var(--primary);
+  border-radius: 0 8px 8px 0;
+}
+
+/* ---------------- 弹窗根 / 杂项 ---------------- */
+#modal-root:empty { display: none; }
+canvas { display: block; max-width: 100%; }
+
+/* 说明：模板固定 id（#app #topbar #sidebar #nav-list #backdrop #main
+   #statusbar #modal-root #toast-root #tb-* #st-*）样式均在本文件内实现 */
+
+/* ---------------- 响应式 ---------------- */
+@media (max-width: 1100px) {
+  .grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-dash { grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+}
+
+@media (max-width: 920px) {
+  #app {
+    grid-template-areas:
+      "top top"
+      "main main"
+      "foot foot";
+    grid-template-columns: 1fr;
+  }
+
+  #sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 236px;
+    transform: translateX(-100%); transition: transform 0.22s ease;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.45);
+  }
+
+  #app.sb-open #sidebar { transform: translateX(0); }
+  #app.sb-mini { grid-template-columns: 1fr; }
+  #app.sb-mini .ni-name { display: block; }
+  #app.sb-mini .sb-foot { font-size: 12px; text-align: left; padding: 12px 14px; }
+  #app.sb-mini .nav-item { justify-content: flex-start; padding: 9px 12px; }
+
+  #backdrop {
+    display: block; position: fixed; inset: 0; z-index: 35;
+    background: rgba(6, 10, 16, 0.55); opacity: 0; pointer-events: none;
+    transition: opacity 0.22s ease;
+  }
+
+  #app.sb-open #backdrop { opacity: 1; pointer-events: auto; }
+
+  .brand-t h1 i { display: none; }
+  #tb-count { padding: 3px 10px; font-size: 12px; }
+  #tb-count b { font-size: 14px; }
+  #tb-date { display: none; }
+}
+
+@media (max-width: 600px) {
+  .grid2, .grid3 { grid-template-columns: 1fr; }
+  .grid-dash { grid-template-columns: 1fr; }
+
+  .page-head { flex-direction: column; align-items: stretch; }
+  .ph-r { justify-content: flex-start; }
+  #main { padding: 12px; }
+  .st-tip { display: none; }
+  #statusbar { gap: 12px; }
+
+  .modal.m-form,
+  .modal.m-form.wide,
+  .modal.m-confirm { width: 100%; }
+
+  #toast-root { right: 10px; left: 10px; bottom: 44px; }
+  .toast { max-width: none; }
+}
+
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="topbar">
+    <button class="icon-btn tb-menu" data-act="sb-mobile" title="菜单">☰</button>
+    <button class="icon-btn tb-mini" data-act="sb-toggle" title="折叠侧栏">⇤</button>
+    <div class="brand">
+      <span class="logo">🎓</span>
+      <div class="brand-t"><h1>研途408 <i>· 11408 备考博客</i></h1><span id="tb-date" class="muted mono"></span></div>
+    </div>
+    <div id="tb-count" class="tb-count mono" title="考研初试倒计时"></div>
+    <div id="tb-pomo" class="tb-pomo mono" data-act="pomo-jump" title="番茄钟"></div>
+    <button class="icon-btn" id="tb-theme" data-act="toggle-theme" title="切换主题 (T)">🌙</button>
+  </header>
+  <aside id="sidebar">
+    <nav id="nav-list"></nav>
+    <div class="sb-foot"><span class="ni-icon">⚓</span><span class="ni-name">11408 · 一战成硕</span></div>
+  </aside>
+  <div id="backdrop" data-act="sb-mobile"></div>
+  <main id="main"></main>
+  <footer id="statusbar">
+    <span>🔥 今日专注 <b id="st-focus" class="mono">—</b></span>
+    <span>✅ 今日任务 <b id="st-rate" class="mono">—</b></span>
+    <span>📅 备考 <b id="st-days" class="mono">—</b></span>
+    <span class="st-tip muted">快捷键：<kbd>N</kbd> 新任务 · <kbd>P</kbd> 番茄 · <kbd>T</kbd> 主题</span>
+  </footer>
+</div>
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+<script>
+'use strict';
+/* =====================================================================
+   研途408 · core.js —— 全局契约层
+   工具 / 存储 / 路由 / 动作委托 / Modal / Toast / Charts / 番茄引擎 / 提醒引擎
+   其他 part 只允许使用，禁止重定义本文件任何标识符（清单见 SPEC.md）
+   ===================================================================== */
+
+/* ---------------- 基础工具 ---------------- */
+const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const pad2 = n => String(n).padStart(2, '0');
+const todayStr = d => { d = d || new Date(); return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); };
+const today = () => todayStr();
+const parseDate = s => { const p = String(s).split('-').map(Number); return new Date(p[0], (p[1] || 1) - 1, p[2] || 1); };
+const addDays = (s, n) => { const d = parseDate(s); d.setDate(d.getDate() + n); return todayStr(d); };
+const diffDays = (a, b) => Math.round((parseDate(a) - parseDate(b)) / 86400000);
+const fmtDateCN = s => { const d = parseDate(s); return (d.getMonth() + 1) + '月' + d.getDate() + '日'; };
+const monthKey = s => String(s).slice(0, 7);
+const num = (v, d) => { const n = parseFloat(v); return isNaN(n) ? (d || 0) : n; };
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+function fmtMin(m) {
+  m = Math.round(m || 0);
+  const h = Math.floor(m / 60);
+  if (h <= 0) return m + '分钟';
+  return h + '小时' + (m % 60 ? (m % 60) + '分' : '');
+}
+function isoWeek(dateStr) {
+  const d = parseDate(dateStr);
+  const t = new Date(d); t.setHours(0, 0, 0, 0);
+  t.setDate(t.getDate() + 3 - ((t.getDay() + 6) % 7));
+  const w1 = new Date(t.getFullYear(), 0, 4);
+  const wk = 1 + Math.round(((t - w1) / 86400000 - 3 + ((w1.getDay() + 6) % 7)) / 7);
+  return t.getFullYear() + '-W' + pad2(wk);
+}
+function weekDates(dateStr) {
+  const d = parseDate(dateStr);
+  const mon = new Date(d);
+  mon.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+  const out = [];
+  for (let i = 0; i < 7; i++) { const x = new Date(mon); x.setDate(mon.getDate() + i); out.push(todayStr(x)); }
+  return out;
+}
+const WEEK_CN = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+const weekCN = s => WEEK_CN[(parseDate(s).getDay() + 6) % 7];
+
+/* ---------------- 学科体系 ---------------- */
+const SUBJECTS = {
+  ds:   { name: '数据结构',   short: '数据', color: 'var(--c-ds)' },
+  comp: { name: '组成原理',   short: '组成', color: 'var(--c-comp)' },
+  os:   { name: '操作系统',   short: '操作', color: 'var(--c-os)' },
+  net:  { name: '计算机网络', short: '网络', color: 'var(--c-net)' },
+  math: { name: '数学一',     short: '数学', color: 'var(--c-math)' },
+  eng:  { name: '英语一',     short: '英语', color: 'var(--c-eng)' },
+  pol:  { name: '政治',       short: '政治', color: 'var(--c-pol)' }
+};
+const SUBJ_ORDER = ['ds', 'comp', 'os', 'net', 'math', 'eng', 'pol'];
+const SUBJ408 = ['ds', 'comp', 'os', 'net'];
+const subBadge = k => SUBJECTS[k] ? '<span class="badge" style="--b:' + SUBJECTS[k].color + '">' + esc(SUBJECTS[k].short) + '</span>' : '';
+
+/* ---------------- 存储层 ---------------- */
+const DB_KEY = 'ky408_v1';
+const DB = {
+  s: null,
+  load() {
+    let raw = null;
+    try { raw = localStorage.getItem(DB_KEY); if (raw) this.s = JSON.parse(raw); } catch (e) { this.s = null; }
+    if (!this.s || typeof this.s !== 'object' || Array.isArray(this.s)) {
+      if (raw) { try { localStorage.setItem(DB_KEY + '.corrupt', raw); } catch (e) {} }
+      this.s = defaultState();
+      this.save();
+      setTimeout(() => toast('本地数据读取失败，已重置为初始状态；原数据备份在 ' + DB_KEY + '.corrupt', 'err'), 300);
+    }
+    try { migrate(this.s); } catch (e) { console.warn('migrate', e); }
+  },
+  save() {
+    try { localStorage.setItem(DB_KEY, JSON.stringify(this.s)); }
+    catch (e) { toast('本地存储写入失败：' + e.message, 'err'); }
+  }
+};
+let S = null;
+function save() { DB.save(); }
+
+/* ---------------- 轻提示 ---------------- */
+function toast(msg, type) {
+  const r = $('#toast-root');
+  if (!r) return;
+  const d = document.createElement('div');
+  d.className = 'toast ' + (type || 'ok');
+  d.textContent = msg;
+  r.appendChild(d);
+  setTimeout(() => { d.classList.add('out'); setTimeout(() => d.remove(), 350); }, 2400);
+}
+
+/* ---------------- 弹窗 ---------------- */
+const Modal = {
+  _submit: null, _ok: null,
+  open(html, cls) {
+    $('#modal-root').innerHTML = '<div class="modal-mask" data-act="modal-mask"><div class="modal ' + (cls || '') + '" role="dialog" aria-modal="true">' + html + '</div></div>';
+    const f = $('#modal-root').querySelector('input,textarea,select');
+    if (f) setTimeout(() => { try { f.focus(); } catch (e) {} }, 60);
+  },
+  close() { $('#modal-root').innerHTML = ''; this._submit = null; this._ok = null; },
+  isOpen() { return !!$('#modal-root').innerHTML; },
+  form(opt) {
+    const fields = opt.fields || [];
+    const body = fields.map(f => {
+      const v = f.value == null ? '' : f.value;
+      let ctl;
+      if (f.type === 'textarea') {
+        ctl = '<textarea name="' + esc(f.key) + '" rows="' + (f.rows || 3) + '" placeholder="' + esc(f.placeholder || '') + '">' + esc(v) + '</textarea>';
+      } else if (f.type === 'select') {
+        ctl = '<select name="' + esc(f.key) + '">' + (f.options || []).map(o => {
+          const ov = typeof o === 'object' ? o.v : o, ol = typeof o === 'object' ? o.label : o;
+          return '<option value="' + esc(ov) + '"' + (String(ov) === String(v) ? ' selected' : '') + '>' + esc(ol) + '</option>';
+        }).join('') + '</select>';
+      } else {
+        ctl = '<input name="' + esc(f.key) + '" type="' + (f.type || 'text') + '" value="' + esc(v) + '" placeholder="' + esc(f.placeholder || '') + '"'
+          + (f.min != null ? ' min="' + f.min + '"' : '') + (f.max != null ? ' max="' + f.max + '"' : '')
+          + (f.step != null ? ' step="' + f.step + '"' : '') + '>';
+      }
+      return '<label class="mf-row"><span class="mf-label">' + esc(f.label) + (f.required ? ' <em>*</em>' : '') + '</span>' + ctl + '</label>';
+    }).join('');
+    this._submit = opt.onSubmit || null;
+    this.open(
+      '<div class="modal-head"><h3>' + esc(opt.title || '编辑') + '</h3><button class="icon-btn" data-act="modal-close" title="关闭">✕</button></div>' +
+      '<form data-submit="modal-submit">' + body +
+      '<div class="modal-foot"><button type="button" class="btn ghost" data-act="modal-close">取消</button>' +
+      '<button type="submit" class="btn primary">' + esc(opt.submitText || '保存') + '</button></div></form>',
+      'm-form' + (opt.wide ? ' wide' : ''));
+  },
+  confirm(opt) {
+    this._ok = opt.onOk || null;
+    this.open(
+      '<div class="modal-head"><h3>' + esc(opt.title || '确认操作') + '</h3><button class="icon-btn" data-act="modal-close" title="关闭">✕</button></div>' +
+      '<div class="modal-body">' + (opt.message || '') + '</div>' +
+      '<div class="modal-foot"><button type="button" class="btn ghost" data-act="modal-close">取消</button>' +
+      '<button type="button" class="btn ' + (opt.danger === false ? 'primary' : 'danger') + '" data-act="modal-ok">' + esc(opt.okText || '确定') + '</button></div>',
+      'm-confirm');
+  }
+};
+
+/* ---------------- 动作委托（唯一事件入口） ---------------- */
+const Actions = {};
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]');
+  if (!el) return;
+  const fn = Actions[el.dataset.act];
+  if (fn) fn(el.dataset, el, e);
+});
+document.addEventListener('change', e => {
+  const el = e.target.closest('[data-change]');
+  if (!el) return;
+  const fn = Actions[el.dataset.change];
+  if (fn) fn(el.dataset, el, e);
+});
+document.addEventListener('input', e => {
+  const el = e.target.closest('[data-input]');
+  if (!el) return;
+  const fn = Actions[el.dataset.input];
+  if (fn) fn(el.dataset, el, e);
+});
+document.addEventListener('submit', e => {
+  const el = e.target.closest('[data-submit]');
+  if (!el) return;
+  e.preventDefault();
+  const fn = Actions[el.dataset.submit];
+  if (fn) fn(el.dataset, el, e);
+});
+Actions['modal-close'] = () => Modal.close();
+Actions['modal-mask'] = (d, el, e) => { if (e.target.classList.contains('modal-mask')) Modal.close(); };
+Actions['modal-ok'] = () => { const f = Modal._ok; Modal.close(); if (f) f(); };
+Actions['modal-submit'] = (d, el, e) => {
+  const vals = {};
+  new FormData(e.target).forEach((v, k) => { vals[k] = v; });
+  const cb = Modal._submit;
+  const keep = cb ? cb(vals) : undefined;
+  if (keep !== false) Modal.close();
+};
+Actions['nav-page'] = d => { nav(d.page); const a = $('#app'); if (a) a.classList.remove('sb-open'); };
+Actions['sb-toggle'] = () => {
+  const a = $('#app'); a.classList.toggle('sb-mini');
+  try { localStorage.setItem('ky408_sbmini', a.classList.contains('sb-mini') ? '1' : ''); } catch (e) {}
+};
+Actions['sb-mobile'] = () => $('#app').classList.toggle('sb-open');
+Actions['pomo-jump'] = () => nav('pomo');
+Actions['toggle-theme'] = () => setTheme(S.theme === 'dark' ? 'light' : 'dark');
+
+/* ---------------- 路由 ---------------- */
+const PAGES = {};
+const PAGE_ORDER = [];
+function registerPage(id, def) { if (!PAGES[id]) PAGE_ORDER.push(id); PAGES[id] = def; }
+let currentPage = 'dashboard';
+function nav(id) {
+  if (!PAGES[id]) return;
+  currentPage = id;
+  try { localStorage.setItem('ky408_page', id); } catch (e) {}
+  renderCurrent();
+  window.scrollTo(0, 0);
+}
+function renderCurrent() {
+  const p = PAGES[currentPage] || PAGES[PAGE_ORDER[0]];
+  const m = $('#main');
+  m.innerHTML = '';
+  try { p.render(m); }
+  catch (e) {
+    console.error(e);
+    m.innerHTML = '<section class="card"><div class="card-b">页面渲染出错：' + esc(e && e.message) + '</div></section>';
+  }
+  $$('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.page === currentPage));
+  updateStatusbar();
+}
+function rerender() { renderCurrent(); }
+
+/* ---------------- 页面拼装组件 ---------------- */
+function pageHead(title, desc, actionsHtml) {
+  return '<div class="page-head"><div class="ph-l"><h2>' + title + '</h2>' + (desc ? '<p class="muted">' + desc + '</p>' : '') +
+    '</div><div class="ph-r">' + (actionsHtml || '') + '</div></div>';
+}
+function card(title, bodyHtml, cls, headHtml) {
+  return '<section class="card ' + (cls || '') + '">' +
+    (title != null ? '<div class="card-h"><h3>' + title + '</h3>' + (headHtml || '') + '</div>' : '') +
+    '<div class="card-b">' + bodyHtml + '</div></section>';
+}
+function progressBar(pct, color) {
+  pct = clamp(Math.round(pct || 0), 0, 100);
+  return '<div class="pbar"><i style="width:' + pct + '%;background:' + (color || 'var(--primary)') + '"></i><span class="mono">' + pct + '%</span></div>';
+}
+function statCard(label, value, sub, color) {
+  return '<div class="stat"' + (color ? ' style="--sc:' + color + '"' : '') + '><span class="stat-v mono">' + value + '</span><span class="stat-l">' + label + '</span>' +
+    (sub ? '<span class="stat-s muted">' + sub + '</span>' : '') + '</div>';
+}
+function empty(t) { return '<div class="empty">🌱 ' + esc(t) + '</div>'; }
+
+/* ---------------- 画图（canvas 手绘，无依赖） ---------------- */
+const Charts = {
+  css(name) { return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); },
+  _c(c) {
+    if (!c) return this.css('--primary') || '#5b7fa6';
+    if (String(c).indexOf('var(') === 0) return this.css(c.slice(4, -1).trim()) || '#5b7fa6';
+    return c;
+  },
+  _setup(cv, h) {
+    const dpr = window.devicePixelRatio || 1;
+    const w = Math.max(120, cv.clientWidth || (cv.parentElement ? cv.parentElement.clientWidth : 0) || 320);
+    cv.width = Math.round(w * dpr);
+    cv.height = Math.round(h * dpr);
+    cv.style.height = h + 'px';
+    cv.style.width = '100%';
+    const ctx = cv.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    return { ctx: ctx, w: w, h: h };
+  },
+  _empty(ctx, w, h) {
+    ctx.fillStyle = this.css('--text2') || '#888';
+    ctx.font = '13px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('暂无数据', w / 2, h / 2);
+  },
+  _grid(ctx, w, h, yMin, yMax, cfg) {
+    const padL = 46, padR = 14, padT = 16, padB = 26;
+    const pw = w - padL - padR, ph = h - padT - padB;
+    ctx.strokeStyle = this.css('--line') || 'rgba(128,128,128,.25)';
+    ctx.lineWidth = 1;
+    ctx.font = '10px ui-monospace,Consolas,monospace';
+    ctx.fillStyle = this.css('--text2') || '#888';
+    for (let g = 0; g <= 4; g++) {
+      const gy = padT + ph * g / 4;
+      ctx.beginPath(); ctx.moveTo(padL, gy); ctx.lineTo(w - padR, gy); ctx.stroke();
+      ctx.textAlign = 'right';
+      const val = yMax - (yMax - yMin) * g / 4;
+      ctx.fillText(cfg && cfg.fmt ? cfg.fmt(val) : String(Math.round(val * 10) / 10), padL - 6, gy + 3);
+    }
+    return { padL: padL, padR: padR, padT: padT, padB: padB, pw: pw, ph: ph };
+  },
+  _xlabels(ctx, labels, h, X) {
+    ctx.fillStyle = this.css('--text2') || '#888';
+    ctx.font = '10px ui-monospace,Consolas,monospace';
+    ctx.textAlign = 'center';
+    const step = Math.max(1, Math.ceil(labels.length / 9));
+    labels.forEach((lb, i) => { if (i % step === 0 || i === labels.length - 1) ctx.fillText(lb, X(i), h - 8); });
+  },
+  pie(cv, data, h) {
+    h = h || 230;
+    data = (data || []).filter(d => d.value > 0);
+    const st = this._setup(cv, h);
+    if (!data.length) { this._empty(st.ctx, st.w, st.h); return; }
+    const total = data.reduce((s, d) => s + d.value, 0) || 1;
+    const cx = st.w / 2 - 34, cy = st.h / 2, R = Math.min(cx, cy) - 16, r = R * 0.58;
+    let a = -Math.PI / 2;
+    data.forEach((d, i) => {
+      const a2 = a + d.value / total * Math.PI * 2;
+      st.ctx.beginPath();
+      st.ctx.arc(cx, cy, R, a, a2);
+      st.ctx.arc(cx, cy, r, a2, a, true);
+      st.ctx.closePath();
+      st.ctx.fillStyle = this._c(d.color);
+      st.ctx.fill();
+      st.ctx.strokeStyle = this.css('--bg2') || '#222';
+      st.ctx.lineWidth = 2;
+      st.ctx.stroke();
+      if (d.value / total > 0.075) {
+        const mid = (a + a2) / 2, lr = (R + r) / 2;
+        st.ctx.fillStyle = '#fff';
+        st.ctx.font = '10px ui-monospace,monospace';
+        st.ctx.textAlign = 'center';
+        st.ctx.fillText(Math.round(d.value / total * 100) + '%', cx + lr * Math.cos(mid), cy + lr * Math.sin(mid) + 3);
+      }
+      a = a2;
+    });
+    st.ctx.fillStyle = this.css('--text') || '#eee';
+    st.ctx.textAlign = 'center';
+    st.ctx.font = 'bold 16px ui-monospace,monospace';
+    st.ctx.fillText(String(Math.round(total)), cx, cy + 1);
+    st.ctx.font = '10px sans-serif';
+    st.ctx.fillStyle = this.css('--text2') || '#888';
+    st.ctx.fillText('合计', cx, cy + 15);
+  },
+  legend(data) {
+    return '<div class="legend">' + (data || []).filter(d => d.value > 0).map(d =>
+      '<span class="lg-item"><i style="background:' + this._c(d.color) + '"></i>' + esc(d.label) +
+      ' <b class="mono">' + d.value + '</b></span>').join('') + '</div>';
+  },
+  bar(cv, cfg, h) {
+    h = h || 230;
+    const st = this._setup(cv, h);
+    const labels = cfg.labels || [], series = cfg.series || [];
+    if (!labels.length || !series.length) { this._empty(st.ctx, st.w, st.h); return; }
+    let yMax = cfg.yMax;
+    if (yMax == null) {
+      yMax = 0;
+      series.forEach(s => s.data.forEach(v => { if (v != null && v > yMax) yMax = v; }));
+      yMax = yMax * 1.15 || 1;
+    }
+    const g = this._grid(st.ctx, st.w, st.h, 0, yMax, cfg);
+    const slot = g.pw / labels.length;
+    const bw = Math.max(3, Math.min(36, slot * 0.72 / series.length));
+    labels.forEach((lb, i) => {
+      series.forEach((sr, si) => {
+        const v = sr.data[i] == null ? 0 : sr.data[i];
+        const bh = v / yMax * g.ph;
+        const bx = g.padL + slot * i + slot / 2 - (bw * series.length) / 2 + bw * si;
+        st.ctx.fillStyle = this._c(sr.color);
+        st.ctx.fillRect(bx, g.padT + g.ph - bh, bw - 2, bh);
+      });
+    });
+    this._xlabels(st.ctx, labels, st.h, i => g.padL + slot * i + slot / 2);
+  },
+  line(cv, cfg, h) {
+    h = h || 230;
+    const st = this._setup(cv, h);
+    const labels = cfg.labels || [], series = cfg.series || [];
+    const hasData = series.some(s => (s.data || []).some(v => v != null));
+    if (!labels.length || !series.length || !hasData) { this._empty(st.ctx, st.w, st.h); return; }
+    let yMax = cfg.yMax;
+    if (yMax == null) {
+      yMax = -Infinity;
+      series.forEach(s => s.data.forEach(v => { if (v != null && v > yMax) yMax = v; }));
+      yMax = isFinite(yMax) ? (yMax * 1.15 || 1) : 1;
+    }
+    const yMin = cfg.yMin != null ? cfg.yMin : 0;
+    const g = this._grid(st.ctx, st.w, st.h, yMin, yMax, cfg);
+    const X = i => g.padL + (labels.length === 1 ? g.pw / 2 : i * g.pw / (labels.length - 1));
+    const Y = v => g.padT + g.ph - (v - yMin) / (yMax - yMin || 1) * g.ph;
+    this._xlabels(st.ctx, labels, st.h, X);
+    series.forEach(sr => {
+      const col = this._c(sr.color);
+      st.ctx.strokeStyle = col;
+      st.ctx.fillStyle = col;
+      st.ctx.lineWidth = 2;
+      st.ctx.beginPath();
+      let started = false;
+      sr.data.forEach((v, i) => {
+        if (v == null) { started = false; return; }
+        if (!started) { st.ctx.moveTo(X(i), Y(v)); started = true; }
+        else st.ctx.lineTo(X(i), Y(v));
+      });
+      st.ctx.stroke();
+      sr.data.forEach((v, i) => {
+        if (v == null) return;
+        st.ctx.beginPath();
+        st.ctx.arc(X(i), Y(v), 2.5, 0, Math.PI * 2);
+        st.ctx.fill();
+      });
+    });
+  }
+};
+
+/* ---------------- 番茄引擎 ---------------- */
+const Pomo = {
+  st: { running: false, paused: false, mode: 'focus', sub: 'ds', endAt: 0, remainMs: 0, min: 45 },
+  _ui: null,
+  setUI(fn) { this._ui = fn; },
+  ui() { if (this._ui) { try { this._ui(); } catch (e) {} } },
+  // 番茄进行状态落盘（刷新/关闭后可恢复；到点很久的作废不补记）
+  _persist() {
+    const st = this.st;
+    S.pomo.cur = st.running ? {
+      running: true, paused: !!st.paused, mode: st.mode, sub: st.sub,
+      endAt: st.endAt, remainMs: st.remainMs, min: st.min
+    } : null;
+  },
+  start(min, mode, sub) {
+    this.st = {
+      running: true, paused: false,
+      mode: mode || 'focus',
+      sub: sub || S.pomo.lastSub || 'ds',
+      endAt: Date.now() + min * 60000,
+      remainMs: min * 60000,
+      min: min
+    };
+    if ((mode || 'focus') === 'focus') S.pomo.lastSub = this.st.sub;
+    this._persist();
+    save();
+    this.ui();
+  },
+  pause() {
+    if (!this.st.running || this.st.paused) return;
+    this.st.paused = true;
+    this.st.remainMs = Math.max(0, this.st.endAt - Date.now());
+    this._persist();
+    this.ui();
+  },
+  resume() {
+    if (!this.st.paused) return;
+    this.st.endAt = Date.now() + this.st.remainMs;
+    this.st.paused = false;
+    this._persist();
+    this.ui();
+  },
+  stop(logIt) {
+    const st = this.st;
+    if (logIt && st.running && st.mode === 'focus') {
+      const remainMin = (st.paused ? st.remainMs : st.endAt - Date.now()) / 60000;
+      const used = st.min - Math.ceil(remainMin);
+      if (used >= 1) {
+        (S.pomo.log[today()] = S.pomo.log[today()] || []).push({ sub: st.sub, min: used, ts: Date.now() });
+        toast('已记录本次专注 ' + fmtMin(used));
+      }
+    }
+    st.running = false;
+    st.paused = false;
+    this._persist();
+    save();
+    this.ui();
+  },
+  tick() {
+    const st = this.st;
+    if (!st.running || st.paused) return;
+    if (Date.now() < st.endAt) return;
+    if (st.mode === 'focus') {
+      (S.pomo.log[today()] = S.pomo.log[today()] || []).push({ sub: st.sub, min: st.min, ts: Date.now() });
+      beep(3);
+      if (S.pomo.autoNext) {
+        toast('🍅 番茄完成！自动进入休息 ' + S.pomo.breakMin + ' 分钟');
+        this.start(S.pomo.breakMin, 'break', st.sub);
+      } else {
+        toast('🍅 番茄完成，休息一下吧！');
+        st.running = false; st.paused = false;
+      }
+    } else {
+      beep(2);
+      toast('☕ 休息结束，准备开始下一个番茄');
+      st.running = false; st.paused = false;
+    }
+    this._persist();
+    save();
+    this.ui();
+  },
+  remainMs() {
+    const st = this.st;
+    if (!st.running) return 0;
+    return st.paused ? st.remainMs : Math.max(0, st.endAt - Date.now());
+  },
+  mmss() {
+    const t = Math.ceil(this.remainMs() / 1000);
+    return pad2(Math.floor(t / 60)) + ':' + pad2(t % 60);
+  }
+};
+
+/* ---------------- 倒计时 / 状态栏 / 提醒 ---------------- */
+function countdownParts() {
+  let target = new Date(S.examDate || '2028-12-18T08:30');
+  if (isNaN(target.getTime())) target = new Date('2028-12-18T08:30');
+  let diff = target - new Date();
+  const neg = diff < 0;
+  diff = Math.abs(diff);
+  return {
+    neg: neg,
+    d: Math.floor(diff / 86400000),
+    h: Math.floor(diff % 86400000 / 3600000),
+    m: Math.floor(diff % 3600000 / 60000),
+    s: Math.floor(diff % 60000 / 1000)
+  };
+}
+function updateCountdown() {
+  const el = $('#tb-count');
+  if (!el) return;
+  const c = countdownParts();
+  if (c.neg) { el.innerHTML = '🎓 初试已结束'; return; }
+  el.innerHTML = '⏳ 距初试 <b>' + c.d + '</b> 天 <span>' + pad2(c.h) + ':' + pad2(c.m) + ':' + pad2(c.s) + '</span>';
+  const big = $('#dash-count');
+  if (big) big.textContent = c.d + ' 天 ' + pad2(c.h) + ':' + pad2(c.m) + ':' + pad2(c.s);
+}
+function updateStatusbar() {
+  if (!S) return;
+  const log = S.pomo.log[today()] || [];
+  const el = $('#st-focus');
+  if (el) el.textContent = fmtMin(log.reduce((s, x) => s + x.min, 0));
+  const ts = typeof tasksOn === 'function' ? tasksOn(today()) : [];
+  const done = ts.filter(t => t.done).length;
+  const el2 = $('#st-rate');
+  if (el2) el2.textContent = ts.length ? Math.round(done / ts.length * 100) + '%（' + done + '/' + ts.length + '）' : '—';
+  const el3 = $('#st-days');
+  if (el3) el3.textContent = '第 ' + Math.max(1, diffDays(today(), S.startDate) + 1) + ' 天';
+}
+let _lastEye = Date.now();
+const _reminded = new Set();
+function checkReminders() {
+  if (!S) return;
+  if (S.reminders.eyeOn && Date.now() - _lastEye >= S.reminders.eyeMin * 60000 && !Modal.isOpen()) {
+    _lastEye = Date.now();
+    beep(2);
+    Modal.confirm({
+      title: '🌿 护眼提醒',
+      message: '已经连续学习 <b>' + S.reminders.eyeMin + '</b> 分钟啦～<br>起身活动一下，远眺 20 秒，保护眼睛。',
+      okText: '收到', danger: false
+    });
+  }
+  const now = new Date();
+  const hm = pad2(now.getHours()) + ':' + pad2(now.getMinutes());
+  (S.schedule || []).forEach(it => {
+    if (it.remind && it.start === hm && !_reminded.has(today() + it.id)) {
+      _reminded.add(today() + it.id);
+      beep(1);
+      toast('⏰ 作息提醒：' + it.label);
+    }
+  });
+}
+function beep(n) {
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return;
+    const ac = beep._ac || (beep._ac = new AC());
+    for (let i = 0; i < (n || 1); i++) {
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = 'sine';
+      o.frequency.value = 880;
+      g.gain.setValueAtTime(0.0001, ac.currentTime + i * 0.22);
+      g.gain.exponentialRampToValueAtTime(0.12, ac.currentTime + i * 0.22 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + i * 0.22 + 0.18);
+      o.connect(g); g.connect(ac.destination);
+      o.start(ac.currentTime + i * 0.22);
+      o.stop(ac.currentTime + i * 0.22 + 0.2);
+    }
+  } catch (e) {}
+}
+
+/* ---------------- 主题 / 导出 ---------------- */
+function setTheme(t) {
+  S.theme = t;
+  document.documentElement.dataset.theme = t;
+  const b = $('#tb-theme');
+  if (b) b.textContent = t === 'dark' ? '☀️' : '🌙';
+  save();
+  rerender();
+}
+function downloadText(filename, text) {
+  const blob = new Blob(['\ufeff' + text], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+}
+
+/* ---------------- 侧边栏 / 快捷键 / 启动 ---------------- */
+function buildSidebar() {
+  const el = $('#nav-list');
+  el.innerHTML = PAGE_ORDER.map(id => {
+    const p = PAGES[id];
+    return '<button class="nav-item" data-act="nav-page" data-page="' + id + '" id="nav-' + id + '">' +
+      '<span class="ni-icon">' + p.icon + '</span><span class="ni-name">' + p.name + '</span></button>';
+  }).join('');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (Modal.isOpen() && (tag === 'textarea' || e.target.isContentEditable)) {
+      e.target.blur();
+      return;
+    }
+    if (Modal.isOpen()) Modal.close();
+    return;
+  }
+  const tag = (e.target.tagName || '').toLowerCase();
+  if (tag === 'input' || tag === 'textarea' || tag === 'select' || e.target.isContentEditable) return;
+  if (Modal.isOpen()) return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const k = e.key.toLowerCase();
+  if (k === 'n' && Actions['quick-add-task']) Actions['quick-add-task']();
+  else if (k === 'p' && Actions['pomo-toggle']) Actions['pomo-toggle']();
+  else if (k === 't') Actions['toggle-theme']();
+});
+function startTimers() {
+  updateCountdown();
+  updateStatusbar();
+  setInterval(() => {
+    try {
+      updateCountdown();
+      if (S) {
+        Pomo.tick();
+        Pomo.ui();
+        updateStatusbar();
+      }
+    } catch (e) { console.warn('tick', e); }
+  }, 1000);
+  setInterval(checkReminders, 20000);
+}
+function initApp() {
+  DB.load();
+  S = DB.s;
+  document.documentElement.dataset.theme = S.theme || 'dark';
+  // 恢复进行中的番茄（若离开期间早已到点超过 2 分钟，作废不补记，避免虚增时长）
+  try {
+    const cur = S.pomo.cur;
+    if (cur && cur.running) {
+      if (!cur.paused && Date.now() >= cur.endAt && Date.now() - cur.endAt > 120000) {
+        S.pomo.cur = null;
+      } else {
+        Pomo.st = {
+          running: true, paused: !!cur.paused, mode: cur.mode || 'focus',
+          sub: cur.sub || S.pomo.lastSub || 'ds', endAt: cur.endAt,
+          remainMs: cur.remainMs, min: cur.min || S.pomo.focusMin
+        };
+      }
+    }
+  } catch (e) {}
+  const b = $('#tb-theme');
+  if (b) b.textContent = (S.theme || 'dark') === 'dark' ? '☀️' : '🌙';
+  const now = new Date();
+  $('#tb-date').textContent = now.getFullYear() + '年' + (now.getMonth() + 1) + '月' + now.getDate() + '日 · ' + WEEK_CN[(now.getDay() + 6) % 7];
+  try { if (localStorage.getItem('ky408_sbmini') === '1') $('#app').classList.add('sb-mini'); } catch (e) {}
+  buildSidebar();
+  let last = 'dashboard';
+  try { last = localStorage.getItem('ky408_page') || 'dashboard'; } catch (e) {}
+  currentPage = PAGES[last] ? last : PAGE_ORDER[0];
+  renderCurrent();
+  startTimers();
+  window.addEventListener('resize', debounce(rerender, 350));
+}
+document.addEventListener('DOMContentLoaded', initApp);
+
+</script>
+<script>
+/* =====================================================================
+   研途408 · data.js —— 默认状态与数据迁移
+   只定义 defaultState() / migrate(s)，顶层不执行任何逻辑
+   ===================================================================== */
+
+const KNOWLEDGE_TREE = {
+  ds: [
+    { name: '绪论', children: ['数据结构基本概念', '逻辑结构与存储结构', '算法与时间空间复杂度'] },
+    { name: '线性表', children: ['顺序表', '单链表', '双链表与循环链表', '顺序表与链表对比'] },
+    { name: '栈队列和数组', children: ['栈的应用', '循环队列与共享栈', '队列的应用', '特殊矩阵压缩存储', '数组地址计算'] },
+    { name: '串', children: ['朴素模式匹配', 'KMP算法', 'next数组求解'] },
+    { name: '树与二叉树', children: ['二叉树定义性质与存储', '二叉树遍历与线索二叉树', '树与森林的转换', '哈夫曼树与并查集', '二叉排序树与平衡二叉树', 'B树与B+树'] },
+    { name: '图', children: ['图的存储邻接矩阵与邻接表', '图的遍历DFS与BFS', '最小生成树Prim与Kruskal', '最短路径Dijkstra与Floyd', '拓扑排序与关键路径'] },
+    { name: '查找', children: ['顺序折半分块查找', 'B树B+树操作', '散列表冲突处理与查找效率'] },
+    { name: '排序', children: ['插入排序直接与希尔', '交换排序冒泡与快排', '选择排序简单选择与堆排', '归并排序', '基数排序', '排序算法比较与外部排序'] }
+  ],
+  comp: [
+    { name: '计算机系统概述', children: ['计算机发展层次与性能指标', '系统层次结构', '冯诺依曼结构'] },
+    { name: '数据的表示和运算', children: ['数制与编码', '定点数表示与运算', '浮点数表示与运算IEEE754', '算术逻辑单元ALU'] },
+    { name: '存储系统', children: ['主存RAM与ROM及CPU连接', '高速缓冲存储器Cache', '虚拟存储器', '外部存储器'] },
+    { name: '指令系统', children: ['指令格式与寻址方式', 'CISC与RISC'] },
+    { name: '中央处理器', children: ['CPU功能与基本结构', '指令执行过程与数据通路', '控制器硬布线与微程序', '指令流水线', '中断与异常处理'] },
+    { name: '总线', children: ['总线概述与性能指标', '总线仲裁与操作', '总线标准'] },
+    { name: '输入输出系统', children: ['IO接口与编址方式', '程序查询与中断方式', 'DMA方式'] }
+  ],
+  os: [
+    { name: '操作系统概述', children: ['概念特征与功能', '发展与分类', '运行机制与中断异常', '系统调用与体系结构'] },
+    { name: '进程与线程', children: ['进程概念状态与转换', '进程控制与通信', '线程概念与多线程模型', '处理机调度算法与评价', '同步与互斥信号量管程', '死锁预防避免检测解除'] },
+    { name: '内存管理', children: ['连续分配与回收', '基本分页分段段页式', '虚拟内存与请求分页', '页面置换算法与抖动'] },
+    { name: '文件管理', children: ['文件逻辑结构与目录', '文件物理结构与索引节点', '文件存储空间管理', '磁盘调度算法'] },
+    { name: '输入输出管理', children: ['IO管理概述与层次', 'IO核心子系统', '设备分配与缓冲区', 'SPOOLing技术'] }
+  ],
+  net: [
+    { name: '计算机网络体系结构', children: ['概念组成与功能', '分类与性能指标', '分层结构协议接口服务', 'OSI与TCPIP模型'] },
+    { name: '物理层', children: ['通信基础概念与指标', '编码与调制', '传输介质', '物理层设备'] },
+    { name: '数据链路层', children: ['功能组帧与差错检测', '流量控制与可靠传输滑动窗口', '介质访问控制', '局域网以太网VLAN', '广域网与链路层设备'] },
+    { name: '网络层', children: ['IPv4分组格式与IP地址', '子网划分与CIDR', 'ARP ICMP DHCP', '路由协议RIP OSPF BGP', 'IP多播NAT与IPv6', '路由器组成与功能'] },
+    { name: '传输层', children: ['UDP', 'TCP报文段与连接管理', 'TCP可靠传输滑动窗口', 'TCP拥塞控制'] },
+    { name: '应用层', children: ['客户服务器与P2P', 'DNS', 'FTP', '电子邮件SMTP POP3 IMAP', 'WWW与HTTP'] }
+  ]
+};
+
+function buildKnowledge() {
+  const out = {};
+  ['ds', 'comp', 'os', 'net'].forEach(k => {
+    out[k] = (KNOWLEDGE_TREE[k] || []).map(ch => ({
+      name: ch.name,
+      children: (ch.children || []).map(c => ({ name: c, status: '未学' }))
+    }));
+  });
+  return out;
+}
+
+function defaultState() {
+  const td = today();
+  const mk = monthKey(td);
+  const wk = isoWeek(td);
+  const qs = [
+    // ---- 数据结构 q01-q08 ----
+    { id: 'q01', subject: 'ds', q: '含 n 个结点的二叉树中，空指针域的个数为（ ）', options: ['n-1', 'n', 'n+1', '2n'], answer: 'C', explain: 'n 个结点共 2n 个指针域，其中 n-1 个非空（除根外每个结点恰被一个指针指向），空指针数 = 2n-(n-1) = n+1。' },
+    { id: 'q02', subject: 'ds', q: '循环队列用数组 data[0..m-1] 存储，队头下标 front，元素个数用 size 记录，则队满的判断条件是（ ）', options: ['front == (rear+1)%m', 'size == m', 'front == rear', 'rear == m-1'], answer: 'B', explain: '用 size 记录元素个数时，size == m 即队满；选项 A 是牺牲一个存储单元时的判满条件，C 是判空条件。' },
+    { id: 'q03', subject: 'ds', q: '入栈序列为 1、2、3、4，则不可能得到的出栈序列是（ ）', options: ['1、2、3、4', '4、3、2、1', '3、1、4、2', '2、1、4、3'], answer: 'C', explain: '若 3 先出栈，说明 1、2 仍在栈中且 2 在 1 之上，下一个出栈的只能是 2，故 3、1、4、2 不可能；其余序列均可通过合法的进栈出栈操作得到。' },
+    { id: 'q04', subject: 'ds', q: 'KMP 算法求 next 数组的时间复杂度为（ ）', options: ['O(m)', 'O(mn)', 'O(n)', 'O(log m)'], answer: 'A', explain: '模式串长度为 m，求 next 数组只需对模式串做一趟扫描，时间复杂度 O(m)；KMP 匹配阶段复杂度为 O(n+m)。' },
+    { id: 'q05', subject: 'ds', q: '有 n 个叶结点的哈夫曼树的总结点数为（ ）', options: ['2n', '2n-1', '2n+1', 'n-1'], answer: 'B', explain: '哈夫曼树中没有度为 1 的结点，设总结点 N = n + n2，且 n2 = n-1，故 N = 2n-1。' },
+    { id: 'q06', subject: 'ds', q: '对一个有向图进行拓扑排序，若拓扑序列不能包含全部顶点，则说明该图（ ）', options: ['是强连通图', '存在环', '是完全图', '是无向图'], answer: 'B', explain: '拓扑排序每步删除一个入度为 0 的顶点，若中途不存在入度为 0 的顶点，说明剩余顶点构成环；故不能输出全部顶点等价于图中有环。' },
+    { id: 'q07', subject: 'ds', q: '对含有 n 个有序元素的表进行折半查找，在查找成功时与给定值比较的关键字个数至多为（ ）', options: ['n/2', '⌊log₂n⌋+1', 'n', '⌈log₂n⌉-1'], answer: 'B', explain: '折半查找成功时最多比较 ⌊log2 n⌋+1 次，即判定树的高度。' },
+    { id: 'q08', subject: 'ds', q: '快速排序算法的空间复杂度在最坏情况下为（ ）', options: ['O(1)', 'O(log n)', 'O(n)', 'O(n log n)'], answer: 'C', explain: '快排的空间开销是递归栈，最坏情况（每次划分极不平衡，如已有序）递归深度为 O(n)；平均情况为 O(log n)。' },
+    // ---- 组成原理 q09-q16 ----
+    { id: 'q09', subject: 'comp', q: '用 8 位补码表示带符号整数，可表示的范围是（ ）', options: ['-127 ~ +127', '-128 ~ +127', '-128 ~ +128', '-255 ~ +255'], answer: 'B', explain: '8 位补码共 256 个编码，规定 10000000 表示 -128，故范围为 -128 ~ +127。' },
+    { id: 'q10', subject: 'comp', q: '在直接映射方式下，主存地址通常划分为（ ）三段', options: ['标记 + 组号 + 块内地址', '标记 + 块内地址', '标记 + 行号 + 组号 + 块内地址', '段号 + 页号 + 块内地址'], answer: 'A', explain: '直接映射将 Cache 分成若干行，主存地址划分为 标记（Tag）+ 行号（Cache 行号）+ 块内地址 三段，行号即对应"组号"的位置；C 是组相联的划分。' },
+    { id: 'q11', subject: 'comp', q: '下列不属于冯·诺依曼计算机基本特点的是（ ）', options: ['指令和数据以同等地位存于存储器', '指令按地址访问并顺序执行', '运算器为中心，输入输出设备与存储器间的数据传送都经过运算器', '采用堆积式的并行流水结构'], answer: 'D', explain: '冯·诺依曼机的特点是存储程序、指令和数据同存于存储器、顺序执行、以运算器为中心；并行流水结构是后来体系结构的发展，不属于其基本特点。' },
+    { id: 'q12', subject: 'comp', q: '对浮点数进行规格化的主要目的是（ ）', options: ['提高表示精度，使表示形式唯一', '扩大数的表示范围', '防止溢出', '便于机器码的转换'], answer: 'A', explain: '规格化使尾数最高有效位为有效数字，保证表示精度最高且表示形式唯一；表示范围由阶码位数决定。' },
+    { id: 'q13', subject: 'comp', q: '与微程序控制器相比，硬布线控制器的特点是（ ）', options: ['指令执行速度慢，便于修改扩展', '指令执行速度快，但设计复杂、修改困难', '结构规整，可扩展性强', '便于实现复杂指令'], answer: 'B', explain: '硬布线用组合逻辑电路直接产生控制信号，速度快，但指令一经定型难以修改扩展；微程序控制器反之。' },
+    { id: 'q14', subject: 'comp', q: '下列不属于中断隐指令功能的是（ ）', options: ['保存程序断点', '关中断', '引出中断服务程序的入口地址', '保存通用寄存器内容'], answer: 'D', explain: '中断隐指令由硬件在中断周期自动完成：关中断、保存断点、引出服务程序入口地址；通用寄存器内容须由中断服务程序（软件）保存。' },
+    { id: 'q15', subject: 'comp', q: 'DMA 方式传送数据期间，数据的传送过程（ ）', options: ['完全由 CPU 执行程序控制', '完全由硬件控制，不需 CPU 干预', '由中断服务程序控制', '每传送一个字都要 CPU 响应一次中断'], answer: 'B', explain: 'DMA 传送由 DMA 控制器（硬件）全权控制主存与外设之间的数据传送，仅在传送前初始化和传送结束后才需要 CPU 参与。' },
+    { id: 'q16', subject: 'comp', q: '下列不属于 RISC 机器特点的是（ ）', options: ['指令条数少、指令长度固定', '只有 Load/Store 指令访存', '多数指令在一个机器周期内完成', '采用微程序控制实现'], answer: 'D', explain: 'RISC 因指令简单规整，主要采用组合逻辑（硬布线）控制；微程序控制是 CISC 的典型实现方式。' },
+    // ---- 操作系统 q17-q24 ----
+    { id: 'q17', subject: 'os', q: '进程从运行态转入就绪态的原因是（ ）', options: ['等待某事件发生', '时间片用完', '所等事件已发生', '进程完成'], answer: 'B', explain: '时间片用完被剥夺 CPU，运行态→就绪态；等待事件→阻塞态；事件发生→就绪态；完成→终止态。' },
+    { id: 'q18', subject: 'os', q: 'P、V 操作中，P 操作执行后若信号量值小于 0，则该进程（ ）', options: ['继续执行', '被置为阻塞态并插入等待队列', '被终止', '转入就绪队列末尾'], answer: 'B', explain: 'P 操作将信号量减 1，若结果小于 0 说明无可用资源，进程自我阻塞进入该信号量的等待队列。' },
+    { id: 'q19', subject: 'os', q: '下列不属于死锁四个必要条件的是（ ）', options: ['互斥', '占有并等待', '可剥夺', '循环等待'], answer: 'C', explain: '死锁的四个必要条件是互斥、占有并等待（请求和保持）、不可剥夺、循环等待；"可剥夺"恰是其反面。' },
+    { id: 'q20', subject: 'os', q: '银行家算法属于（ ）', options: ['死锁预防', '死锁避免', '死锁检测', '死锁解除'], answer: 'B', explain: '银行家算法在资源分配前计算系统的安全状态，仅当分配后系统仍安全才分配，属于死锁避免策略；死锁预防则通过破坏必要条件实现。' },
+    { id: 'q21', subject: 'os', q: '页面访问序列为 1、2、3、1、4，分配 3 个物理块，采用 LRU 置换算法，缺页次数为（ ）', options: ['3', '4', '5', '2'], answer: 'B', explain: '依次装入 1、2、3（3 次缺页）；访问 1 命中；访问 4 时最久未使用的是 2，淘汰 2（第 4 次缺页），共 4 次。' },
+    { id: 'q22', subject: 'os', q: '下列页面置换算法中，可能出现 Belady 异常（分配的物理块增加而缺页次数反而增多）的是（ ）', options: ['LRU', 'FIFO', '最佳置换 OPT', '时钟算法 CLOCK'], answer: 'B', explain: 'FIFO 算法可能出现 Belady 异常；LRU 和 OPT 属于栈式算法，物理块增加时缺页次数不会增加。' },
+    { id: 'q23', subject: 'os', q: '分页存储管理与分段存储管理的主要区别之一是（ ）', options: ['分页对用户透明，分段按用户程序逻辑单位划分', '分段对用户透明，分页由程序员决定', '分页会产生外部碎片，分段只有内部碎片', '两者都会产生外部碎片'], answer: 'A', explain: '分页是系统行为，页是固定大小的物理单位，对用户透明；分段按程序的逻辑单位划分、大小不固定、用户可见。分页有内部碎片、无外部碎片，反之分段有外部碎片。' },
+    { id: 'q24', subject: 'os', q: 'SPOOLing 技术的主要作用是（ ）', options: ['提高内存利用率', '将独占设备改造为共享设备', '加快磁盘调度', '实现进程同步'], answer: 'B', explain: 'SPOOLing 利用磁盘上的输入/输出井模拟脱机输入输出，把独占设备（如打印机）改造成可供多个进程共享的逻辑设备。' },
+    // ---- 计算机网络 q25-q32 ----
+    { id: 'q25', subject: 'net', q: 'OSI 参考模型共分为（ ）层', options: ['4', '5', '6', '7'], answer: 'D', explain: 'OSI 参考模型共 7 层：物理层、数据链路层、网络层、传输层、会话层、表示层、应用层。' },
+    { id: 'q26', subject: 'net', q: '子网掩码为 255.255.255.192 的子网中，可用的主机地址数最多为（ ）', options: ['64', '62', '32', '126'], answer: 'B', explain: '掩码 255.255.255.192 即 /26，主机位 6 位，共 2^6-2 = 62 个可用主机地址（去掉网络地址和广播地址）。' },
+    { id: 'q27', subject: 'net', q: 'TCP 建立连接需要三次握手，第三次握手报文的标志位是（ ）', options: ['SYN=1', 'ACK=1', 'SYN=1, ACK=1', 'FIN=1'], answer: 'B', explain: '第一次握手 SYN=1；第二次 SYN=1、ACK=1；第三次只置 ACK=1（可携带数据），连接进入 ESTABLISHED 状态。' },
+    { id: 'q28', subject: 'net', q: '与 TCP 相比，UDP 的特点是（ ）', options: ['面向连接、可靠传输', '无连接、尽最大努力交付、开销小时延低', '提供流量控制和拥塞控制', '只能传送文本数据'], answer: 'B', explain: 'UDP 无连接、不保证可靠交付、无拥塞与流量控制，首部仅 8 字节，开销小、时延低，支持一对多通信。' },
+    { id: 'q29', subject: 'net', q: 'ARP 协议的作用是（ ）', options: ['由 IP 地址查找对应的 MAC 地址', '由 MAC 地址查找 IP 地址', '把域名解析为 IP 地址', '动态分配 IP 地址'], answer: 'A', explain: 'ARP（地址解析协议）通过 ARP 请求/应答，将同一局域网内已知 IP 地址解析为对应的 MAC 地址；域名解析是 DNS，动态分配 IP 是 DHCP。' },
+    { id: 'q30', subject: 'net', q: '工作在不同层次的联网设备中，路由器工作在（ ）', options: ['物理层', '数据链路层', '网络层', '传输层'], answer: 'C', explain: '集线器工作在物理层，交换机（网桥）工作在数据链路层，路由器工作在网络层，依据 IP 地址进行分组转发。' },
+    { id: 'q31', subject: 'net', q: 'HTTP 协议在传输层使用的协议是（ ）', options: ['UDP', 'TCP', 'IP', 'ICMP'], answer: 'B', explain: 'HTTP 是基于 TCP 的应用层协议（默认 80 端口），依靠 TCP 提供的可靠字节流传输网页内容。' },
+    { id: 'q32', subject: 'net', q: 'SMTP 协议默认使用的端口号是（ ）', options: ['25', '80', '110', '53'], answer: 'A', explain: 'SMTP 默认使用 TCP 25 端口发送邮件；110 是 POP3，53 是 DNS，80 是 HTTP。' }
+  ];
+  return {
+    version: 1,
+    theme: 'dark',
+    examDate: '2028-12-18T08:30',
+    startDate: td,
+    _ui: {},
+    keyNodes: [
+      { id: 'kn1', name: '预报名', date: '2028-09-24', note: '预计9月24-27日，以研招网公告为准' },
+      { id: 'kn2', name: '正式报名', date: '2028-10-08', note: '预计10月8日-25日，逾期不补' },
+      { id: 'kn3', name: '网上确认', date: '2028-11-01', note: '以各报考点公告为准，留意材料截止' },
+      { id: 'kn4', name: '打印准考证', date: '2028-12-08', note: '考前约10天开放下载' },
+      { id: 'kn5', name: '初试', date: '2028-12-18', note: '初步日期，Day1 政治+英语，Day2 数学+408' },
+      { id: 'kn6', name: '成绩公布', date: '2029-02-20', note: '预计2月下旬，各省不同' },
+      { id: 'kn7', name: '国家线', date: '2029-03-15', note: '预计3月中旬公布' },
+      { id: 'kn8', name: '复试调剂', date: '2029-03-25', note: '3月底-4月，关注院校通知' }
+    ],
+    stages: [
+      { id: 'st1', name: '基础阶段', start: '2026-09-05', end: '2027-08-31', goal: '长线稳扎稳打：408四科教材/基础课过一遍并配套基础习题；数学教材+基础习题多轮；英语大纲单词滚动多轮+长难句；政治暂缓。' },
+      { id: 'st2', name: '强化阶段', start: '2027-09-01', end: '2028-06-30', goal: '408强化课+王道习题重点二刷；数学强化讲义+题库刷题；英语真题精读一刷（留最近3年）；政治精讲课+1000题启动。' },
+      { id: 'st3', name: '冲刺阶段', start: '2028-07-01', end: '2028-11-30', goal: '408/数学历年真题全真限时一刷+错题二刷；政治背诵手册+肖八；英语真题二刷+作文模板成文。' },
+      { id: 'st4', name: '模拟阶段', start: '2028-12-01', end: '2028-12-17', goal: '全真模拟卷限时训练（408/数学/肖四/英语）；回归错题与背诵清单，调整生物钟至考试节奏。' }
+    ],
+    months: (function () {
+      const o = {};
+      o[mk] = { items: [
+        { id: uid(), subject: 'math', text: '数学：高数教材（上）前三章过完+基础习题', done: false },
+        { id: uid(), subject: 'ds', text: '408数据结构：绪论、线性表、栈队列 基础完成', done: false },
+        { id: uid(), subject: 'comp', text: '408组成原理：系统概述、数据表示 基础完成', done: false },
+        { id: uid(), subject: 'eng', text: '英语：核心词汇 List 1-15 + 每日长难句1句', done: false },
+        { id: uid(), subject: 'all', text: '每周日晚完成周复盘，错题不过夜', done: false }
+      ] };
+      return o;
+    })(),
+    weeks: (function () {
+      const o = {};
+      o[wk] = { items: [
+        { id: uid(), subject: 'ds', text: '数据结构：顺序表+链表 章节选择题30道', done: false },
+        { id: uid(), subject: 'math', text: '数学：函数极限与连续 基础习题20道', done: false },
+        { id: uid(), subject: 'eng', text: '英语：核心词 List 1-3 + 长难句5句', done: false },
+        { id: uid(), subject: 'all', text: '周日 21:30 前完成本周复盘', done: false }
+      ] };
+      return o;
+    })(),
+    tasks: [],
+    milestones: [
+      { id: 'ms1', name: '数据结构一轮完成', done: false },
+      { id: 'ms2', name: '组成原理一轮完成', done: false },
+      { id: 'ms3', name: '操作系统一轮完成', done: false },
+      { id: 'ms4', name: '计算机网络一轮完成', done: false },
+      { id: 'ms5', name: '数学基础阶段完成', done: false },
+      { id: 'ms6', name: '英语大纲词汇一轮', done: false },
+      { id: 'ms7', name: '408强化完成+王道题二刷', done: false },
+      { id: 'ms8', name: '数学强化完成', done: false },
+      { id: 'ms9', name: '政治一轮（精讲+1000题）', done: false },
+      { id: 'ms10', name: '408历年真题一刷', done: false },
+      { id: 'ms11', name: '全科真题二刷+错题清零', done: false },
+      { id: 'ms12', name: '模拟卷≥10套+考前梳理', done: false }
+    ],
+    realExam: [],
+    algo: [],
+    pitfalls: [],
+    mathErrors: [],
+    memItems: [],
+    dailyQLog: [],
+    mocks: [],
+    resources: [],
+    reviews: [],
+    moods: [],
+    progressManual: { math: 0, eng: 0, pol: 0 },
+    dailyQBank: qs,
+    pomo: { focusMin: 45, breakMin: 10, autoNext: false, lastSub: 'ds', log: {} },
+    schedule: [
+      { id: 'sc1', start: '06:30', end: '07:00', label: '起床洗漱', remind: true },
+      { id: 'sc2', start: '07:00', end: '07:30', label: '早餐+英语单词', remind: false },
+      { id: 'sc3', start: '07:30', end: '11:30', label: '上午主战场：数学', remind: true },
+      { id: 'sc4', start: '11:30', end: '13:00', label: '午餐+午休', remind: false },
+      { id: 'sc5', start: '13:00', end: '13:30', label: '英语真题精读1篇', remind: false },
+      { id: 'sc6', start: '13:30', end: '17:30', label: '下午主战场：408', remind: true },
+      { id: 'sc7', start: '17:30', end: '19:00', label: '晚餐+散步运动', remind: false },
+      { id: 'sc8', start: '19:00', end: '21:30', label: '晚间：错题整理+专项刷题', remind: true },
+      { id: 'sc9', start: '21:30', end: '22:00', label: '当日复盘+明日计划', remind: false },
+      { id: 'sc10', start: '22:00', end: '23:00', label: '自由时间·23:00前睡觉', remind: false }
+    ],
+    school: { name: '', major: '计算机科学与技术', province: '', ratio: '', enroll: '', books: '', retest: '', note: '', lines: [] },
+    reminders: { eyeOn: true, eyeMin: 45 },
+    knowledge: buildKnowledge()
+  };
+}
+
+function migrate(s) {
+  const d = defaultState();
+  for (const k in d) if (s[k] === undefined) s[k] = d[k];
+  // 关键集合字段：类型不对一律归零，防止坏导入导致全站崩溃
+  ['tasks', 'milestones', 'realExam', 'algo', 'pitfalls', 'mathErrors', 'memItems',
+   'dailyQBank', 'dailyQLog', 'mocks', 'resources', 'reviews', 'moods', 'keyNodes', 'stages', 'schedule'
+  ].forEach(k => { if (!Array.isArray(s[k])) s[k] = []; });
+  // months/weeks：每项必须为 {items:[...]}
+  ['months', 'weeks'].forEach(k => {
+    if (!s[k] || typeof s[k] !== 'object' || Array.isArray(s[k])) s[k] = {};
+    Object.keys(s[k]).forEach(key => {
+      const v = s[k][key];
+      if (!v || typeof v !== 'object' || Array.isArray(v)) s[k][key] = { items: [] };
+      else if (!Array.isArray(v.items)) v.items = [];
+    });
+  });
+  if (!s.knowledge || typeof s.knowledge !== 'object') s.knowledge = {};
+  ['ds', 'comp', 'os', 'net'].forEach(k => {
+    if (!Array.isArray(s.knowledge[k])) { s.knowledge[k] = d.knowledge[k]; return; }
+    s.knowledge[k] = s.knowledge[k]
+      .filter(ch => ch && typeof ch === 'object')
+      .map(ch => ({
+        name: String(ch.name || '未命名'),
+        children: (Array.isArray(ch.children) ? ch.children : [])
+          .filter(n => n && typeof n === 'object')
+          .map(n => ({
+            name: String(n.name || ''),
+            status: ['未学', '学习中', '已掌握', '薄弱'].indexOf(n.status) >= 0 ? n.status : '未学'
+          }))
+      }));
+  });
+  if (!s.pomo || typeof s.pomo !== 'object') s.pomo = d.pomo;
+  if (!s.pomo.log || typeof s.pomo.log !== 'object' || Array.isArray(s.pomo.log)) s.pomo.log = {};
+  Object.keys(s.pomo.log).forEach(k => { if (!Array.isArray(s.pomo.log[k])) s.pomo.log[k] = []; });
+  if (!s._ui || typeof s._ui !== 'object' || Array.isArray(s._ui)) s._ui = {};
+  if (!s.reminders || typeof s.reminders !== 'object') s.reminders = { eyeOn: true, eyeMin: 45 };
+  s.reminders.eyeOn = !!s.reminders.eyeOn;
+  const em = Math.round(num(s.reminders.eyeMin, 45));
+  s.reminders.eyeMin = clamp(em || 45, 5, 180);
+  if (!s.progressManual || typeof s.progressManual !== 'object') s.progressManual = { math: 0, eng: 0, pol: 0 };
+  ['math', 'eng', 'pol'].forEach(k => { s.progressManual[k] = clamp(num(s.progressManual[k], 0), 0, 100); });
+  if (!s.school || typeof s.school !== 'object') s.school = d.school;
+  if (!Array.isArray(s.school.lines)) s.school.lines = [];
+  if (typeof s.examDate !== 'string' || isNaN(new Date(s.examDate).getTime())) s.examDate = d.examDate;
+  if (typeof s.startDate !== 'string' || isNaN(parseDate(s.startDate).getTime())) s.startDate = d.startDate;
+}
+
+</script>
+<script>
+/* =====================================================================
+   研途408 · pages_a.js —— 共享计算函数 + 总览仪表盘 + 目标规划
+   ===================================================================== */
+
+/* ================= 共享计算函数（唯一定义处，其他 part 只许调用） ================= */
+function tasksOn(dateStr) { return S.tasks.filter(t => t.date === dateStr); }
+function weekTasks(dateStr) {
+  const days = weekDates(dateStr), out = [];
+  days.forEach(d => S.tasks.forEach(t => { if (t.date === d) out.push(t); }));
+  return out;
+}
+function monthTasks(mk) { return S.tasks.filter(t => monthKey(t.date) === mk); }
+function rateOf(list) {
+  if (!list || !list.length) return 0;
+  return Math.round(list.filter(t => t.done).length / list.length * 100);
+}
+function weekRate(dateStr) { return rateOf(weekTasks(dateStr)); }
+function monthRate(dateStr) { return rateOf(monthTasks(monthKey(dateStr))); }
+function focusSum(fromDateStr, toDateStr, subKey) {
+  let sum = 0;
+  Object.keys(S.pomo.log || {}).forEach(d => {
+    if (d >= fromDateStr && d <= toDateStr) {
+      (S.pomo.log[d] || []).forEach(x => { if (!subKey || x.sub === subKey) sum += x.min; });
+    }
+  });
+  return sum;
+}
+function subjectProgress(k) {
+  if (SUBJ408.indexOf(k) >= 0) {
+    const W = { '已掌握': 1, '学习中': 0.4, '薄弱': 0.25, '未学': 0 };
+    const chs = (S.knowledge && S.knowledge[k]) || [];
+    if (!chs.length) return 0;
+    let sum = 0;
+    chs.forEach(c => {
+      const kids = c.children || [];
+      if (kids.length) {
+        sum += kids.reduce((s, x) => s + (W[x.status] || 0), 0) / kids.length * 100;
+      } else {
+        sum += (W[c.status] || 0) * 100;
+      }
+    });
+    return clamp(Math.round(sum / chs.length), 0, 100);
+  }
+  return clamp(Math.round(num((S.progressManual || {})[k])), 0, 100);
+}
+function overallProgress() {
+  let sum = 0;
+  SUBJ_ORDER.forEach(k => { sum += subjectProgress(k); });
+  return Math.round(sum / SUBJ_ORDER.length);
+}
+function stageOfDate(dateStr) {
+  return (S.stages || []).find(st => dateStr >= st.start && dateStr <= st.end) || null;
+}
+function dueMemItems() {
+  const out = [];
+  (S.memItems || []).forEach(it => {
+    (it.reviews || []).forEach((r, i) => {
+      if (!r.done && r.date <= today()) out.push({ it: it, r: r, i: i });
+    });
+  });
+  out.sort((a, b) => a.r.date < b.r.date ? -1 : 1);
+  return out;
+}
+function todayQuestion() {
+  const bank = S.dailyQBank || [];
+  if (!bank.length) return null;
+  const idx = Math.abs(diffDays(today(), '2026-01-01')) % bank.length;
+  return bank[idx];
+}
+
+/* ================= 页面一：总览仪表盘 ================= */
+registerPage('dashboard', {
+  name: '总览仪表盘', icon: '🧭',
+  render(el) {
+    el.innerHTML = pageHead('总览仪表盘', '备考全局一屏掌握：倒计时 · 任务 · 进度 · 心态') +
+      '<div class="grid-dash">' + [
+        _dashCountdown(), _dashToday(), _dashProgress(), _dashMilestones(),
+        _dashMem(), _dashQuestion(), _dashMood(), _dashWeek()
+      ].join('') + '</div>';
+  }
+});
+
+/* ---- 卡1 倒计时 + 关键节点 ---- */
+function _dashCountdown() {
+  const c = countdownParts();
+  const big = c.neg ? '已结束' : c.d + ' 天 ' + pad2(c.h) + ':' + pad2(c.m) + ':' + pad2(c.s);
+  const rows = (S.keyNodes || []).slice().sort((a, b) => a.date < b.date ? -1 : 1).map(n => {
+    const left = diffDays(n.date, today());
+    const cls = left < 0 ? ' class="muted"' : (left <= 7 ? ' class="due"' : '');
+    return '<div class="row">' +
+      '<span class="grow">' + esc(n.name) + ' <span class="muted mono">' + esc(n.date) + '</span></span>' +
+      '<b' + cls + '>' + (left < 0 ? '已过' : '还有 ' + left + ' 天') + '</b>' +
+      '<button class="icon-btn" data-act="dash-node-edit" data-id="' + esc(n.id) + '" title="编辑">✎</button>' +
+      '<button class="icon-btn" data-act="dash-node-del" data-id="' + esc(n.id) + '" title="删除">✕</button>' +
+      '</div>';
+  }).join('');
+  return card('⏳ 倒计时 · 关键节点',
+    '<div class="big-count mono" id="dash-count">' + esc(big) + '</div>' +
+    '<div class="muted">距 <b>' + new Date(S.examDate || '2028-12-18T08:30').getFullYear() + '</b> 考研初试 <button class="btn ghost sm" data-act="dash-edit-exam">修改日期</button></div>' +
+    '<div class="sep"></div>' + (rows || empty('暂无关键节点，点右上 + 添加')) +
+    '<div style="margin-top:8px"><button class="btn ghost sm" data-act="dash-node-add">＋ 添加节点</button></div>');
+}
+
+/* ---- 卡2 今日任务 ---- */
+function _dashToday() {
+  const list = tasksOn(today());
+  const opts = SUBJ_ORDER.map(k => '<option value="' + k + '">' + esc(SUBJECTS[k].short) + '</option>').join('');
+  const rows = list.slice(0, 8).map(t =>
+    '<div class="row' + (t.done ? ' done' : '') + '">' +
+    '<input type="checkbox" data-change="dash-task-toggle" data-id="' + esc(t.id) + '"' + (t.done ? ' checked' : '') + '>' +
+    subBadge(t.subject) + '<span class="grow">' + esc(t.text) + '</span>' +
+    '<button class="icon-btn" data-act="dash-task-del" data-id="' + esc(t.id) + '" title="删除">✕</button>' +
+    '</div>').join('');
+  const more = list.length > 8 ? '<button class="btn ghost sm" data-act="dash-go-daily">查看全部（' + list.length + ' 条）</button>' : '';
+  return card('✅ 今日任务',
+    '<form data-submit="dash-quick-add" class="row">' +
+    '<input name="text" placeholder="快速添加任务…" required>' +
+    '<select name="subject">' + opts + '</select>' +
+    '<button class="btn primary sm" type="submit">添加</button></form>' +
+    '<div class="sep"></div>' + (rows || empty('今天还没有任务')) + (more || ''));
+}
+
+/* ---- 卡3 全科进度 ---- */
+function _dashProgress() {
+  const rows = SUBJ_ORDER.map(k => {
+    const p = subjectProgress(k);
+    const edit = (k === 'math' || k === 'eng' || k === 'pol')
+      ? ' <button class="icon-btn" data-act="dash-edit-prog" data-k="' + k + '" title="手动设置">✎</button>' : '';
+    return '<div class="sub-bar"><span class="sb-name">' + subBadge(k) + '</span>' +
+      '<span class="grow">' + progressBar(p, SUBJECTS[k].color) + '</span>' + edit + '</div>';
+  }).join('');
+  return card('📊 全科进度', rows +
+    '<div class="sep"></div><div class="sub-bar"><b>总进度</b><span class="grow">' +
+    progressBar(overallProgress()) + '</span></div>');
+}
+
+/* ---- 卡4 里程碑 ---- */
+function _dashMilestones() {
+  const ms = S.milestones || [];
+  const done = ms.filter(m => m.done).length;
+  const rows = ms.map(m =>
+    '<div class="row' + (m.done ? ' st-已掌握' : '') + '">' +
+    '<span class="chk' + (m.done ? ' on' : '') + '" data-act="dash-ms-toggle" data-id="' + esc(m.id) + '">' + (m.done ? '✓' : '') + '</span>' +
+    '<span class="grow"' + (m.done ? ' style="text-decoration:line-through;opacity:.75"' : '') + '>' + esc(m.name) + '</span>' +
+    '<button class="icon-btn" data-act="dash-ms-del" data-id="' + esc(m.id) + '" title="删除">✕</button>' +
+    '</div>').join('');
+  return card('🏁 里程碑（已达成 ' + done + '/' + ms.length + '）',
+    rows || empty('还没有里程碑'),
+    '', '<button class="icon-btn" data-act="dash-ms-add" title="添加">＋</button>');
+}
+
+/* ---- 卡5 艾宾浩斯到期 ---- */
+function _dashMem() {
+  const due = dueMemItems();
+  const rows = due.map((x, idx) => {
+    const left = diffDays(x.r.date, today());
+    const when = left === 0 ? '<b>今天</b>' : '<b class="due">逾期 ' + (-left) + ' 天</b>';
+    return '<div class="row">' +
+      '<span class="grow">' + esc(x.it.name) + '</span>' + subBadge(x.it.subject) +
+      '<span class="muted mono">' + when + '</span>' +
+      '<button class="btn ghost sm" data-act="dash-mem-ok" data-idx="' + idx + '">✓ 记住了</button>' +
+      '<button class="btn ghost sm" data-act="dash-mem-later" data-idx="' + idx + '">✗ 明天再背</button>' +
+      '</div>';
+  }).join('');
+  return card('🧠 艾宾浩斯到期（' + due.length + '）', rows || empty('今天没有到期的复习，真棒'));
+}
+
+/* ---- 卡6 每日一题 ---- */
+function _dashQuestion() {
+  const q = todayQuestion();
+  if (!q) return card('📝 每日一题', empty('题库为空，去工具箱添加题目吧'),
+    '', '<button class="btn ghost sm" data-act="dash-go-tools">全部题目 →</button>');
+  const log = (S.dailyQLog || []).find(l => l.date === today() && l.qid === q.id);
+  const letters = ['A', 'B', 'C', 'D'];
+  const opts = q.options.map((o, i) => {
+    const L = letters[i];
+    let cls = 'q-opt', act = ' data-act="dash-q-answer" data-k="' + L + '"';
+    if (log) {
+      act = '';
+      if (L === q.answer) cls += ' right';
+      else if (L === log.choice) cls += ' wrong';
+    }
+    return '<button class="' + cls + '"' + act + '><b>' + L + '</b> ' + esc(o) + '</button>';
+  }).join('');
+  let explain = '';
+  if (log) {
+    explain = '<div class="q-explain">答案 <b>' + esc(q.answer) + '</b> · ' + esc(q.explain || '') +
+      '<br>' + (log.correct ? '答对了，继续保持！🎉' : '答错了也没关系，吃透解析～') + '</div>';
+  }
+  return card('📝 每日一题',
+    '<div class="row">' + subBadge(q.subject) + '<span class="grow">' + esc(q.q) + '</span></div>' +
+    '<div class="q-opts">' + opts + '</div>' + explain,
+    '', '<button class="btn ghost sm" data-act="dash-go-tools">全部题目 →</button>');
+}
+
+/* ---- 卡7 心态速记 ---- */
+function _dashMood() {
+  const rec = (S.moods || []).find(m => m.date === today());
+  const faces = ['😫', '😕', '😐', '🙂', '😄'];
+  const btns = faces.map((f, i) =>
+    '<button class="mood-btn' + (rec && rec.score === i + 1 ? ' on' : '') + '" data-act="dash-mood" data-s="' + (i + 1) + '">' + f + '</button>').join('');
+  const tip = rec ? '今天的心态：<b>' + rec.score + '/5</b>' : '今天感觉如何？点一下记录';
+  return card('🌤 心态速记',
+    '<div class="mood-row">' + btns + '</div>' +
+    '<div class="muted" style="margin-top:6px">' + tip + '</div>' +
+    '<div class="muted" style="margin-top:4px"><button class="btn ghost sm" data-act="dash-go-review">去复盘中心写日记 →</button></div>');
+}
+
+/* ---- 卡8 本周概览 ---- */
+function _dashWeek() {
+  const wd = weekDates(today());
+  const wr = weekRate(today());
+  const focus = focusSum(wd[0], wd[6]);
+  const wk = (S.weeks || {})[isoWeek(today())];
+  const wi = wk ? wk.items : [];
+  const wDone = wi.filter(x => x.done).length;
+  const ts = tasksOn(today());
+  const tDone = ts.filter(t => t.done).length;
+  return card('📈 本周概览',
+    '<div class="stat-grid">' +
+    statCard('本周任务完成率', wr + '%', '', SUBJECTS.math.color) +
+    statCard('本周专注', fmtMin(focus), '', SUBJECTS.eng.color) +
+    statCard('本周计划', wDone + '/' + wi.length, '', SUBJECTS.pol.color) +
+    statCard('今日任务', tDone + '/' + ts.length, '', SUBJECTS.ds.color) +
+    '</div>' +
+    '<div style="margin-top:10px">' + progressBar(wr) + '</div>' +
+    '<div style="margin-top:10px"><button class="btn primary" data-act="dash-pomo">🍅 开始专注</button></div>');
+}
+
+/* ================= 页面二：目标规划 ================= */
+registerPage('goals', {
+  name: '目标规划', icon: '🎯',
+  render(el) {
+    S._ui = S._ui || {};
+    if (!S._ui.goalMonth) S._ui.goalMonth = monthKey(today());
+    if (!S._ui.goalWeek) S._ui.goalWeek = isoWeek(today());
+    el.innerHTML = pageHead('目标规划', '阶段 → 月 → 周 → 日，四级联动层层拆解') +
+      '<div class="grid-dash">' + [
+        _goalsStages(), _goalsMonth(), _goalsWeek(),
+        card('🔗 联动说明', '<p class="muted">任务打勾 → 周完成率 → 月完成率 → 阶段进度，全部自动同步，无需手动更新。</p>')
+      ].join('') + '</div>';
+  }
+});
+
+/* ---- 卡1 阶段总览 ---- */
+function _stageRate(st) {
+  const list = [];
+  let mk = monthKey(st.start);
+  const endMk = monthKey(st.end);
+  while (mk <= endMk) {
+    const m = (S.months || {})[mk];
+    if (m && m.items && m.items.length) list.push(rateOf(m.items));
+    const parts = mk.split('-');
+    const d = new Date(num(parts[0]), num(parts[1]) - 1, 1);
+    d.setMonth(d.getMonth() + 1);
+    mk = d.getFullYear() + '-' + pad2(d.getMonth() + 1);
+  }
+  if (!list.length) return null;
+  return Math.round(list.reduce((a, b) => a + b, 0) / list.length);
+}
+function _goalsStages() {
+  const cur = stageOfDate(today());
+  const cards = (S.stages || []).map(st => {
+    const r = _stageRate(st);
+    const tag = cur && cur.id === st.id ? ' <span class="tag">当前</span>' : '';
+    return '<div class="card">' +
+      '<div class="card-b">' +
+      '<b>' + esc(st.name) + '</b>' + tag +
+      '<div class="muted mono">' + esc(st.start) + ' ~ ' + esc(st.end) + '</div>' +
+      '<div class="muted clamp2">' + esc(st.goal || '（未填写目标）') + '</div>' +
+      '<div style="margin:6px 0">' + (r == null ? '<span class="muted">进度 —</span>' : progressBar(r)) + '</div>' +
+      '<button class="btn ghost sm" data-act="goals-stage-edit" data-id="' + esc(st.id) + '">编辑</button>' +
+      '</div></div>';
+  }).join('');
+  return card('🗺 阶段总览', '<div class="grid-dash">' + cards + '</div>',
+    '', '<span class="muted">四级联动：阶段→月→周→日</span>');
+}
+
+/* ---- 卡2 月度计划 ---- */
+function _goalsMonth() {
+  const mk = S._ui.goalMonth;
+  const m = (S.months || {})[mk];
+  const items = m ? m.items : [];
+  const done = items.filter(x => x.done).length;
+  const parts = mk.split('-');
+  const rows = items.map(it =>
+    '<div class="row' + (it.done ? ' done' : '') + '">' +
+    '<input type="checkbox" data-change="goals-month-toggle" data-id="' + esc(it.id) + '"' + (it.done ? ' checked' : '') + '>' +
+    (it.subject === 'all' ? '<span class="badge">全科</span>' : subBadge(it.subject)) +
+    '<span class="grow">' + esc(it.text) + '</span>' +
+    '<button class="icon-btn" data-act="goals-month-edit" data-id="' + esc(it.id) + '" title="编辑">✎</button>' +
+    '<button class="icon-btn" data-act="goals-month-del" data-id="' + esc(it.id) + '" title="删除">✕</button>' +
+    '</div>').join('');
+  const prevKey = _monthShift(mk, -1);
+  const hasPrev = !!(S.months || {})[prevKey];
+  const body =
+    '<div class="row">' +
+    '<button class="btn ghost sm" data-act="goals-month-nav" data-d="-1">‹ 上一月</button>' +
+    '<b class="mono grow" style="text-align:center">' + num(parts[0]) + '年' + num(parts[1]) + '月</b>' +
+    '<button class="btn ghost sm" data-act="goals-month-nav" data-d="1">下一月 ›</button>' +
+    '</div><div class="sep"></div>' +
+    (rows || empty('本月还没有计划')) +
+    (!items.length && hasPrev
+      ? '<div style="margin-top:8px"><button class="btn ghost sm" data-act="goals-month-copy">📋 复制自上月</button></div>' : '') +
+    '<div class="sep"></div>' +
+    '<div class="row"><span>条目完成 <b class="mono">' + done + '/' + items.length + '</b></span>' +
+    '<span class="grow">本月任务完成率 ' + monthRate(mk + '-01') + '%</span></div>' +
+    '<button class="btn primary sm" data-act="goals-month-add" style="margin-top:8px">＋ 添加月计划</button>';
+  return card('🗓 月度计划', body);
+}
+function _monthShift(mk, n) {
+  const p = mk.split('-');
+  const d = new Date(num(p[0]), num(p[1]) - 1, 1);
+  d.setMonth(d.getMonth() + n);
+  return d.getFullYear() + '-' + pad2(d.getMonth() + 1);
+}
+
+/* ---- 卡3 周计划 ---- */
+function _goalsWeek() {
+  const wkKey = S._ui.goalWeek;
+  const w = (S.weeks || {})[wkKey];
+  const items = w ? w.items : [];
+  const done = items.filter(x => x.done).length;
+  const wd = weekDates(_weekKey2date(wkKey || isoWeek(today())));
+  const days = wd.map(d => {
+    const ts = tasksOn(d);
+    return '<span class="ds-day' + (d === today() ? ' on' : '') + '">' +
+      '<i>' + weekCN(d) + '</i><b class="mono">' + ts.filter(t => t.done).length + '/' + ts.length + '</b></span>';
+  }).join('');
+  const rows = items.map(it =>
+    '<div class="row' + (it.done ? ' done' : '') + '">' +
+    '<input type="checkbox" data-change="goals-week-toggle" data-id="' + esc(it.id) + '"' + (it.done ? ' checked' : '') + '>' +
+    (it.subject === 'all' ? '<span class="badge">全科</span>' : subBadge(it.subject)) +
+    '<span class="grow">' + esc(it.text) + '</span>' +
+    '<button class="icon-btn" data-act="goals-week-edit" data-id="' + esc(it.id) + '" title="编辑">✎</button>' +
+    '<button class="icon-btn" data-act="goals-week-del" data-id="' + esc(it.id) + '" title="删除">✕</button>' +
+    '</div>').join('');
+  const body =
+    '<div class="row">' +
+    '<button class="btn ghost sm" data-act="goals-week-nav" data-d="-7">‹ 上一周</button>' +
+    '<b class="mono grow" style="text-align:center">' + esc(wkKey) + '</b>' +
+    '<button class="btn ghost sm" data-act="goals-week-nav" data-d="7">下一周 ›</button>' +
+    '</div><div class="sep"></div>' +
+    (rows || empty('本周还没有计划')) +
+    '<div class="sep"></div>' +
+    '<div class="row"><span>条目完成 <b class="mono">' + done + '/' + items.length + '</b></span>' +
+    '<span class="grow">本周任务完成率 ' + weekRate(wd[0]) + '%</span></div>' +
+    '<div class="date-strip">' + days + '</div>' +
+    '<div class="row" style="margin-top:8px">' +
+    '<button class="btn primary sm" data-act="goals-week-add">＋ 添加周计划</button>' +
+    '<button class="btn sm" data-act="goals-week-assign">📥 分配到每日</button></div>';
+  return card('📅 周计划', body);
+}
+
+/* ================= Actions：仪表盘 ================= */
+Actions['dash-edit-exam'] = () => {
+  const ed = S.examDate || '2028-12-18T08:30';
+  const dPart = ed.slice(0, 10), tPart = ed.slice(11, 16) || '08:30';
+  Modal.form({
+    title: '修改初试时间',
+    fields: [
+      { key: 'date', label: '日期', type: 'date', value: dPart, required: true },
+      { key: 'time', label: '时间', type: 'time', value: tPart, required: true }
+    ],
+    onSubmit(v) {
+      if (!v.date || !v.time) { toast('日期和时间都要填哦', 'err'); return false; }
+      S.examDate = v.date + 'T' + v.time;
+      save(); rerender(); updateCountdown();
+      toast('初试时间已更新');
+    }
+  });
+};
+Actions['dash-node-add'] = () => {
+  Modal.form({
+    title: '添加关键节点',
+    fields: [
+      { key: 'name', label: '节点名称', type: 'text', required: true, placeholder: '如：网上确认' },
+      { key: 'date', label: '日期', type: 'date', required: true },
+      { key: 'note', label: '备注', type: 'text' }
+    ],
+    onSubmit(v) {
+      if (!v.name || !v.date) { toast('名称和日期必填', 'err'); return false; }
+      S.keyNodes.push({ id: uid(), name: v.name, date: v.date, note: v.note || '' });
+      save(); rerender(); toast('节点已添加');
+    }
+  });
+};
+Actions['dash-node-edit'] = d => {
+  const n = (S.keyNodes || []).find(x => x.id === d.id);
+  if (!n) return;
+  Modal.form({
+    title: '编辑节点',
+    fields: [
+      { key: 'name', label: '节点名称', type: 'text', value: n.name, required: true },
+      { key: 'date', label: '日期', type: 'date', value: n.date, required: true },
+      { key: 'note', label: '备注', type: 'text', value: n.note }
+    ],
+    onSubmit(v) {
+      if (!v.name || !v.date) { toast('名称和日期必填', 'err'); return false; }
+      n.name = v.name; n.date = v.date; n.note = v.note || '';
+      save(); rerender();
+    }
+  });
+};
+Actions['dash-node-del'] = d => {
+  const n = (S.keyNodes || []).find(x => x.id === d.id);
+  if (!n) return;
+  Modal.confirm({
+    title: '删除节点',
+    message: '确定删除节点 <b>' + esc(n.name) + '</b> 吗？',
+    onOk() { S.keyNodes = S.keyNodes.filter(x => x.id !== d.id); save(); rerender(); toast('已删除'); }
+  });
+};
+Actions['dash-quick-add'] = (d, el) => {
+  const vals = {};
+  new FormData(el).forEach((v, k) => { vals[k] = v; });
+  if (!vals.text || !vals.text.trim()) { toast('任务内容不能为空', 'err'); return; }
+  S.tasks.push({ id: uid(), date: today(), subject: vals.subject || 'ds', text: vals.text.trim(), done: false });
+  save(); rerender(); toast('已添加今日任务');
+};
+Actions['dash-task-toggle'] = d => {
+  const t = S.tasks.find(x => x.id === d.id);
+  if (!t) return;
+  t.done = !t.done;
+  if (t.done) t.doneAt = today(); else delete t.doneAt;
+  save(); rerender();
+};
+Actions['dash-task-del'] = d => {
+  Modal.confirm({
+    title: '删除任务',
+    message: '确定删除这条任务吗？',
+    onOk() { S.tasks = S.tasks.filter(x => x.id !== d.id); save(); rerender(); toast('已删除'); }
+  });
+};
+Actions['dash-go-daily'] = () => nav('daily');
+Actions['dash-edit-prog'] = d => {
+  Modal.form({
+    title: '设置「' + SUBJECTS[d.k].name + '」进度',
+    fields: [{ key: 'p', label: '进度（0-100）', type: 'number', value: S.progressManual[d.k] || 0, min: 0, max: 100 }],
+    onSubmit(v) {
+      const p = clamp(Math.round(num(v.p)), 0, 100);
+      S.progressManual[d.k] = p;
+      save(); rerender(); toast(SUBJECTS[d.k].name + '进度已更新为 ' + p + '%');
+    }
+  });
+};
+Actions['dash-ms-add'] = () => {
+  Modal.form({
+    title: '添加里程碑',
+    fields: [{ key: 'name', label: '里程碑', type: 'text', required: true, placeholder: '如：408 真题一轮完成' }],
+    onSubmit(v) {
+      if (!v.name || !v.name.trim()) { toast('内容不能为空', 'err'); return false; }
+      S.milestones.push({ id: uid(), name: v.name.trim(), done: false });
+      save(); rerender();
+    }
+  });
+};
+Actions['dash-ms-toggle'] = d => {
+  const m = S.milestones.find(x => x.id === d.id);
+  if (!m) return;
+  m.done = !m.done;
+  if (m.done) { m.doneAt = today(); toast('🎉 里程碑达成！'); }
+  else delete m.doneAt;
+  save(); rerender();
+};
+Actions['dash-ms-del'] = d => {
+  Modal.confirm({
+    title: '删除里程碑',
+    message: '确定删除这条里程碑吗？',
+    onOk() { S.milestones = S.milestones.filter(x => x.id !== d.id); save(); rerender(); toast('已删除'); }
+  });
+};
+Actions['dash-mem-ok'] = d => {
+  const x = dueMemItems()[num(d.idx, -1)];
+  if (!x) return;
+  x.r.done = true;
+  save(); rerender(); toast('✓ 已标记记住');
+};
+Actions['dash-mem-later'] = d => {
+  const x = dueMemItems()[num(d.idx, -1)];
+  if (!x) return;
+  x.r.date = addDays(x.r.date, 1);
+  save(); rerender(); toast('已推迟到明天');
+};
+Actions['dash-q-answer'] = d => {
+  const q = todayQuestion();
+  if (!q) return;
+  if ((S.dailyQLog || []).some(l => l.date === today() && l.qid === q.id)) { rerender(); return; }
+  const correct = d.k === q.answer;
+  S.dailyQLog.push({ date: today(), qid: q.id, choice: d.k, correct: correct });
+  save(); rerender();
+  toast(correct ? '答对了，厉害！🎉' : '答错了，看看解析记住它～', correct ? 'ok' : 'err');
+};
+Actions['dash-go-tools'] = () => nav('tools');
+Actions['dash-mood'] = d => {
+  const score = clamp(num(d.s, 3), 1, 5);
+  const td = today();
+  let rec = (S.moods || []).find(m => m.date === td);
+  if (rec) {
+    rec.score = score;
+  } else {
+    S.moods.push({ date: td, score: score, tags: '', text: '' });
+  }
+  save(); rerender(); toast('已记录');
+};
+Actions['dash-go-review'] = () => nav('review');
+Actions['dash-pomo'] = () => {
+  Pomo.start(S.pomo.focusMin, 'focus', S.pomo.lastSub);
+  nav('pomo');
+};
+
+/* ================= Actions：目标规划 ================= */
+Actions['goals-stage-edit'] = d => {
+  const st = (S.stages || []).find(x => x.id === d.id);
+  if (!st) return;
+  Modal.form({
+    title: '编辑阶段：' + st.name,
+    fields: [
+      { key: 'name', label: '阶段名称', type: 'text', value: st.name, required: true },
+      { key: 'start', label: '开始日期', type: 'date', value: st.start, required: true },
+      { key: 'end', label: '结束日期', type: 'date', value: st.end, required: true },
+      { key: 'goal', label: '阶段目标', type: 'textarea', value: st.goal, rows: 3 }
+    ],
+    onSubmit(v) {
+      if (!v.name || !v.start || !v.end) { toast('名称和起止日期必填', 'err'); return false; }
+      if (v.start > v.end) { toast('开始日期不能晚于结束日期', 'err'); return false; }
+      st.name = v.name; st.start = v.start; st.end = v.end; st.goal = v.goal || '';
+      save(); rerender();
+    }
+  });
+};
+Actions['goals-month-nav'] = d => {
+  S._ui = S._ui || {};
+  S._ui.goalMonth = _monthShift(S._ui.goalMonth || monthKey(today()), num(d.d));
+  save(); rerender();
+};
+Actions['goals-month-toggle'] = d => {
+  const m = (S.months || {})[S._ui.goalMonth];
+  if (!m) return;
+  const it = m.items.find(x => x.id === d.id);
+  if (!it) return;
+  it.done = !it.done;
+  save(); rerender();
+};
+Actions['goals-month-add'] = () => {
+  const mk = S._ui.goalMonth;
+  const opts = [{ v: 'all', label: '全科' }].concat(SUBJ_ORDER.map(k => ({ v: k, label: SUBJECTS[k].name })));
+  Modal.form({
+    title: '添加月计划（' + mk + '）',
+    fields: [
+      { key: 'subject', label: '学科', type: 'select', options: opts, value: 'all' },
+      { key: 'text', label: '计划内容', type: 'text', required: true, placeholder: '如：过完高数一轮讲义' }
+    ],
+    onSubmit(v) {
+      if (!v.text || !v.text.trim()) { toast('内容不能为空', 'err'); return false; }
+      S.months[mk] = S.months[mk] || { items: [] };
+      S.months[mk].items.push({ id: uid(), subject: v.subject, text: v.text.trim(), done: false });
+      save(); rerender();
+    }
+  });
+};
+Actions['goals-month-edit'] = d => {
+  const m = (S.months || {})[S._ui.goalMonth];
+  const it = m && m.items.find(x => x.id === d.id);
+  if (!it) return;
+  const opts = [{ v: 'all', label: '全科' }].concat(SUBJ_ORDER.map(k => ({ v: k, label: SUBJECTS[k].name })));
+  Modal.form({
+    title: '编辑月计划',
+    fields: [
+      { key: 'subject', label: '学科', type: 'select', options: opts, value: it.subject },
+      { key: 'text', label: '计划内容', type: 'text', value: it.text, required: true }
+    ],
+    onSubmit(v) {
+      if (!v.text || !v.text.trim()) { toast('内容不能为空', 'err'); return false; }
+      it.subject = v.subject; it.text = v.text.trim();
+      save(); rerender();
+    }
+  });
+};
+Actions['goals-month-del'] = d => {
+  Modal.confirm({
+    title: '删除月计划',
+    message: '确定删除这条月计划吗？',
+    onOk() {
+      const m = (S.months || {})[S._ui.goalMonth];
+      if (m) m.items = m.items.filter(x => x.id !== d.id);
+      save(); rerender(); toast('已删除');
+    }
+  });
+};
+Actions['goals-month-copy'] = () => {
+  const mk = S._ui.goalMonth;
+  const prev = (S.months || {})[_monthShift(mk, -1)];
+  if (!prev || !prev.items.length) { toast('上月没有可复制的计划', 'err'); return; }
+  S.months[mk] = S.months[mk] || { items: [] };
+  prev.items.forEach(it => {
+    S.months[mk].items.push({ id: uid(), subject: it.subject, text: it.text, done: false });
+  });
+  save(); rerender();
+  toast('已从上月复制 ' + prev.items.length + ' 条计划');
+};
+Actions['goals-week-nav'] = d => {
+  S._ui = S._ui || {};
+  const curBase = weekDates(_weekKey2date(S._ui.goalWeek || isoWeek(today())))[0];
+  S._ui.goalWeek = isoWeek(addDays(curBase, num(d.d)));
+  save(); rerender();
+};
+function _weekKey2date(key) {
+  const p = String(key).split('-W');
+  const y = num(p[0]);
+  const wk = num(p[1]);
+  const jan4 = new Date(y, 0, 4);
+  const mon = new Date(jan4);
+  mon.setDate(jan4.getDate() - ((jan4.getDay() + 6) % 7) + (wk - 1) * 7);
+  return todayStr(mon);
+}
+Actions['goals-week-toggle'] = d => {
+  const w = (S.weeks || {})[S._ui.goalWeek];
+  if (!w) return;
+  const it = w.items.find(x => x.id === d.id);
+  if (!it) return;
+  it.done = !it.done;
+  save(); rerender();
+};
+Actions['goals-week-add'] = () => {
+  const wk = S._ui.goalWeek;
+  const opts = [{ v: 'all', label: '全科' }].concat(SUBJ_ORDER.map(k => ({ v: k, label: SUBJECTS[k].name })));
+  Modal.form({
+    title: '添加周计划（' + wk + '）',
+    fields: [
+      { key: 'subject', label: '学科', type: 'select', options: opts, value: 'all' },
+      { key: 'text', label: '计划内容', type: 'text', required: true, placeholder: '如：完成 OS 第 3 章习题' }
+    ],
+    onSubmit(v) {
+      if (!v.text || !v.text.trim()) { toast('内容不能为空', 'err'); return false; }
+      S.weeks[wk] = S.weeks[wk] || { items: [] };
+      S.weeks[wk].items.push({ id: uid(), subject: v.subject, text: v.text.trim(), done: false });
+      save(); rerender();
+    }
+  });
+};
+Actions['goals-week-edit'] = d => {
+  const w = (S.weeks || {})[S._ui.goalWeek];
+  const it = w && w.items.find(x => x.id === d.id);
+  if (!it) return;
+  const opts = [{ v: 'all', label: '全科' }].concat(SUBJ_ORDER.map(k => ({ v: k, label: SUBJECTS[k].name })));
+  Modal.form({
+    title: '编辑周计划',
+    fields: [
+      { key: 'subject', label: '学科', type: 'select', options: opts, value: it.subject },
+      { key: 'text', label: '计划内容', type: 'text', value: it.text, required: true }
+    ],
+    onSubmit(v) {
+      if (!v.text || !v.text.trim()) { toast('内容不能为空', 'err'); return false; }
+      it.subject = v.subject; it.text = v.text.trim();
+      save(); rerender();
+    }
+  });
+};
+Actions['goals-week-del'] = d => {
+  Modal.confirm({
+    title: '删除周计划',
+    message: '确定删除这条周计划吗？',
+    onOk() {
+      const w = (S.weeks || {})[S._ui.goalWeek];
+      if (w) w.items = w.items.filter(x => x.id !== d.id);
+      save(); rerender(); toast('已删除');
+    }
+  });
+};
+Actions['goals-week-assign'] = () => {
+  const wkKey = S._ui.goalWeek || isoWeek(today());
+  const w = (S.weeks || {})[wkKey];
+  if (!w || !w.items.length) { toast('本周没有周计划可分配', 'err'); return; }
+  const pending = w.items.filter(x => !x.done);
+  if (!pending.length) { toast('周计划已全部完成，无需分配'); return; }
+  const wd = weekDates(_weekKey2date(wkKey)).filter(d => d >= today());
+  let note = '';
+  if (!wd.length) { wd.push(today()); note = '（所选周已结束，任务加入今天）'; }
+  let n = 0;
+  pending.forEach((it, i) => {
+    const date = wd[i % wd.length];
+    S.tasks.push({ id: uid(), date: date, subject: it.subject === 'all' ? 'ds' : it.subject,
+      text: '【周计划】' + it.text, done: false });
+    n++;
+  });
+  save(); rerender();
+  toast('已生成 ' + n + ' 条每日任务' + note);
+};
+
+</script>
+<script>
+/* =====================================================================
+   研途408 · pages_b.js —— daily / exam / algo 三页
+   ===================================================================== */
+
+/* ======================= 每日打卡 ======================= */
+registerPage('daily', {
+  name: '每日打卡',
+  icon: '✅',
+  render(el) {
+    S._ui = S._ui || {};
+    const date = S._ui.dailyDate || today();
+    const tasks = tasksOn(date);
+    const done = tasks.filter(t => t.done).length;
+
+    const head =
+      pageHead('每日打卡', '一天一小步，日拱一卒', '') +
+      '<div class="card"><div class="card-b">' +
+      '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+      '<button class="icon-btn" data-act="daily-prev">‹</button>' +
+      '<span class="mono" style="font-size:16px;">' + esc(date) + ' ' + weekCN(date) + '</span>' +
+      (date === today() ? '<span class="tag">今天</span>' : '') +
+      '<button class="icon-btn" data-act="daily-next">›</button>' +
+      '<button class="btn sm ghost" data-act="daily-today">回到今天</button>' +
+      '</div>';
+
+    // 周条
+    const wd = weekDates(date);
+    const strip =
+      card(null,
+        '<div style="display:flex;align-items:center;gap:6px;">' +
+        '<button class="icon-btn" data-act="daily-week-prev" title="上一周">‹</button>' +
+        '<div class="date-strip">' +
+        wd.map(d => {
+          const ts = tasksOn(d);
+          const dn = ts.filter(t => t.done).length;
+          return '<button class="ds-cell' + (d === date ? ' active' : '') + (d === today() ? ' is-today' : '') + '"' +
+            ' data-act="daily-jump" data-date="' + esc(d) + '">' +
+            '<span class="ds-w">' + weekCN(d) + '</span>' +
+            '<span class="ds-d mono">' + d.slice(8) + '</span>' +
+            '<span class="ds-c muted">' + dn + '/' + ts.length + '</span></button>';
+        }).join('') +
+        '</div>' +
+        '<button class="icon-btn" data-act="daily-week-next" title="下一周">›</button>' +
+        '</div>');
+
+    // 添加表单
+    const form =
+      '<form data-submit="daily-add" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">' +
+      '<input name="text" type="text" placeholder="新任务，如：过一遍红黑树" style="flex:1;min-width:180px;">' +
+      '<select name="subject">' +
+      SUBJ_ORDER.map(k => '<option value="' + k + '">' + esc(SUBJECTS[k].name) + '</option>').join('') +
+      '</select>' +
+      '<button type="submit" class="btn primary">添加</button></form>';
+
+    // 任务列表
+    let list;
+    if (!tasks.length) {
+      list = empty('今天还没有任务，添加一个开始吧');
+    } else {
+      list = '<div class="rowlist">' + tasks.map(t =>
+        '<div class="row' + (t.done ? ' done' : '') + '">' +
+        '<input type="checkbox" data-change="daily-toggle" data-id="' + esc(t.id) + '"' + (t.done ? ' checked' : '') + '>' +
+        subBadge(t.subject) +
+        '<span class="row-text' + (t.done ? ' strike' : '') + '">' + esc(t.text) + '</span>' +
+        '<button class="icon-btn" data-act="daily-edit" data-id="' + esc(t.id) + '" title="编辑">✎</button>' +
+        '<button class="icon-btn" data-act="daily-del" data-id="' + esc(t.id) + '" title="删除">🗑</button>' +
+        '</div>').join('') + '</div>';
+    }
+
+    const stats =
+      '<div class="grid3" style="margin-top:16px;">' +
+      statCard('当日完成', done + '/' + tasks.length, '', 'var(--primary)') +
+      statCard('本周完成率', weekRate(date) + '%', '', 'var(--c-ds)') +
+      statCard('本月完成率', monthRate(date) + '%', '', 'var(--c-math)') +
+      '</div>';
+
+    el.innerHTML = head + card(null, strip + form + list) + stats;
+  }
+});
+
+Actions['daily-prev'] = () => { S._ui = S._ui || {}; S._ui.dailyDate = addDays(S._ui.dailyDate || today(), -1); rerender(); };
+Actions['daily-next'] = () => { S._ui = S._ui || {}; S._ui.dailyDate = addDays(S._ui.dailyDate || today(), 1); rerender(); };
+Actions['daily-today'] = () => { S._ui = S._ui || {}; S._ui.dailyDate = today(); rerender(); };
+Actions['daily-jump'] = d => { S._ui = S._ui || {}; S._ui.dailyDate = d.date; rerender(); };
+Actions['daily-week-prev'] = () => { S._ui = S._ui || {}; S._ui.dailyDate = addDays(S._ui.dailyDate || today(), -7); rerender(); };
+Actions['daily-week-next'] = () => { S._ui = S._ui || {}; S._ui.dailyDate = addDays(S._ui.dailyDate || today(), 7); rerender(); };
+
+Actions['daily-add'] = (d, el, ev) => {
+  const vals = {};
+  new FormData(ev.target).forEach((v, k) => { vals[k] = v; });
+  if (!vals.text || !vals.text.trim()) { toast('任务内容不能为空', 'err'); return false; }
+  S._ui = S._ui || {};
+  S.tasks.push({ id: uid(), date: S._ui.dailyDate || today(), subject: vals.subject, text: vals.text.trim(), done: false });
+  save(); rerender();
+  return false; // 保持表单？不，rerender 后表单已重建
+};
+
+Actions['daily-toggle'] = d => {
+  const t = S.tasks.find(x => x.id === d.id);
+  if (!t) return;
+  t.done = !t.done;
+  if (t.done) t.doneAt = today(); else delete t.doneAt;
+  save(); rerender();
+};
+
+Actions['daily-edit'] = d => {
+  const t = S.tasks.find(x => x.id === d.id);
+  if (!t) return;
+  Modal.form({
+    title: '编辑任务',
+    fields: [
+      { key: 'text', label: '任务内容', type: 'text', value: t.text, required: true },
+      { key: 'subject', label: '学科', type: 'select', options: SUBJ_ORDER.map(k => ({ v: k, label: SUBJECTS[k].name })), value: t.subject },
+      { key: 'date', label: '日期（可跨天）', type: 'date', value: t.date }
+    ],
+    onSubmit(vals) {
+      if (!vals.text || !vals.text.trim()) { toast('任务内容不能为空', 'err'); return false; }
+      t.text = vals.text.trim();
+      t.subject = vals.subject;
+      t.date = vals.date || t.date;
+      save(); rerender();
+    }
+  });
+};
+
+Actions['daily-del'] = d => {
+  const t = S.tasks.find(x => x.id === d.id);
+  if (!t) return;
+  Modal.confirm({
+    title: '删除任务',
+    message: '确定删除任务「' + esc(t.text) + '」？',
+    onOk() { S.tasks = S.tasks.filter(x => x.id !== d.id); save(); rerender(); }
+  });
+};
+
+Actions['quick-add-task'] = () => {
+  Modal.form({
+    title: '⚡ 快速添加任务',
+    fields: [
+      { key: 'text', label: '任务内容', type: 'text', required: true },
+      { key: 'subject', label: '学科', type: 'select', options: SUBJ_ORDER.map(k => ({ v: k, label: SUBJECTS[k].name })) },
+      { key: 'date', label: '日期', type: 'date', value: today() }
+    ],
+    onSubmit(vals) {
+      if (!vals.text || !vals.text.trim()) { toast('任务内容不能为空', 'err'); return false; }
+      S.tasks.push({ id: uid(), date: vals.date || today(), subject: vals.subject, text: vals.text.trim(), done: false });
+      save();
+      if (currentPage !== 'daily') toast('已在今天创建任务');
+      rerender();
+    }
+  });
+};
+
+/* ======================= 408真题 ======================= */
+registerPage('exam', {
+  name: '408真题',
+  icon: '📘',
+  render(el) {
+    S._ui = S._ui || {};
+    const ui = S._ui;
+    ui.examFilter = ui.examFilter || { year: '', subject: '' };
+    ui.examOpen = ui.examOpen || {};
+
+    const all = S.realExam || [];
+    const years = Array.from(new Set(all.map(r => r.year))).sort((a, b) => b - a);
+    const EXAM_SUBJ = [{ v: 'ds', label: '数据结构' }, { v: 'comp', label: '组成原理' }, { v: 'os', label: '操作系统' }, { v: 'net', label: '计算机网络' }, { v: 'all', label: '综合' }];
+    const subjName = k => { const f = EXAM_SUBJ.find(x => x.v === k); return f ? f.label : k; };
+
+    const rows = all.filter(r =>
+      (!ui.examFilter.year || String(r.year) === String(ui.examFilter.year)) &&
+      (!ui.examFilter.subject || r.subject === ui.examFilter.subject)
+    );
+    const sorted = rows.slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+    // 按年份分组
+    const byYear = {};
+    sorted.forEach(r => { (byYear[r.year] = byYear[r.year] || []).push(r); });
+    const yearKeys = Object.keys(byYear).sort((a, b) => b - a);
+
+    const errCount = all.reduce((s, r) => s + (r.errors || []).length, 0);
+    const latest = all.map(r => r.date).filter(Boolean).sort().pop();
+
+    let listHtml;
+    if (!yearKeys.length) {
+      listHtml = empty((ui.examFilter.year || ui.examFilter.subject)
+        ? '当前筛选条件下没有记录，试试清空筛选'
+        : '还没有刷题记录，点右上角记录一次吧');
+    } else {
+      listHtml = yearKeys.map(y =>
+        '<div class="year-head mono">' + esc(y) + ' 年 · ' + byYear[y].length + ' 次</div>' +
+        byYear[y].map(r => {
+          const rate = r.total ? Math.round((r.correct || 0) / r.total * 100) : 0;
+          const rateCls = rate >= 70 ? 'ok' : (rate < 50 ? 'bad' : '');
+          const open = !!ui.examOpen[r.id];
+          return '<div class="exam-item">' +
+            '<div class="row" style="cursor:pointer;" data-act="exam-toggle" data-id="' + esc(r.id) + '">' +
+            subBadge(r.subject) +
+            '<span class="mono muted">' + esc(r.date || '') + '</span>' +
+            '<span class="mono ' + rateCls + '">正确 ' + (r.correct || 0) + '/' + (r.total || 0) + '</span>' +
+            (r.note ? '<span class="muted row-note">' + esc(String(r.note).slice(0, 24)) + '</span>' : '') +
+            '<span style="flex:1;"></span>' +
+            '<button class="icon-btn" data-act="exam-edit" data-id="' + esc(r.id) + '" title="编辑">✎</button>' +
+            '<button class="icon-btn" data-act="exam-del" data-id="' + esc(r.id) + '" title="删除">🗑</button>' +
+            '<span class="muted">' + (open ? '▾' : '▸') + ' 错题 (' + (r.errors || []).length + ')</span>' +
+            '</div>' +
+            (open ?
+              '<div class="err-box">' +
+              (!(r.errors || []).length ? '<div class="muted" style="padding:6px 0;">这条记录暂无错题</div>' :
+                r.errors.map((e, i) =>
+                  '<div class="row err-row">' +
+                  '<span class="row-text">' + esc(e.q) + '</span>' +
+                  '<span class="muted">错因：' + esc(e.reason || '—') + '</span>' +
+                  '<span class="tag">' + esc(e.point || '未标考点') + '</span>' +
+                  '<button class="icon-btn" data-act="exam-err-del" data-id="' + esc(r.id) + '" data-idx="' + i + '" title="删除错题">🗑</button>' +
+                  '</div>').join('')) +
+              '<button class="btn sm ghost" data-act="exam-err-add" data-id="' + esc(r.id) + '">+ 补充错题</button>' +
+              '</div>' : '') +
+            '</div>';
+        }).join('')
+      ).join('');
+    }
+
+    el.innerHTML =
+      pageHead('408真题', '真题是最好的老师，一道一道吃透',
+        '<button class="btn primary" data-act="exam-add">+ 记录一次刷题</button>' +
+        '<button class="btn ghost" data-act="exam-export">导出 txt</button>') +
+      '<div class="card"><div class="card-b">' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">' +
+      '<select data-change="exam-filter" data-k="year">' +
+      '<option value="">全部年份</option>' +
+      years.map(y => '<option value="' + esc(y) + '"' + (String(ui.examFilter.year) === String(y) ? ' selected' : '') + '>' + esc(y) + ' 年</option>').join('') +
+      '</select>' +
+      '<select data-change="exam-filter" data-k="subject">' +
+      '<option value="">全部科目</option>' +
+      EXAM_SUBJ.map(s => '<option value="' + s.v + '"' + (ui.examFilter.subject === s.v ? ' selected' : '') + '>' + esc(s.label) + '</option>').join('') +
+      '</select></div>' + listHtml + '</div></div>' +
+      '<div class="grid3" style="margin-top:16px;">' +
+      statCard('累计刷题', all.length + ' 次', '', 'var(--primary)') +
+      statCard('覆盖错题', errCount + ' 道', '', 'var(--c-ds)') +
+      statCard('最近一次', latest ? fmtDateCN(latest) : '—', latest ? esc(latest) : '', 'var(--c-math)') +
+      '</div>';
+  }
+});
+
+Actions['exam-filter'] = (d, el) => {
+  S._ui = S._ui || {};
+  S._ui.examFilter = S._ui.examFilter || {};
+  S._ui.examFilter[d.k] = el.value || '';
+  rerender();
+};
+
+Actions['exam-toggle'] = d => {
+  S._ui = S._ui || {};
+  S._ui.examOpen = S._ui.examOpen || {};
+  S._ui.examOpen[d.id] = !S._ui.examOpen[d.id];
+  rerender();
+};
+
+Actions['exam-add'] = () => {
+  Modal.form({
+    title: '记录一次刷题',
+    wide: true,
+    fields: [
+      { key: 'year', label: '年份', type: 'number', value: new Date().getFullYear(), min: 2000, max: 2100 },
+      { key: 'subject', label: '科目', type: 'select', options: [{ v: 'ds', label: '数据结构' }, { v: 'comp', label: '组成原理' }, { v: 'os', label: '操作系统' }, { v: 'net', label: '计算机网络' }, { v: 'all', label: '综合' }] },
+      { key: 'correct', label: '对题数', type: 'number', min: 0 },
+      { key: 'total', label: '总题数', type: 'number', value: 100, min: 1 },
+      { key: 'date', label: '日期', type: 'date', value: today() },
+      { key: 'note', label: '笔记', type: 'textarea', rows: 2 }
+    ],
+    onSubmit(vals) {
+      S.realExam = S.realExam || [];
+      S.realExam.push({
+        id: uid(),
+        year: Math.round(num(vals.year, new Date().getFullYear())),
+        subject: vals.subject,
+        date: vals.date || today(),
+        correct: Math.round(num(vals.correct, 0)),
+        total: Math.round(num(vals.total, 100)),
+        note: vals.note || '',
+        errors: []
+      });
+      save(); rerender();
+      toast('已记录刷题');
+    }
+  });
+};
+
+Actions['exam-edit'] = d => {
+  const r = (S.realExam || []).find(x => x.id === d.id);
+  if (!r) return;
+  Modal.form({
+    title: '编辑刷题记录',
+    wide: true,
+    fields: [
+      { key: 'year', label: '年份', type: 'number', value: r.year },
+      { key: 'subject', label: '科目', type: 'select', options: [{ v: 'ds', label: '数据结构' }, { v: 'comp', label: '组成原理' }, { v: 'os', label: '操作系统' }, { v: 'net', label: '计算机网络' }, { v: 'all', label: '综合' }], value: r.subject },
+      { key: 'correct', label: '对题数', type: 'number', value: r.correct },
+      { key: 'total', label: '总题数', type: 'number', value: r.total },
+      { key: 'date', label: '日期', type: 'date', value: r.date },
+      { key: 'note', label: '笔记', type: 'textarea', rows: 2, value: r.note }
+    ],
+    onSubmit(vals) {
+      r.year = Math.round(num(vals.year, r.year));
+      r.subject = vals.subject;
+      r.correct = Math.round(num(vals.correct, 0));
+      r.total = Math.round(num(vals.total, 100));
+      r.date = vals.date || r.date;
+      r.note = vals.note || '';
+      save(); rerender();
+    }
+  });
+};
+
+Actions['exam-del'] = d => {
+  Modal.confirm({
+    title: '删除记录',
+    message: '确定删除这条刷题记录（含其错题）？',
+    onOk() { S.realExam = (S.realExam || []).filter(x => x.id !== d.id); save(); rerender(); }
+  });
+};
+
+Actions['exam-err-add'] = d => {
+  const r = (S.realExam || []).find(x => x.id === d.id);
+  if (!r) return;
+  Modal.form({
+    title: '补充错题',
+    wide: true,
+    fields: [
+      { key: 'q', label: '题干', type: 'textarea', required: true, rows: 3 },
+      { key: 'reason', label: '错因', type: 'text' },
+      { key: 'point', label: '考点', type: 'text' }
+    ],
+    onSubmit(vals) {
+      if (!vals.q || !vals.q.trim()) { toast('题干不能为空', 'err'); return false; }
+      r.errors = r.errors || [];
+      r.errors.push({ q: vals.q.trim(), reason: vals.reason || '', point: vals.point || '' });
+      save(); rerender();
+    }
+  });
+};
+
+Actions['exam-err-del'] = d => {
+  const r = (S.realExam || []).find(x => x.id === d.id);
+  if (!r) return;
+  const i = num(d.idx, -1);
+  Modal.confirm({
+    title: '删除错题',
+    message: '确定删除这道错题？',
+    onOk() { r.errors.splice(i, 1); save(); rerender(); }
+  });
+};
+
+Actions['exam-export'] = () => {
+  const EXAM_SUBJ = { ds: '数据结构', comp: '组成原理', os: '操作系统', net: '计算机网络', all: '综合' };
+  const lines = (S.realExam || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || '')).map(r => {
+    let s = '[' + r.year + '][' + (EXAM_SUBJ[r.subject] || r.subject) + '] 正确' + (r.correct || 0) + '/' + (r.total || 0);
+    if (r.note) s += '；笔记：' + r.note;
+    (r.errors || []).forEach(e => { s += '\n  错题：' + e.q + '→' + (e.reason || '未记错因') + '→' + (e.point || '未标考点'); });
+    return s;
+  }).join('\n');
+  downloadText('408真题打卡_' + today() + '.txt', lines || '暂无记录');
+  toast('已导出');
+};
+
+/* ======================= 算法刷题 ======================= */
+const ALGO_DIFF = ['简单', '中等', '困难'];
+const ALGO_DS = ['链表', '栈与队列', '二叉树', '图', '哈希表', '堆', '字符串', '双指针', '数组', '其他'];
+const ALGO_WAY = ['模拟', '双指针', '二分查找', 'BFS', 'DFS', '动态规划', '贪心', '分治', '回溯', '排序', '其他'];
+const ALGO_STATUS = ['未做', '有思路', '已AC', '卡壳'];
+
+registerPage('algo', {
+  name: '算法刷题',
+  icon: '💻',
+  render(el) {
+    S._ui = S._ui || {};
+    const ui = S._ui;
+    ui.algoFilter = ui.algoFilter || { diff: '', status: '', ds: '' };
+
+    const list = (S.algo || []).filter(a =>
+      (!ui.algoFilter.diff || a.diff === ui.algoFilter.diff) &&
+      (!ui.algoFilter.status || a.status === ui.algoFilter.status) &&
+      (!ui.algoFilter.ds || a.ds === ui.algoFilter.ds)
+    ).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+
+    const cnt = st => (S.algo || []).filter(a => a.status === st).length;
+
+    let listHtml;
+    if (!list.length) {
+      listHtml = empty((ui.algoFilter.diff || ui.algoFilter.status || ui.algoFilter.ds)
+        ? '当前筛选条件下没有题目，试试清空筛选'
+        : '还没收录算法题，从一道链表题开始吧');
+    } else {
+      listHtml = '<div class="rowlist">' + list.map(a => {
+        const safeLink = /^(https?:\/\/|mailto:)/i.test(String(a.link || '')) ? String(a.link) : '';
+        const titleHtml = safeLink
+          ? '<a href="' + esc(safeLink) + '" target="_blank" rel="noopener" class="row-text">' + esc(a.title) + '</a>'
+          : '<span class="row-text">' + esc(a.title) + '</span>';
+        return '<div class="row">' +
+          '<span class="tag diff-' + esc(a.diff) + '">' + esc(a.diff) + '</span>' +
+          titleHtml +
+          '<span class="tag">' + esc(a.ds) + '</span>' +
+          '<span class="tag">' + esc(a.algo) + '</span>' +
+          '<span class="chip st-' + esc(a.status) + '">' + esc(a.status) + '</span>' +
+          '<button class="icon-btn" data-act="algo-cycle" data-id="' + esc(a.id) + '" title="切换状态">⇄</button>' +
+          '<span class="mono muted">' + esc(a.date || '') + '</span>' +
+          '<button class="icon-btn" data-act="algo-edit" data-id="' + esc(a.id) + '" title="编辑">✎</button>' +
+          '<button class="icon-btn" data-act="algo-del" data-id="' + esc(a.id) + '" title="删除">🗑</button>' +
+          '</div>';
+      }).join('') + '</div>';
+    }
+
+    el.innerHTML =
+      pageHead('算法刷题', '手撕代码，题感是刷出来的',
+        '<button class="btn primary" data-act="algo-add">+ 添加题目</button>') +
+      '<div class="card"><div class="card-b">' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">' +
+      '<select data-change="algo-filter" data-k="diff">' +
+      '<option value="">全部难度</option>' +
+      ALGO_DIFF.map(x => '<option value="' + esc(x) + '"' + (ui.algoFilter.diff === x ? ' selected' : '') + '>' + esc(x) + '</option>').join('') +
+      '</select>' +
+      '<select data-change="algo-filter" data-k="status">' +
+      '<option value="">全部状态</option>' +
+      ALGO_STATUS.map(x => '<option value="' + esc(x) + '"' + (ui.algoFilter.status === x ? ' selected' : '') + '>' + esc(x) + '</option>').join('') +
+      '</select>' +
+      '<select data-change="algo-filter" data-k="ds">' +
+      '<option value="">全部数据结构</option>' +
+      ALGO_DS.map(x => '<option value="' + esc(x) + '"' + (ui.algoFilter.ds === x ? ' selected' : '') + '>' + esc(x) + '</option>').join('') +
+      '</select>' +
+      '<span class="muted" style="align-self:center;">已 AC：' + cnt('已AC') + ' / ' + (S.algo || []).length + '</span>' +
+      '</div>' + listHtml + '</div></div>' +
+      '<div class="grid-dash" style="margin-top:16px;">' +
+      statCard('总题数', (S.algo || []).length, '', 'var(--primary)') +
+      statCard('已 AC', cnt('已AC'), '', 'var(--ok, var(--primary))') +
+      statCard('有思路', cnt('有思路'), '', 'var(--c-ds)') +
+      statCard('卡壳', cnt('卡壳'), '', 'var(--c-math)') +
+      '</div>';
+  }
+});
+
+Actions['algo-filter'] = (d, el) => {
+  S._ui = S._ui || {};
+  S._ui.algoFilter = S._ui.algoFilter || {};
+  S._ui.algoFilter[d.k] = el.value || '';
+  rerender();
+};
+
+function algoFormFields(a) {
+  return [
+    { key: 'title', label: '题目名', type: 'text', value: a ? a.title : '', required: true },
+    { key: 'link', label: '链接（可选）', type: 'text', value: a ? a.link : '', placeholder: 'https://leetcode.cn/problems/...' },
+    { key: 'diff', label: '难度', type: 'select', options: ALGO_DIFF, value: a ? a.diff : '中等' },
+    { key: 'ds', label: '数据结构', type: 'select', options: ALGO_DS, value: a ? a.ds : '链表' },
+    { key: 'algo', label: '算法思想', type: 'select', options: ALGO_WAY, value: a ? a.algo : '模拟' },
+    { key: 'status', label: '状态', type: 'select', options: ALGO_STATUS, value: a ? a.status : '未做' },
+    { key: 'note', label: '笔记', type: 'textarea', rows: 2, value: a ? a.note : '' }
+  ];
+}
+
+Actions['algo-add'] = () => {
+  Modal.form({
+    title: '添加算法题',
+    wide: true,
+    fields: algoFormFields(null),
+    onSubmit(vals) {
+      if (!vals.title || !vals.title.trim()) { toast('题目名不能为空', 'err'); return false; }
+      S.algo = S.algo || [];
+      S.algo.push({
+        id: uid(),
+        title: vals.title.trim(),
+        link: (vals.link || '').trim(),
+        diff: vals.diff,
+        ds: vals.ds,
+        algo: vals.algo,
+        status: vals.status,
+        note: vals.note || '',
+        date: today()
+      });
+      save(); rerender();
+      toast('已收录');
+    }
+  });
+};
+
+Actions['algo-edit'] = d => {
+  const a = (S.algo || []).find(x => x.id === d.id);
+  if (!a) return;
+  Modal.form({
+    title: '编辑算法题',
+    wide: true,
+    fields: algoFormFields(a),
+    onSubmit(vals) {
+      if (!vals.title || !vals.title.trim()) { toast('题目名不能为空', 'err'); return false; }
+      a.title = vals.title.trim();
+      a.link = (vals.link || '').trim();
+      a.diff = vals.diff;
+      a.ds = vals.ds;
+      a.algo = vals.algo;
+      a.status = vals.status;
+      a.note = vals.note || '';
+      save(); rerender();
+    }
+  });
+};
+
+Actions['algo-cycle'] = d => {
+  const a = (S.algo || []).find(x => x.id === d.id);
+  if (!a) return;
+  const i = ALGO_STATUS.indexOf(a.status);
+  a.status = ALGO_STATUS[(i + 1) % ALGO_STATUS.length];
+  if (a.status === '已AC' && !a.date) a.date = today();
+  save(); rerender();
+  toast('「' + a.title + '」→ ' + a.status);
+};
+
+Actions['algo-del'] = d => {
+  const a = (S.algo || []).find(x => x.id === d.id);
+  if (!a) return;
+  Modal.confirm({
+    title: '删除题目',
+    message: '确定删除「' + esc(a.title) + '」？',
+    onOk() { S.algo = S.algo.filter(x => x.id !== d.id); save(); rerender(); }
+  });
+};
+
+</script>
+<script>
+/* =====================================================================
+   研途408 · pages_c.js —— 错题本 / 知识点树
+   ===================================================================== */
+
+/* ================= 错题本 ================= */
+registerPage('errors', {
+  name: '错题本',
+  icon: '🧾',
+  render(el) {
+    S._ui = S._ui || {};
+    const tab = S._ui.errTab || 'math';
+
+    let body = '<div class="tabs">' +
+      '<button class="tab' + (tab === 'math' ? ' active' : '') + '" data-act="err-tab" data-t="math">📐 数学错题</button>' +
+      '<button class="tab' + (tab === 'pit' ? ' active' : '') + '" data-act="err-tab" data-t="pit">⚠️ 408易错点</button>' +
+      '</div>';
+    body += tab === 'pit' ? errPitHtml() : errMathHtml();
+
+    el.innerHTML = pageHead('错题本', '数学错题与 408 易错点集中管理') + body;
+  }
+});
+
+function errMathHtml() {
+  S._ui = S._ui || {};
+  const kw = (S._ui.errSearch || '').toLowerCase();
+  const chap = S._ui.errChap || '';
+  const list = (S.mathErrors || []).filter(it => {
+    if (chap && it.chap !== chap) return false;
+    if (kw) {
+      const hay = ((it.q || '') + ' ' + (it.method || '') + ' ' + (it.reason || '')).toLowerCase();
+      if (hay.indexOf(kw) < 0) return false;
+    }
+    return true;
+  });
+  const mastered = list.filter(it => it.mastered).length;
+
+  let rows = list.map(it =>
+    '<div class="row"' + (it.mastered ? ' style="opacity:.5"' : '') + '>' +
+    '<div class="row-main">' +
+    '<div class="row-tags">' +
+    '<span class="badge">' + esc(it.chap) + '</span>' +
+    '<span class="badge">' + esc(it.type) + '</span>' +
+    (it.method ? '<span class="muted sm">方法：' + esc(it.method) + '</span>' : '') +
+    '</div>' +
+    '<div style="white-space:pre-wrap' + (it.mastered ? ';text-decoration:line-through' : '') + '">' + esc(it.q) + '</div>' +
+    (it.reason ? '<div class="muted sm" style="white-space:pre-wrap">错因：' + esc(it.reason) + '</div>' : '') +
+    '<div class="muted sm mono">' + esc(it.date || '') + '</div>' +
+    '</div>' +
+    '<div class="row-ops">' +
+    '<button class="btn sm' + (it.mastered ? ' primary' : ' ghost') + '" data-act="err-master" data-id="' + esc(it.id) + '">' + (it.mastered ? '✓ 已掌握' : '标记掌握') + '</button>' +
+    '<button class="icon-btn" data-act="err-edit" data-id="' + esc(it.id) + '" title="编辑">✏️</button>' +
+    '<button class="icon-btn" data-act="err-del" data-id="' + esc(it.id) + '" title="删除">🗑️</button>' +
+    '</div></div>'
+  ).join('');
+
+  const toolbar = card(null,
+    '<div class="toolbar">' +
+    '<input type="search" placeholder="搜题干/方法/错因" value="' + esc(S._ui.errSearch || '') + '" data-input="err-search">' +
+    '<select data-change="err-chap">' +
+    '<option value=""' + (chap === '' ? ' selected' : '') + '>全部章节</option>' +
+    ['高数', '线代', '概率'].map(c => '<option value="' + c + '"' + (chap === c ? ' selected' : '') + '>' + c + '</option>').join('') +
+    '</select>' +
+    '<button class="btn primary" data-act="err-add">＋ 记录错题</button>' +
+    '<button class="btn ghost" data-act="err-export">导出 txt</button>' +
+    '</div>');
+
+  const summary = '<div class="muted sm" style="margin:8px 4px">共 ' + list.length + ' 道 · 未掌握 ' + (list.length - mastered) + ' 道</div>';
+
+  return toolbar + summary +
+    card('📐 数学错题', list.length ? '<div class="rowlist">' + rows + '</div>' : empty('还没有数学错题，点「＋ 记录错题」开始积累'));
+}
+
+function errPitHtml() {
+  S._ui = S._ui || {};
+  const kw = (S._ui.errPitSearch || '').toLowerCase();
+  const sub = S._ui.errPitSub || '';
+  const list = (S.pitfalls || []).filter(it => {
+    if (sub && it.subject !== sub) return false;
+    if (kw) {
+      const hay = ((it.title || '') + ' ' + (it.content || '')).toLowerCase();
+      if (hay.indexOf(kw) < 0) return false;
+    }
+    return true;
+  });
+
+  let rows = list.map(it =>
+    '<div class="row">' +
+    '<div class="row-main">' +
+    '<div class="row-tags">' + subBadge(it.subject) +
+    '<b>' + esc(it.title) + '</b>' +
+    '<span class="muted sm mono">' + esc(it.date || '') + '</span>' +
+    '</div>' +
+    '<div style="white-space:pre-wrap">' + esc(it.content) + '</div>' +
+    '</div>' +
+    '<div class="row-ops">' +
+    '<button class="icon-btn" data-act="err-pit-edit" data-id="' + esc(it.id) + '" title="编辑">✏️</button>' +
+    '<button class="icon-btn" data-act="err-pit-del" data-id="' + esc(it.id) + '" title="删除">🗑️</button>' +
+    '</div></div>'
+  ).join('');
+
+  const toolbar = card(null,
+    '<div class="toolbar">' +
+    '<input type="search" placeholder="搜标题/内容" value="' + esc(S._ui.errPitSearch || '') + '" data-input="err-pit-search">' +
+    '<select data-change="err-pit-sub">' +
+    '<option value=""' + (sub === '' ? ' selected' : '') + '>全部科目</option>' +
+    SUBJ408.map(k => '<option value="' + k + '"' + (sub === k ? ' selected' : '') + '>' + esc(SUBJECTS[k].name) + '</option>').join('') +
+    '</select>' +
+    '<button class="btn primary" data-act="err-pit-add">＋ 添加易错点</button>' +
+    '<button class="btn ghost" data-act="err-pit-export">导出 txt</button>' +
+    '</div>');
+
+  return toolbar + '<div class="muted sm" style="margin:8px 4px">共 ' + list.length + ' 条</div>' +
+    card('⚠️ 408易错点', list.length ? '<div class="rowlist">' + rows + '</div>' : empty('还没有易错点记录'));
+}
+
+Actions['err-tab'] = (d) => { S._ui.errTab = d.t; save(); rerender(); };
+Actions['err-search'] = (d, el) => {
+  S._ui.errSearch = el.value;
+  const pos = el.selectionStart == null ? el.value.length : el.selectionStart;
+  rerender();
+  const n = document.querySelector('[data-input="err-search"]');
+  if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} }
+};
+Actions['err-chap'] = (d, el) => { S._ui.errChap = el.value; rerender(); };
+Actions['err-pit-search'] = (d, el) => {
+  S._ui.errPitSearch = el.value;
+  const pos = el.selectionStart == null ? el.value.length : el.selectionStart;
+  rerender();
+  const n = document.querySelector('[data-input="err-pit-search"]');
+  if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} }
+};
+Actions['err-pit-sub'] = (d, el) => { S._ui.errPitSub = el.value; rerender(); };
+
+function errMathForm(it) {
+  Modal.form({
+    title: it ? '编辑数学错题' : '记录错题',
+    wide: true,
+    fields: [
+      { key: 'chap', label: '章节', type: 'select', options: ['高数', '线代', '概率'], value: it ? it.chap : '高数' },
+      { key: 'type', label: '题型', type: 'text', value: it ? it.type : '', placeholder: '如：中值定理证明' },
+      { key: 'method', label: '所用方法', type: 'text', value: it ? it.method : '', placeholder: '如：构造辅助函数' },
+      { key: 'q', label: '题目内容', type: 'textarea', rows: 4, required: true, value: it ? it.q : '' },
+      { key: 'reason', label: '错因', type: 'textarea', rows: 2, value: it ? it.reason : '' }
+    ],
+    onSubmit(vals) {
+      if (!vals.q || !vals.q.trim()) { toast('题目内容不能为空', 'err'); return false; }
+      if (it) {
+        it.chap = vals.chap; it.type = vals.type.trim(); it.method = vals.method.trim();
+        it.q = vals.q.trim(); it.reason = vals.reason.trim();
+      } else {
+        S.mathErrors.push({
+          id: uid(), chap: vals.chap, type: vals.type.trim(), method: vals.method.trim(),
+          q: vals.q.trim(), reason: vals.reason.trim(), mastered: false, date: today()
+        });
+      }
+      save(); rerender();
+    }
+  });
+}
+
+Actions['err-add'] = () => errMathForm(null);
+Actions['err-edit'] = (d) => { const it = (S.mathErrors || []).find(x => x.id === d.id); if (it) errMathForm(it); };
+Actions['err-del'] = (d) => {
+  const i = (S.mathErrors || []).findIndex(x => x.id === d.id);
+  if (i < 0) return;
+  Modal.confirm({
+    title: '删除错题',
+    message: '确定删除这道错题吗？删除后不可恢复。',
+    onOk() { S.mathErrors.splice(i, 1); save(); rerender(); toast('已删除'); }
+  });
+};
+Actions['err-master'] = (d) => {
+  const it = (S.mathErrors || []).find(x => x.id === d.id);
+  if (!it) return;
+  it.mastered = !it.mastered;
+  save(); rerender();
+};
+Actions['err-export'] = () => {
+  const list = S.mathErrors || [];
+  if (!list.length) { toast('暂无错题可导出'); return; }
+  const txt = list.map(it =>
+    '【' + it.chap + '】' + it.type + (it.method ? '（方法：' + it.method + '）' : '') + '\n' +
+    it.q + '\n' +
+    (it.reason ? '错因：' + it.reason + '\n' : '') +
+    (it.mastered ? '[已掌握]' : '[未掌握]') + ' ' + (it.date || '')
+  ).join('\n\n————————\n\n');
+  downloadText('数学错题本_' + today() + '.txt', txt);
+};
+
+function errPitForm(it) {
+  Modal.form({
+    title: it ? '编辑易错点' : '添加易错点',
+    fields: [
+      { key: 'subject', label: '科目', type: 'select', options: SUBJ408.map(k => ({ v: k, label: SUBJECTS[k].name })), value: it ? it.subject : 'ds' },
+      { key: 'title', label: '标题', type: 'text', required: true, value: it ? it.title : '' },
+      { key: 'content', label: '内容', type: 'textarea', rows: 4, value: it ? it.content : '' }
+    ],
+    onSubmit(vals) {
+      if (!vals.title || !vals.title.trim()) { toast('标题不能为空', 'err'); return false; }
+      if (it) {
+        it.subject = vals.subject; it.title = vals.title.trim(); it.content = vals.content.trim();
+      } else {
+        S.pitfalls.push({ id: uid(), subject: vals.subject, title: vals.title.trim(), content: vals.content.trim(), date: today() });
+      }
+      save(); rerender();
+    }
+  });
+}
+
+Actions['err-pit-add'] = () => errPitForm(null);
+Actions['err-pit-edit'] = (d) => { const it = (S.pitfalls || []).find(x => x.id === d.id); if (it) errPitForm(it); };
+Actions['err-pit-del'] = (d) => {
+  const i = (S.pitfalls || []).findIndex(x => x.id === d.id);
+  if (i < 0) return;
+  const t = S.pitfalls[i].title;
+  Modal.confirm({
+    title: '删除易错点',
+    message: '确定删除「' + esc(t) + '」吗？',
+    onOk() { S.pitfalls.splice(i, 1); save(); rerender(); toast('已删除'); }
+  });
+};
+Actions['err-pit-export'] = () => {
+  const list = S.pitfalls || [];
+  if (!list.length) { toast('暂无易错点可导出'); return; }
+  const txt = list.map(it =>
+    '【' + (SUBJECTS[it.subject] ? SUBJECTS[it.subject].name : it.subject) + '】' + it.title + '\n' +
+    (it.content || '') + '\n' + (it.date || '')
+  ).join('\n\n————————\n\n');
+  downloadText('408易错点_' + today() + '.txt', txt);
+};
+
+/* ================= 知识点树 ================= */
+const TREE_CYCLE = ['未学', '学习中', '已掌握', '薄弱'];
+
+registerPage('tree', {
+  name: '知识点树',
+  icon: '🌳',
+  render(el) {
+    S._ui = S._ui || {};
+    const k = S._ui.treeSub || 'ds';
+    const chaps = S.knowledge[k] || [];
+
+    let html = pageHead('知识点树', '408 四科章-节掌握度管理') +
+      '<div class="tabs">' +
+      SUBJ408.map(sk =>
+        '<button class="tab' + (sk === k ? ' active' : '') + '" data-act="tree-sub" data-k="' + sk + '">' + esc(SUBJECTS[sk].name) + '</button>'
+      ).join('') +
+      '</div>';
+
+    let cM = 0, cL = 0, cW = 0, cN = 0;
+    chaps.forEach(ch => (ch.children || []).forEach(sec => {
+      if (sec.status === '已掌握') cM++;
+      else if (sec.status === '学习中') cL++;
+      else if (sec.status === '薄弱') cW++;
+      else cN++;
+    }));
+    const total = cM + cL + cW + cN;
+    html += card('📊 ' + esc(SUBJECTS[k].name) + ' 总览',
+      progressBar(subjectProgress(k), SUBJECTS[k].color) +
+      '<div class="muted sm" style="margin-top:6px">已掌握 ' + cM + ' / 学习中 ' + cL + ' / 薄弱 ' + cW + ' / 未学 ' + cN + '</div>' +
+      '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">' +
+      '<span class="chip st-已掌握">已掌握</span>' +
+      '<span class="chip st-学习中">学习中</span>' +
+      '<span class="chip st-薄弱">薄弱</span>' +
+      '<span class="chip st-未学">未学</span>' +
+      '</div>');
+
+    let body;
+    if (!chaps.length) {
+      body = empty('还没有章节，点「＋ 添加章节」开始搭建知识树');
+    } else {
+      body = '<div class="rowlist">' + chaps.map((ch, ci) => {
+        const secs = ch.children || [];
+        const m = secs.filter(s => s.status === '已掌握').length;
+        const rows = secs.map((sec, si) =>
+          '<div class="row tree-sec">' +
+          '<div class="row-main">' +
+          '<button class="chip st-' + esc(sec.status || '未学') + '" data-act="tree-cycle" data-ci="' + ci + '" data-si="' + si + '" title="点击切换状态">● ' + esc(sec.status || '未学') + '</button>' +
+          '<span>' + esc(sec.name) + '</span>' +
+          '</div>' +
+          '<div class="row-ops">' +
+          '<button class="icon-btn" data-act="tree-del-sec" data-ci="' + ci + '" data-si="' + si + '" title="删除节">🗑️</button>' +
+          '</div></div>'
+        ).join('');
+        return '<div class="row tree-ch">' +
+          '<div class="row-main"><b>' + esc(ch.name) + '</b>' +
+          '<span class="muted sm">已掌握 ' + m + '/' + secs.length + '</span></div>' +
+          '<div class="row-ops">' +
+          '<button class="btn sm ghost" data-act="tree-add-sec" data-ci="' + ci + '">＋ 添加节</button>' +
+          '<button class="icon-btn" data-act="tree-del-ch" data-ci="' + ci + '" title="删除章">🗑️</button>' +
+          '</div></div>' + rows;
+      }).join('') + '</div>';
+    }
+    html += card(null,
+      '<div class="toolbar">' +
+      '<button class="btn primary" data-act="tree-add-ch">＋ 添加章节</button>' +
+      '<span class="muted sm">共 ' + chaps.length + ' 章 · ' + total + ' 节</span>' +
+      '</div>' + body);
+
+    html += '<div class="muted sm" style="margin-top:10px">💡 408 四科掌握度会自动同步到「总览仪表盘」的全科进度条（408 部分由本树推导）。</div>';
+
+    el.innerHTML = html;
+  }
+});
+
+Actions['tree-sub'] = (d) => { S._ui.treeSub = d.k; save(); rerender(); };
+
+Actions['tree-add-ch'] = () => {
+  const k = S._ui.treeSub || 'ds';
+  Modal.form({
+    title: '添加章节',
+    fields: [{ key: 'name', label: '章节名', type: 'text', required: true, placeholder: '如：第一章 线性表' }],
+    onSubmit(vals) {
+      if (!vals.name || !vals.name.trim()) { toast('章节名不能为空', 'err'); return false; }
+      S.knowledge[k].push({ name: vals.name.trim(), children: [] });
+      save(); rerender();
+    }
+  });
+};
+
+Actions['tree-del-ch'] = (d) => {
+  const k = S._ui.treeSub || 'ds';
+  const ci = num(d.ci, -1);
+  const ch = (S.knowledge[k] || [])[ci];
+  if (!ch) return;
+  Modal.confirm({
+    title: '删除章节',
+    message: '确定删除章节「' + esc(ch.name) + '」吗？<br><b>会连带删除其下 ' + (ch.children || []).length + ' 个小节的状态记录！</b>',
+    onOk() { S.knowledge[k].splice(ci, 1); save(); rerender(); toast('已删除章节'); }
+  });
+};
+
+Actions['tree-add-sec'] = (d) => {
+  const k = S._ui.treeSub || 'ds';
+  const ci = num(d.ci, -1);
+  const ch = (S.knowledge[k] || [])[ci];
+  if (!ch) return;
+  Modal.form({
+    title: '添加小节 · ' + ch.name,
+    fields: [{ key: 'name', label: '小节名', type: 'text', required: true, placeholder: '如：顺序表与链表' }],
+    onSubmit(vals) {
+      if (!vals.name || !vals.name.trim()) { toast('小节名不能为空', 'err'); return false; }
+      if (!ch.children) ch.children = [];
+      ch.children.push({ name: vals.name.trim(), status: '未学' });
+      save(); rerender();
+    }
+  });
+};
+
+Actions['tree-del-sec'] = (d) => {
+  const k = S._ui.treeSub || 'ds';
+  const ci = num(d.ci, -1), si = num(d.si, -1);
+  const ch = (S.knowledge[k] || [])[ci];
+  const sec = ch && (ch.children || [])[si];
+  if (!sec) return;
+  Modal.confirm({
+    title: '删除小节',
+    message: '确定删除小节「' + esc(sec.name) + '」吗？',
+    onOk() { ch.children.splice(si, 1); save(); rerender(); toast('已删除小节'); }
+  });
+};
+
+Actions['tree-cycle'] = (d) => {
+  const k = S._ui.treeSub || 'ds';
+  const ci = num(d.ci, -1), si = num(d.si, -1);
+  const ch = (S.knowledge[k] || [])[ci];
+  const sec = ch && (ch.children || [])[si];
+  if (!sec) return;
+  const i = TREE_CYCLE.indexOf(sec.status || '未学');
+  sec.status = TREE_CYCLE[(i + 1) % TREE_CYCLE.length];
+  save(); rerender();
+};
+
+</script>
+<script>
+/* =====================================================================
+   研途408 · pages_d.js —— 番茄计时(pomo) / 数据统计(stats)
+   ===================================================================== */
+
+registerPage('pomo', {
+  name: '番茄计时',
+  icon: '⏱️',
+  render(el) {
+    S._ui = S._ui || {};
+    const st = Pomo.st;
+    const wk = weekDates(today());
+    const mk = monthKey(today());
+    const dayLog = S.pomo.log[today()] || [];
+    const dayTotal = dayLog.reduce((s, x) => s + x.min, 0);
+
+    // 模式文字 / 按钮区
+    let modeTxt, btns;
+    if (!st.running) {
+      modeTxt = '待机 · 选择科目后开始专注';
+      btns = '<button class="btn primary" data-act="pomo-start">▶ 开始专注</button>';
+    } else if (!st.paused) {
+      modeTxt = st.mode === 'focus' ? '专注中 · ' + (SUBJECTS[st.sub] ? esc(SUBJECTS[st.sub].name) : '') : '休息中';
+      btns = '<button class="btn" data-act="pomo-pause">⏸ 暂停</button>' +
+        '<button class="btn primary" data-act="pomo-stop">⏹ 结束并记录</button>' +
+        '<button class="btn danger" data-act="pomo-drop">✖ 放弃(不记录)</button>';
+    } else {
+      modeTxt = st.mode === 'focus' ? '已暂停 · ' + (SUBJECTS[st.sub] ? esc(SUBJECTS[st.sub].name) : '') : '休息已暂停';
+      btns = '<button class="btn primary" data-act="pomo-resume">▶ 继续</button>' +
+        '<button class="btn" data-act="pomo-stop">⏹ 结束并记录</button>' +
+        '<button class="btn danger" data-act="pomo-drop">✖ 放弃(不记录)</button>';
+    }
+
+    // 待机时科目选择
+    const subSel = !st.running
+      ? '<div class="pomo-sub"><label class="muted">专注科目：</label><select data-change="pomo-sub">' +
+        SUBJ_ORDER.map(k => '<option value="' + k + '"' + (S.pomo.lastSub === k ? ' selected' : '') + '>' + esc(SUBJECTS[k].name) + '</option>').join('') +
+        '</select></div>'
+      : '';
+
+    const pct = st.running ? Math.round((1 - Pomo.remainMs() / (st.min * 60000)) * 100) : 0;
+
+    const todayRows = dayLog.length
+      ? dayLog.map(x => {
+          const d = new Date(x.ts || Date.now());
+          const hm = pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+          return '<div class="row-between"><span>' + subBadge(x.sub) + ' <b class="mono">' + x.min + '</b> 分钟</span><span class="muted mono">' + hm + '</span></div>';
+        }).join('') + '<div class="row-between" style="border-top:1px solid var(--line);padding-top:8px;margin-top:6px"><span>今日合计</span><b class="mono">' + fmtMin(dayTotal) + '</b></div>'
+      : empty('今天还没有专注记录');
+
+    el.innerHTML = pageHead('番茄计时', '快捷键 P：开始 / 暂停 / 继续',
+        '<button class="btn ghost sm" data-act="pomo-set">⚙ 番茄设置</button>') +
+      '<section class="card pomo-card">' +
+        '<div class="pomo-mode muted" id="pomo-mode">' + modeTxt + '</div>' +
+        '<div class="big-count mono" id="pomo-display">' + (st.running ? Pomo.mmss() : S.pomo.focusMin + ':00') + '</div>' +
+        '<div class="pomo-bar">' + progressBar(pct) + '</div>' +
+        '<div class="pomo-btns" id="pomo-btns"><span>' + btns + '</span></div>' + subSel +
+      '</section>' +
+      '<div class="grid3" style="margin-top:16px">' +
+        statCard('今日专注', fmtMin(dayTotal), dayLog.length + ' 个番茄') +
+        statCard('本周专注', fmtMin(focusSum(wk[0], wk[6]))) +
+        statCard('本月专注', fmtMin(focusSum(mk + '-01', today()))) +
+      '</div>' +
+      '<div class="grid2" style="margin-top:16px">' +
+        card('近7天专注', '<canvas id="pomo-week-chart"></canvas>') +
+        card('今日记录', todayRows) +
+      '</div>';
+
+    // 近7天柱状图
+    try {
+      const cv = document.getElementById('pomo-week-chart');
+      if (cv) {
+        const labels = [], data = [];
+        for (let i = 6; i >= 0; i--) {
+          const d = addDays(today(), -i);
+          labels.push(d.slice(5));
+          data.push(focusSum(d, d));
+        }
+        Charts.bar(cv, { labels: labels, series: [{ name: '专注分钟', color: 'var(--primary)', data: data }] });
+      }
+    } catch (e) { console.warn('pomo chart', e); }
+
+    // 计时 UI 更新
+    Pomo.setUI(() => {
+      const dsp = document.getElementById('pomo-display');
+      if (!dsp || !document.body.contains(dsp)) return;
+      const ps = Pomo.st;
+      if (ps.running) dsp.textContent = Pomo.mmss();
+      else dsp.textContent = S.pomo.focusMin + ':00';
+      const md = document.getElementById('pomo-mode');
+      if (md) md.textContent = !ps.running ? '待机 · 选择科目后开始专注'
+        : (ps.mode === 'focus' ? (ps.paused ? '已暂停 · ' : '专注中 · ') + (SUBJECTS[ps.sub] ? SUBJECTS[ps.sub].name : '')
+           : (ps.paused ? '休息已暂停' : '休息中'));
+      const p = ps.running ? Math.round((1 - Pomo.remainMs() / (ps.min * 60000)) * 100) : 0;
+      const bar = dsp.closest('.pomo-card');
+      const fill = bar ? bar.querySelector('.pbar i') : null;
+      if (fill) fill.style.width = clamp(p, 0, 100) + '%';
+      const pc = bar ? bar.querySelector('.pbar .mono') : null;
+      if (pc) pc.textContent = clamp(p, 0, 100) + '%';
+    });
+  }
+});
+
+Actions['pomo-start'] = () => {
+  Pomo.start(S.pomo.focusMin, 'focus', S.pomo.lastSub);
+  toast('番茄开始');
+  if (currentPage === 'pomo') rerender();
+};
+Actions['pomo-pause'] = () => { Pomo.pause(); if (currentPage === 'pomo') rerender(); };
+Actions['pomo-resume'] = () => { Pomo.resume(); if (currentPage === 'pomo') rerender(); };
+Actions['pomo-stop'] = () => {
+  Pomo.stop(true);
+  if (currentPage === 'pomo') rerender(); else updateStatusbar();
+};
+Actions['pomo-drop'] = () => {
+  Modal.confirm({
+    title: '放弃本次专注',
+    message: '本次专注不会被记录，确定放弃吗？',
+    okText: '放弃', danger: true,
+    onOk: () => { Pomo.stop(false); if (currentPage === 'pomo') rerender(); }
+  });
+};
+Actions['pomo-sub'] = (d, elCtrl) => {
+  S.pomo.lastSub = elCtrl.value;
+  save();
+};
+Actions['pomo-set'] = () => {
+  Modal.form({
+    title: '⚙ 番茄设置',
+    fields: [
+      { key: 'focusMin', label: '专注时长(分钟)', type: 'number', min: 5, max: 180, value: S.pomo.focusMin },
+      { key: 'breakMin', label: '休息时长(分钟)', type: 'number', min: 1, max: 60, value: S.pomo.breakMin },
+      { key: 'autoNext', label: '自动进入休息', type: 'select', options: [{ v: '1', label: '开' }, { v: '', label: '关' }], value: S.pomo.autoNext ? '1' : '' }
+    ],
+    onSubmit: vals => {
+      const f = num(vals.focusMin, S.pomo.focusMin), b = num(vals.breakMin, S.pomo.breakMin);
+      if (f < 5 || f > 180) { toast('专注时长需在 5-180 分钟之间', 'err'); return false; }
+      if (b < 1 || b > 60) { toast('休息时长需在 1-60 分钟之间', 'err'); return false; }
+      S.pomo.focusMin = Math.round(f);
+      S.pomo.breakMin = Math.round(b);
+      S.pomo.autoNext = vals.autoNext === '1';
+      save();
+      toast('番茄设置已保存');
+      if (currentPage === 'pomo') rerender();
+    }
+  });
+};
+Actions['pomo-toggle'] = () => {
+  const st = Pomo.st;
+  if (!st.running) {
+    Pomo.start(S.pomo.focusMin, 'focus', S.pomo.lastSub);
+    toast('番茄开始');
+  } else if (!st.paused) {
+    Pomo.pause();
+    toast('番茄已暂停');
+  } else {
+    Pomo.resume();
+    toast('番茄继续');
+  }
+  if (currentPage === 'pomo') rerender();
+};
+
+/* ---------------- 数据统计 ---------------- */
+registerPage('stats', {
+  name: '数据统计',
+  icon: '📈',
+  render(el) {
+    S._ui = S._ui || {};
+    S._ui.statRange = S._ui.statRange || 'week';
+    const rg = S._ui.statRange;
+    const t = today();
+    let dates = [];
+    if (rg === 'week') dates = weekDates(t);
+    else if (rg === 'd7') { for (let i = 6; i >= 0; i--) dates.push(addDays(t, -i)); }
+    else if (rg === 'month') { const d0 = monthKey(t) + '-01'; const n = diffDays(t, d0); for (let i = 0; i <= n; i++) dates.push(addDays(d0, i)); }
+    else { for (let i = 29; i >= 0; i--) dates.push(addDays(t, -i)); }
+    const d0 = dates[0], d1 = dates[dates.length - 1];
+
+    const totalFocus = focusSum(d0, d1);
+    const avgFocus = Math.round(totalFocus / dates.length);
+    let topSub = '—', topVal = 0;
+    SUBJ_ORDER.forEach(k => {
+      const v = focusSum(d0, d1, k);
+      if (v > topVal) { topVal = v; topSub = SUBJECTS[k].name; }
+    });
+    const doneCnt = dates.reduce((s, d) => s + tasksOn(d).filter(x => x.done).length, 0);
+
+    const rangeTabs = [
+      { v: 'week', label: '本周' }, { v: 'd7', label: '近7天' },
+      { v: 'month', label: '本月' }, { v: 'd30', label: '近30天' }
+    ];
+
+    el.innerHTML = pageHead('数据统计', '专注时长与任务完成率一览') +
+      '<div style="margin-bottom:16px" class="stat-range"><label class="muted">统计范围：</label><select data-change="stat-range">' +
+        rangeTabs.map(x => '<option value="' + x.v + '"' + (rg === x.v ? ' selected' : '') + '>' + x.label + '</option>').join('') +
+      '</select></div>' +
+      '<div class="grid-dash">' +
+        statCard('区间总专注', fmtMin(totalFocus), d0 + ' ~ ' + d1) +
+        statCard('日均专注', avgFocus + ' 分钟') +
+        statCard('最投入科目', topSub, topVal ? fmtMin(topVal) : '') +
+        statCard('区间完成任务', doneCnt + ' 项') +
+      '</div>' +
+      '<div class="grid2" style="margin-top:16px">' +
+        card('分科专注占比', '<canvas id="stat-pie"></canvas><div style="margin-top:10px">' + Charts.legend(SUBJ_ORDER.map(k => ({
+          label: SUBJECTS[k].name,
+          value: focusSum(d0, d1, k),
+          color: SUBJECTS[k].color
+        }))) + '</div>') +
+        card('每日专注时长', '<canvas id="stat-bar"></canvas>') +
+      '</div>' +
+      '<div class="grid2" style="margin-top:16px">' +
+        card('任务完成率趋势', '<canvas id="stat-line"></canvas>') +
+      '</div>' +
+      '<p class="muted" style="margin-top:12px;font-size:12px">注：专注时长来自番茄钟记录，任务完成率来自每日打卡。</p>';
+
+    try {
+      const pie = document.getElementById('stat-pie');
+      if (pie) Charts.pie(pie, SUBJ_ORDER.map(k => ({
+        label: SUBJECTS[k].name,
+        value: focusSum(d0, d1, k),
+        color: SUBJECTS[k].color
+      })));
+    } catch (e) { console.warn('stats pie', e); }
+    try {
+      const bar = document.getElementById('stat-bar');
+      if (bar) Charts.bar(bar, {
+        labels: dates.map(d => d.slice(5)),
+        series: [{ name: '分钟', color: 'var(--primary)', data: dates.map(d => focusSum(d, d)) }]
+      });
+    } catch (e) { console.warn('stats bar', e); }
+    try {
+      const line = document.getElementById('stat-line');
+      if (line) Charts.line(line, {
+        labels: dates.map(d => d.slice(5)),
+        series: [{ name: '完成率%', color: 'var(--c-os)', data: dates.map(d => rateOf(tasksOn(d))) }],
+        yMax: 100
+      });
+    } catch (e) { console.warn('stats line', e); }
+  }
+});
+
+Actions['stat-range'] = (d, elCtrl) => {
+  S._ui = S._ui || {};
+  S._ui.statRange = elCtrl.value || 'week';
+  rerender();
+};
+
+</script>
+<script>
+/* =====================================================================
+   研途408 · pages_e.js —— 复盘中心（自动周/月复盘 + 手写总结 + 心态日记）
+   ===================================================================== */
+
+/* ---------------- 复盘：内部工具 ---------------- */
+// 按 kind+period 查找已有复盘
+function reviewFind(kind, period) {
+  return (S.reviews || []).find(r => r.kind === kind && r.period === period) || null;
+}
+// text 字段四段存储：good/bad/next/feel，以 '\n---\n' 分隔
+function reviewParse(text) {
+  const p = String(text || '').split('\n---\n');
+  return { good: p[0] || '', bad: p[1] || '', next: p[2] || '', feel: p[3] || '' };
+}
+const MOOD_EMOJI = { 1: '😫', 2: '😕', 3: '😐', 4: '🙂', 5: '😄' };
+function moodEmoji(score) { return MOOD_EMOJI[num(score, 3)] || '😐'; }
+
+/* ---------------- 复盘：周期数据统计 ---------------- */
+// 一组日期（闭区间）内的自动数据
+function revAutoStats(dates) {
+  const from = dates[0], to = dates[dates.length - 1];
+  const inRange = d => d >= from && d <= to;
+  const tasks = [];
+  dates.forEach(d => tasksOn(d).forEach(t => tasks.push(t)));
+  const done = tasks.filter(t => t.done).length;
+  const qCount =
+    (S.algo || []).filter(a => inRange(a.date)).length +
+    (S.realExam || []).filter(r => inRange(r.date)).length +
+    (S.dailyQLog || []).filter(l => inRange(l.date)).length;
+  const moods = (S.moods || []).filter(m => inRange(m.date));
+  const moodAvg = moods.length
+    ? Math.round(moods.reduce((s, m) => s + num(m.score, 3), 0) / moods.length * 10) / 10
+    : null;
+  return {
+    tasksTotal: tasks.length,
+    tasksDone: done,
+    taskRate: rateOf(tasks),
+    focusMin: focusSum(from, to),
+    qCount: qCount,
+    moodAvg: moodAvg,
+    // 每日专注分钟（小条形文字用）
+    focusByDay: dates.map(d => {
+      const logs = (S.pomo.log || {})[d] || [];
+      return logs.reduce((s, x) => s + num(x.min, 0), 0);
+    })
+  };
+}
+
+/* ---------------- 复盘页 ---------------- */
+registerPage('review', {
+  name: '复盘中心',
+  icon: '🔄',
+  render(el) {
+    S._ui = S._ui || {};
+    const ui = S._ui;
+    if (!ui.revTab) ui.revTab = 'review';
+    if (!ui.revKind) ui.revKind = 'week';
+    if (!ui.revWeek) ui.revWeek = isoWeek(today());
+    if (!ui.revMonth) ui.revMonth = monthKey(today());
+
+    let body = '';
+    const pg = PAGES.review;
+    if (ui.revTab === 'review') body = pg.renderReview();
+    else body = pg.renderMood();
+
+    el.innerHTML = pageHead('复盘中心', '定期回顾：数据自动汇总 + 手写总结，让每一步都有迹可循') +
+      '<div class="tabs">' +
+      '<button class="tab' + (ui.revTab === 'review' ? ' active' : '') + '" data-act="rev-tab" data-t="review">📅 周/月复盘</button>' +
+      '<button class="tab' + (ui.revTab === 'mood' ? ' active' : '') + '" data-act="rev-tab" data-t="mood">💚 心态日记</button>' +
+      '</div>' + body;
+
+    if (ui.revTab === 'mood') pg.drawMoodChart();
+  },
+
+  /* ===== Tab1：周/月复盘 ===== */
+  renderReview() {
+    const ui = S._ui;
+    const isWeek = ui.revKind === 'week';
+    const nav = '<div class="row-nav">' +
+      '<button class="btn sm ghost" data-act="rev-' + (isWeek ? 'prev-week' : 'prev-month') + '">‹ 上' + (isWeek ? '周' : '月') + '</button>' +
+      '<span class="period-label mono">' + (isWeek ? PAGES.review.weekLabel(ui.revWeek) : PAGES.review.monthLabel(ui.revMonth)) + '</span>' +
+      '<button class="btn sm ghost" data-act="rev-' + (isWeek ? 'next-week' : 'next-month') + '">下' + (isWeek ? '周' : '月') + ' ›</button>' +
+      '</div>';
+    const kindTabs = '<div class="tabs sub">' +
+      '<button class="tab' + (isWeek ? ' active' : '') + '" data-act="rev-kind" data-k="week">周复盘</button>' +
+      '<button class="tab' + (!isWeek ? ' active' : '') + '" data-act="rev-kind" data-k="month">月复盘</button>' +
+      '</div>';
+
+    const dates = isWeek ? weekDates(revWeekAnchor(ui.revWeek)) : PAGES.review.monthDates(ui.revMonth);
+    const kind = isWeek ? 'week' : 'month';
+    const period = isWeek ? ui.revWeek : ui.revMonth;
+    const st = revAutoStats(dates);
+    const exist = reviewFind(kind, period);
+    const seg = reviewParse(exist && exist.text);
+
+    const auto = '<div class="grid-dash">' +
+      statCard('任务完成', st.tasksDone + '/' + st.tasksTotal, '完成率 ' + st.taskRate + '%', 'var(--primary)') +
+      statCard('专注时长', fmtMin(st.focusMin), dates[0] + ' ~ ' + dates[dates.length - 1], 'var(--c-math)') +
+      statCard('刷题量', String(st.qCount), '算法+真题+每日一题', 'var(--c-ds)') +
+      statCard('心态均分', st.moodAvg == null ? '—' : String(st.moodAvg), moodsCount(dates) + ' 天记录', 'var(--c-eng)') +
+      '</div>' +
+      card('任务完成率', progressBar(st.taskRate)) +
+      card('每日专注', st.focusByDay.some(m => m > 0)
+        ? '<div class="focus-days">' + dates.map((d, i) =>
+            '<div class="fd-row"><span class="mono muted">' + weekCN(d) + ' ' + d.slice(5) + '</span>' +
+            '<span class="mono">' + (st.focusByDay[i] > 0 ? fmtMin(st.focusByDay[i]) : '—') + '</span></div>'
+          ).join('') + '</div>'
+        : empty('本周还没有专注记录'));
+
+    const form = card('手写复盘' + (exist ? '（已有记录，保存将覆盖）' : ''),
+      '<form data-submit="rev-save" data-kind="' + kind + '" data-period="' + esc(period) + '">' +
+      '<label class="mf-row"><span class="mf-label">做得好的</span><textarea name="good" rows="3" placeholder="哪些事做得不错？保持什么？">' + esc(seg.good) + '</textarea></label>' +
+      '<label class="mf-row"><span class="mf-label">不足与问题</span><textarea name="bad" rows="3" placeholder="哪里没做好？卡在哪里？">' + esc(seg.bad) + '</textarea></label>' +
+      '<label class="mf-row"><span class="mf-label">下期改进</span><textarea name="next" rows="3" placeholder="具体怎么改？">' + esc(seg.next) + '</textarea></label>' +
+      '<label class="mf-row"><span class="mf-label">总体感受</span><input name="feel" type="text" value="' + esc(seg.feel) + '" placeholder="一句话总结这个' + (isWeek ? '周' : '月') + '"></label>' +
+      '<div class="modal-foot"><button type="submit" class="btn primary">保存复盘</button></div>' +
+      '</form>');
+
+    return kindTabs + nav + auto + form + this.renderHistory();
+  },
+
+  weekLabel(wk) {
+    const dates = weekDates(revWeekAnchor(wk));
+    return wk + '（' + fmtDateCN(dates[0]) + ' ~ ' + fmtDateCN(dates[6]) + '）';
+  },
+  monthLabel(mk) {
+    const p = mk.split('-');
+    return p[0] + '年' + Number(p[1]) + '月';
+  },
+  // 当月 1 日 ~ 末日（未到的天截断到今天）
+  monthDates(mk) {
+    const p = mk.split('-');
+    const y = Number(p[0]), mo = Number(p[1]);
+    const last = new Date(y, mo, 0).getDate();
+    const to = mk === monthKey(today()) ? Number(today().slice(8, 10)) : last;
+    const out = [];
+    for (let d = 1; d <= to; d++) out.push(y + '-' + pad2(mo) + '-' + pad2(d));
+    return out;
+  },
+
+  renderHistory() {
+    const list = (S.reviews || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    if (!list.length) return card('历史复盘', empty('还没有保存过复盘，写一篇吧'));
+    return card('历史复盘 <span class="muted">(' + list.length + ')</span>',
+      list.map(r => {
+        const a = r.auto || {};
+        const brief = String(r.text || '').replace(/\n---\n/g, ' / ').slice(0, 80);
+        return '<div class="list-item">' +
+          '<div class="li-main">' +
+          '<div class="li-title"><span class="badge">' + (r.kind === 'month' ? '月' : '周') + '</span> <b class="mono">' + esc(r.period) + '</b>' +
+          ' <span class="muted">' + esc(r.date || '') + '</span></div>' +
+          '<div class="li-sub muted">完成 ' + num(a.tasksDone) + '/' + num(a.tasksTotal) + ' · 专注 ' + fmtMin(a.focusMin) + ' · 刷题 ' + num(a.qCount) + '</div>' +
+          (brief ? '<div class="li-text muted">' + esc(brief) + '</div>' : '') +
+          '</div>' +
+          '<button class="icon-btn" data-act="rev-del" data-id="' + esc(r.id) + '" title="删除">🗑</button>' +
+          '</div>';
+      }).join(''),
+      null,
+      '<button class="btn sm" data-act="rev-export">导出全部复盘</button>');
+  },
+
+  /* ===== Tab2：心态日记 ===== */
+  renderMood() {
+    const moods = S.moods || [];
+    const todayRec = moods.find(m => m.date === today()) || null;
+    const avgAll = moods.length ? Math.round(moods.reduce((s, m) => s + num(m.score, 3), 0) / moods.length * 10) / 10 : '—';
+    const last7 = moods.filter(m => diffDays(today(), m.date) < 7 && diffDays(today(), m.date) >= 0);
+    const avg7 = last7.length ? Math.round(last7.reduce((s, m) => s + num(m.score, 3), 0) / last7.length * 10) / 10 : '—';
+
+    const top = '<div class="grid-dash">' +
+      statCard('已记录天数', String(moods.length), '坚持记录心态', 'var(--primary)') +
+      statCard('平均分', String(avgAll), '全部记录', 'var(--c-math)') +
+      statCard('近7天均分', String(avg7), last7.length + ' 天', 'var(--c-eng)') +
+      '</div>';
+
+    const todayCard = card('今日心态' + (todayRec ? '（今天已记录，保存将覆盖）' : ''),
+      '<form data-submit="rev-mood-save">' +
+      '<label class="mf-row"><span class="mf-label">状态打分</span><select name="score">' +
+      [5, 4, 3, 2, 1].map(v => '<option value="' + v + '"' + (num(todayRec && todayRec.score, 3) === v ? ' selected' : '') + '>' + MOOD_EMOJI[v] + ' ' +
+        ({ 1: '状态很差', 2: '有点低落', 3: '一般平静', 4: '状态不错', 5: '干劲十足' })[v] + '</option>').join('') +
+      '</select></label>' +
+      '<label class="mf-row"><span class="mf-label">标签</span><input name="tags" type="text" value="' + esc(todayRec && todayRec.tags) + '" placeholder="如：专注,高效,疲惫"></label>' +
+      '<label class="mf-row"><span class="mf-label">今日学习状态与心情</span><textarea name="text" rows="3" placeholder="今天学得怎么样？心情如何？">' + esc(todayRec && todayRec.text) + '</textarea></label>' +
+      '<div class="modal-foot"><button type="submit" class="btn primary">保存今日心态</button></div>' +
+      '</form>');
+
+    const trend = card('近 30 天心态趋势', '<canvas id="mood-chart"></canvas>');
+
+    const sorted = moods.slice().sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 20);
+    const history = card('历史记录 <span class="muted">（最近 ' + sorted.length + ' 条）</span>',
+      sorted.length
+        ? sorted.map(m => '<div class="list-item">' +
+            '<div class="li-main">' +
+            '<div class="li-title"><b class="mono">' + esc(m.date) + '</b> ' + moodEmoji(m.score) +
+            ' <span class="muted">' + num(m.score) + ' 分</span></div>' +
+            (m.tags ? '<div class="li-sub">' + String(m.tags).split(/[,，]/).filter(Boolean).map(t => '<span class="badge">' + esc(t.trim()) + '</span>').join(' ') + '</div>' : '') +
+            '<div class="li-text muted">' + (m.text ? esc(m.text) : '—') + '</div>' +
+            '</div>' +
+            '<button class="icon-btn" data-act="rev-mood-del" data-date="' + esc(m.date) + '" title="删除">🗑</button>' +
+            '</div>').join('')
+        : empty('还没有心态记录，从今天开始吧'));
+
+    return top + todayCard + trend + history;
+  },
+
+  drawMoodChart() {
+    try {
+      const cv = document.getElementById('mood-chart');
+      if (!cv) return;
+      const days = [];
+      for (let i = 29; i >= 0; i--) days.push(addDays(today(), -i));
+      const byDate = {};
+      (S.moods || []).forEach(m => { byDate[m.date] = num(m.score, 3); });
+      Charts.line(cv, {
+        labels: days.map(d => d.slice(5)),
+        series: [{ name: '心情分', color: 'var(--c-math)', data: days.map(d => byDate[d] == null ? null : byDate[d]) }],
+        yMin: 1,
+        yMax: 5
+      }, 220);
+    } catch (e) { console.warn('mood chart', e); }
+  }
+});
+
+function moodsCount(dates) {
+  const from = dates[0], to = dates[dates.length - 1];
+  return (S.moods || []).filter(m => m.date >= from && m.date <= to).length;
+}
+
+/* ---------------- 复盘：Actions ---------------- */
+Actions['rev-tab'] = d => { S._ui.revTab = d.t; rerender(); };
+Actions['rev-kind'] = d => { S._ui.revKind = d.k; rerender(); };
+Actions['rev-prev-week'] = () => { S._ui.revWeek = isoWeek(addDays(revWeekAnchor(S._ui.revWeek), -7)); rerender(); };
+Actions['rev-next-week'] = () => { S._ui.revWeek = isoWeek(addDays(revWeekAnchor(S._ui.revWeek), 7)); rerender(); };
+// 'YYYY-Www' -> 该周内的一个日期字符串（用于 weekDates / ±7 导航）
+function revWeekAnchor(wk) {
+  const m = /^(\d{4})-W(\d{2})$/.exec(wk || '');
+  if (!m) return today();
+  const y = Number(m[1]), w = Number(m[2]);
+  // ISO：1月4日必在第1周，取其所在周的周一 + (w-1)*7 天
+  const jan4 = weekDates(y + '-01-04');
+  return addDays(jan4[0], (w - 1) * 7);
+}
+Actions['rev-prev-month'] = () => { S._ui.revMonth = revMonthShift(S._ui.revMonth, -1); rerender(); };
+Actions['rev-next-month'] = () => { S._ui.revMonth = revMonthShift(S._ui.revMonth, 1); rerender(); };
+
+// 'YYYY-MM' ± n 月（跨年安全）
+function revMonthShift(mk, n) {
+  const p = mk.split('-');
+  const d = new Date(Number(p[0]), Number(p[1]) - 1 + n, 1);
+  return d.getFullYear() + '-' + pad2(d.getMonth() + 1);
+}
+
+// 保存复盘（周/月共用）
+Actions['rev-save'] = (d, el) => {
+  const f = el;
+  const get = k => { const x = f.querySelector('[name="' + k + '"]'); return x ? x.value.trim() : ''; };
+  const kind = d.kind === 'month' ? 'month' : 'week';
+  const period = d.period;
+  const dates = kind === 'week' ? weekDates(revWeekAnchor(period)) : PAGES.review.monthDates(period);
+  const st = revAutoStats(dates);
+  const text = [get('good'), get('bad'), get('next'), get('feel')].join('\n---\n');
+  const exist = reviewFind(kind, period);
+  if (exist) {
+    exist.auto = { tasksDone: st.tasksDone, tasksTotal: st.tasksTotal, focusMin: st.focusMin, qCount: st.qCount };
+    exist.text = text;
+    exist.date = today();
+  } else {
+    S.reviews.push({
+      id: uid(), kind: kind, period: period,
+      auto: { tasksDone: st.tasksDone, tasksTotal: st.tasksTotal, focusMin: st.focusMin, qCount: st.qCount },
+      text: text, date: today()
+    });
+  }
+  save(); rerender();
+  toast('复盘已保存 ✓');
+};
+
+Actions['rev-del'] = d => {
+  const r = (S.reviews || []).find(x => x.id === d.id);
+  if (!r) return;
+  Modal.confirm({
+    title: '删除复盘',
+    message: '确定删除 <b>' + esc(r.period) + '</b> 的' + (r.kind === 'month' ? '月' : '周') + '复盘吗？此操作不可恢复。',
+    onOk() {
+      S.reviews = S.reviews.filter(x => x.id !== d.id);
+      save(); rerender();
+      toast('已删除');
+    }
+  });
+};
+
+Actions['rev-export'] = () => {
+  const list = (S.reviews || []).slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+  if (!list.length) { toast('还没有复盘记录可导出', 'err'); return; }
+  const lines = ['研途408 · 复盘记录', '导出时间：' + today(), ''];
+  list.forEach(r => {
+    const a = r.auto || {};
+    const seg = reviewParse(r.text);
+    lines.push('========== ' + (r.kind === 'month' ? '【月复盘】' : '【周复盘】') + r.period + ' ==========');
+    lines.push('记录日期：' + (r.date || ''));
+    lines.push('任务：' + num(a.tasksDone) + '/' + num(a.tasksTotal) + ' · 专注：' + fmtMin(a.focusMin) + ' · 刷题：' + num(a.qCount));
+    lines.push('【做得好的】' + (seg.good || '（空）'));
+    lines.push('【不足与问题】' + (seg.bad || '（空）'));
+    lines.push('【下期改进】' + (seg.next || '（空）'));
+    lines.push('【总体感受】' + (seg.feel || '（空）'));
+    lines.push('');
+  });
+  downloadText('复盘记录_' + today() + '.txt', lines.join('\n'));
+  toast('已导出 ' + list.length + ' 条复盘');
+};
+
+// 保存今日心态（upsert）
+Actions['rev-mood-save'] = (d, el) => {
+  const get = k => { const x = el.querySelector('[name="' + k + '"]'); return x ? x.value.trim() : ''; };
+  const score = clamp(Math.round(num(get('score'), 3)), 1, 5);
+  const exist = (S.moods || []).find(m => m.date === today());
+  if (exist) {
+    exist.score = score;
+    exist.tags = get('tags');
+    exist.text = get('text');
+  } else {
+    S.moods.push({ date: today(), score: score, tags: get('tags'), text: get('text') });
+  }
+  save(); rerender();
+  toast('今日心态已记录 ' + moodEmoji(score));
+};
+
+Actions['rev-mood-del'] = d => {
+  Modal.confirm({
+    title: '删除心态记录',
+    message: '确定删除 <b>' + esc(d.date) + '</b> 的心态记录吗？',
+    onOk() {
+      S.moods = (S.moods || []).filter(m => m.date !== d.date);
+      save(); rerender();
+      toast('已删除');
+    }
+  });
+};
+
+</script>
+<script>
+/* =====================================================================
+   研途408 · pages_f.js —— 工具箱
+   作息表 / 模考成绩+趋势图 / 目标院校卡 / 资料索引 / 护眼提醒
+   艾宾浩斯背诵 / 每日一题全集 / 数据管理（备份·导出·重置·快捷键）
+   ===================================================================== */
+
+/* ---------------- 本页小工具 ---------------- */
+function tlTag(text, color) {
+  return '<span class="tag"' + (color ? ' style="--b:' + color + '"' : '') + '>' + esc(text) + '</span>';
+}
+function tlDash(v) { return (v == null || String(v).trim() === '') ? '—' : esc(v); }
+const TL_MOCK_TYPES = ['408', '数学', '英语', '政治'];
+const TL_MOCK_COLORS = { '408': 'var(--c-net)', '数学': 'var(--c-math)', '英语': 'var(--c-eng)', '政治': 'var(--c-pol)' };
+const TL_MOCK_TOTALS = { '408': 150, '数学': 150, '英语': 100, '政治': 100 };
+
+/* =====================================================================
+   页面注册
+   ===================================================================== */
+registerPage('tools', {
+  name: '工具箱',
+  icon: '🧰',
+  render(el) {
+    S._ui = S._ui || {};
+    const tab = S._ui.tlTab || 'learn';
+    const tabs = [
+      ['learn', '🛠 学习工具'],
+      ['recite', '🔁 背诵与刷题'],
+      ['data', '💾 数据管理']
+    ];
+    const head = pageHead('工具箱', '作息 · 模考 · 院校 · 资料 · 背诵 · 刷题 · 数据备份');
+    const tabBar = '<div class="tabs">' + tabs.map(t =>
+      '<button class="tab' + (tab === t[0] ? ' active' : '') + '" data-act="tl-tab" data-tab="' + t[0] + '">' + t[1] + '</button>'
+    ).join('') + '</div>';
+    el.innerHTML = head + tabBar + '<div class="grid2">' +
+      (tab === 'learn' ? tlLearnHtml() : tab === 'recite' ? tlReciteHtml() : tlDataHtml()) + '</div>';
+
+    if (tab === 'learn') {
+      try {
+        const cv = document.getElementById('tl-mock-chart');
+        if (cv) tlDrawMockChart(cv);
+      } catch (e) { console.warn('mock chart', e); }
+    }
+  }
+});
+
+Actions['tl-tab'] = d => { S._ui.tlTab = d.tab; save(); rerender(); };
+
+/* =====================================================================
+   Tab 1：学习工具
+   ===================================================================== */
+function tlLearnHtml() {
+  return tlSchedCard() + tlMockCard() + tlSchoolCard() + tlResCard() + tlEyeCard();
+}
+
+/* ---------- 1. 作息表 ---------- */
+function tlSchedCard() {
+  const list = S.schedule || [];
+  const rows = list.length ? list.map(it =>
+    '<div class="row">' +
+      '<span class="mono">' + esc(it.start) + ' ~ ' + esc(it.end) + '</span>' +
+      '<span class="grow">' + esc(it.label) + '</span>' +
+      '<label class="chk"><input type="checkbox" data-change="tl-sched-remind" data-id="' + esc(it.id) + '"' + (it.remind ? ' checked' : '') + '> 提醒</label>' +
+      '<button class="icon-btn" data-act="tl-sched-edit" data-id="' + esc(it.id) + '" title="编辑">✎</button>' +
+      '<button class="icon-btn" data-act="tl-sched-del" data-id="' + esc(it.id) + '" title="删除">🗑</button>' +
+    '</div>'
+  ).join('') : empty('还没有作息时段，点「+ 添加时段」安排一天');
+  return card('⏰ 作息表',
+    '<p class="muted small">到点弹窗提醒需页面保持打开。</p>' +
+    rows +
+    '<div class="mt8"><button class="btn sm" data-act="tl-sched-add">+ 添加时段</button></div>');
+}
+Actions['tl-sched-add'] = () => tlSchedForm(null);
+Actions['tl-sched-edit'] = d => {
+  const it = (S.schedule || []).find(x => x.id === d.id);
+  if (it) tlSchedForm(it);
+};
+function tlSchedForm(it) {
+  Modal.form({
+    title: it ? '编辑时段' : '添加时段',
+    fields: [
+      { key: 'start', label: '开始时间', type: 'time', value: it ? it.start : '08:00', required: true },
+      { key: 'end', label: '结束时间', type: 'time', value: it ? it.end : '10:00', required: true },
+      { key: 'label', label: '内容', type: 'text', value: it ? it.label : '', placeholder: '如：背单词 / 408网课', required: true },
+      { key: 'remind', label: '到点提醒', type: 'select', options: ['开', '关'], value: it && !it.remind ? '关' : '开' }
+    ],
+    onSubmit(v) {
+      if (!v.label.trim()) { toast('请填写内容', 'err'); return false; }
+      if (it) {
+        it.start = v.start; it.end = v.end; it.label = v.label.trim(); it.remind = v.remind === '开';
+      } else {
+        (S.schedule = S.schedule || []).push({ id: uid(), start: v.start, end: v.end, label: v.label.trim(), remind: v.remind === '开' });
+      }
+      save(); rerender(); toast('已保存');
+    }
+  });
+}
+Actions['tl-sched-del'] = d => {
+  Modal.confirm({
+    title: '删除时段',
+    message: '确定删除这个作息时段吗？',
+    onOk() {
+      S.schedule = (S.schedule || []).filter(x => x.id !== d.id);
+      save(); rerender(); toast('已删除');
+    }
+  });
+};
+Actions['tl-sched-remind'] = (d, el) => {
+  const it = (S.schedule || []).find(x => x.id === d.id);
+  if (it) { it.remind = el.checked; save(); }
+};
+
+/* ---------- 2. 模考成绩 ---------- */
+function tlMockCard() {
+  const list = (S.mocks || []).slice().sort((a, b) => b.date < a.date ? -1 : b.date > a.date ? 1 : 0);
+  const rows = list.length ? list.map(m => {
+    const rate = m.total ? m.score / m.total * 100 : 0;
+    const color = rate >= 60 ? 'var(--ok, #6fbf73)' : rate < 45 ? 'var(--danger, #d9634f)' : '';
+    return '<div class="row">' +
+      tlTag(m.type, TL_MOCK_COLORS[m.type]) +
+      '<span class="mono">' + esc(m.date) + '</span>' +
+      '<span class="mono"' + (color ? ' style="color:' + color + ';font-weight:700"' : '') + '>' + esc(m.score) + ' / ' + esc(m.total) + '</span>' +
+      '<span class="grow muted">' + tlDash(m.note) + '</span>' +
+      '<button class="icon-btn" data-act="tl-mock-del" data-id="' + esc(m.id) + '" title="删除">🗑</button>' +
+    '</div>';
+  }).join('') : empty('还没有模考记录，考完一套就记一笔');
+  return card('📝 模考成绩',
+    rows +
+    '<div class="mt8"><button class="btn sm" data-act="tl-mock-add">+ 记录模考</button></div>' +
+    '<div class="mt12"><canvas id="tl-mock-chart"></canvas></div>' +
+    Charts.legend(TL_MOCK_TYPES.map(t => ({ label: t, value: (S.mocks || []).filter(m => m.type === t).length, color: TL_MOCK_COLORS[t] }))));
+}
+Actions['tl-mock-add'] = () => {
+  Modal.form({
+    title: '记录模考',
+    fields: [
+      { key: 'date', label: '日期', type: 'date', value: today(), required: true },
+      { key: 'type', label: '科目', type: 'select', options: TL_MOCK_TYPES, value: '408' },
+      { key: 'score', label: '得分', type: 'number', value: '', required: true },
+      { key: 'total', label: '总分', type: 'number', value: '', placeholder: '408/数学 150，英语/政治 100' },
+      { key: 'note', label: '备注', type: 'text', value: '', placeholder: '如：卡在操作系统大题' }
+    ],
+    onSubmit(v) {
+      const type = TL_MOCK_TYPES.indexOf(v.type) >= 0 ? v.type : '408';
+      const total = v.total.trim() !== '' ? Math.round(num(v.total)) : (TL_MOCK_TOTALS[type] || 150);
+      if (v.score.trim() === '') { toast('请填写得分', 'err'); return false; }
+      (S.mocks = S.mocks || []).push({ id: uid(), date: v.date, type: type, score: Math.round(num(v.score)), total: total, note: v.note.trim() });
+      save(); rerender(); toast('已记录模考');
+    }
+  });
+};
+Actions['tl-mock-del'] = d => {
+  Modal.confirm({
+    title: '删除模考记录',
+    message: '确定删除这条模考记录吗？',
+    onOk() {
+      S.mocks = (S.mocks || []).filter(x => x.id !== d.id);
+      save(); rerender(); toast('已删除');
+    }
+  });
+};
+function tlDrawMockChart(cv) {
+  const mocks = (S.mocks || []).slice().sort((a, b) => a.date < b.date ? -1 : 1);
+  const dates = [];
+  mocks.forEach(m => { if (dates.indexOf(m.date) < 0) dates.push(m.date); });
+  Charts.line(cv, {
+    labels: dates.map(d => d.slice(5)),
+    series: TL_MOCK_TYPES.map(t => ({
+      name: t,
+      color: TL_MOCK_COLORS[t],
+      data: dates.map(d => {
+        const m = mocks.find(x => x.date === d && x.type === t);
+        return m ? m.score : null;
+      })
+    }))
+  }, 240);
+}
+
+/* ---------- 3. 目标院校 ---------- */
+function tlSchoolCard() {
+  const sc = S.school || {};
+  const lines = sc.lines || [];
+  const lineRows = lines.length ? lines.map((l, i) =>
+    '<tr><td class="mono">' + tlDash(l.year) + '</td><td class="mono"><b>' + tlDash(l.score) + '</b></td><td class="muted">' + tlDash(l.note) + '</td>' +
+    '<td><button class="icon-btn" data-act="tl-line-del" data-i="' + i + '" title="删除">🗑</button></td></tr>'
+  ).join('') : '<tr><td colspan="4" class="muted">暂无分数线记录</td></tr>';
+  return card('🎓 目标院校',
+    '<div class="school-card">' +
+      '<div class="sc-name">' + tlDash(sc.name) + '</div>' +
+      '<div class="muted">' + tlDash(sc.major) + (sc.province ? ' · ' + esc(sc.province) : '') + '</div>' +
+      '<div class="sc-meta mt8">' +
+        '<span>报录比 <b class="mono">' + tlDash(sc.ratio) + '</b></span>' +
+        '<span>招生 <b class="mono">' + tlDash(sc.enroll) + '</b> 人</span>' +
+        '<span>复试 <b>' + tlDash(sc.retest) + '</b></span>' +
+      '</div>' +
+      (sc.books ? '<div class="mt8 small"><span class="muted">参考书目：</span>' + esc(sc.books).replace(/\n/g, '<br>') + '</div>' : '') +
+      (sc.note ? '<div class="mt8 small muted">' + esc(sc.note) + '</div>' : '') +
+      '<div class="mt12"><button class="btn sm" data-act="tl-school-edit">✎ 编辑院校信息</button></div>' +
+    '</div>' +
+    '<div class="mt12"><h4>历年分数线</h4>' +
+    '<table class="tbl"><thead><tr><th>年份</th><th>分数</th><th>备注</th><th></th></tr></thead><tbody>' + lineRows + '</tbody></table>' +
+    '<div class="mt8"><button class="btn sm ghost" data-act="tl-line-add">+ 添加分数线</button></div></div>');
+}
+Actions['tl-school-edit'] = () => {
+  const sc = S.school || {};
+  Modal.form({
+    title: '编辑院校信息',
+    wide: true,
+    fields: [
+      { key: 'name', label: '院校名称', type: 'text', value: sc.name || '' },
+      { key: 'major', label: '报考专业', type: 'text', value: sc.major || '', placeholder: '如：计算机科学与技术' },
+      { key: 'province', label: '省份', type: 'text', value: sc.province || '' },
+      { key: 'ratio', label: '报录比', type: 'text', value: sc.ratio || '', placeholder: '如 10:1' },
+      { key: 'enroll', label: '招生人数', type: 'text', value: sc.enroll || '' },
+      { key: 'retest', label: '复试科目', type: 'text', value: sc.retest || '' },
+      { key: 'books', label: '参考书目', type: 'textarea', value: sc.books || '', rows: 4, placeholder: '每行一本' },
+      { key: 'note', label: '备注', type: 'textarea', value: sc.note || '', rows: 2 }
+    ],
+    onSubmit(v) {
+      S.school = Object.assign({}, S.school, {
+        name: v.name.trim(), major: v.major.trim(), province: v.province.trim(),
+        ratio: v.ratio.trim(), enroll: v.enroll.trim(), retest: v.retest.trim(),
+        books: v.books.trim(), note: v.note.trim()
+      });
+      save(); rerender(); toast('院校信息已更新');
+    }
+  });
+};
+Actions['tl-line-add'] = () => {
+  Modal.form({
+    title: '添加分数线',
+    fields: [
+      { key: 'year', label: '年份', type: 'number', required: true, min: 2000, max: 2100 },
+      { key: 'score', label: '分数线', type: 'number', required: true },
+      { key: 'note', label: '备注', type: 'text', placeholder: '如：校线 / 院线' }
+    ],
+    onSubmit(v) {
+      S.school = S.school || { lines: [] };
+      if (!Array.isArray(S.school.lines)) S.school.lines = [];
+      S.school.lines.push({ year: Math.round(num(v.year)), score: Math.round(num(v.score)), note: v.note.trim() });
+      save(); rerender(); toast('已添加');
+    }
+  });
+};
+Actions['tl-line-del'] = d => {
+  S.school = S.school || { lines: [] };
+  if (!Array.isArray(S.school.lines)) S.school.lines = [];
+  Modal.confirm({
+    title: '删除分数线',
+    message: '确定删除这条分数线记录吗？',
+    onOk() {
+      S.school.lines.splice(num(d.i), 1);
+      save(); rerender(); toast('已删除');
+    }
+  });
+};
+
+/* ---------- 4. 资料索引 ---------- */
+function tlFilteredResources() {
+  const q = (S._ui.tlResSearch || '').trim().toLowerCase();
+  const sub = S._ui.tlResSubj || 'all';
+  const type = S._ui.tlResType || 'all';
+  return (S.resources || []).filter(r =>
+    (sub === 'all' || r.subject === sub) &&
+    (type === 'all' || r.type === type) &&
+    (!q || (r.name || '').toLowerCase().indexOf(q) >= 0 || (r.loc || '').toLowerCase().indexOf(q) >= 0 || (r.note || '').toLowerCase().indexOf(q) >= 0)
+  );
+}
+const TL_RES_TYPES = ['网课', '讲义', '真题', '笔记', '其他'];
+function tlResCard() {
+  const all = S.resources || [];
+  const list = tlFilteredResources();
+  const subOpts = ['<option value="all">全部</option>'].concat(SUBJ_ORDER.map(k =>
+    '<option value="' + k + '"' + ((S._ui.tlResSubj || 'all') === k ? ' selected' : '') + '>' + esc(SUBJECTS[k].name) + '</option>')).join('');
+  const typeOpts = ['<option value="all">全部</option>'].concat(TL_RES_TYPES.map(t =>
+    '<option value="' + t + '"' + ((S._ui.tlResType || 'all') === t ? ' selected' : '') + '>' + esc(t) + '</option>')).join('');
+  const rows = list.length ? list.map(r =>
+    '<div class="row' + (r.done ? ' done-row' : '') + '">' +
+      subBadge(r.subject) + tlTag(r.type) +
+      '<span class="grow">' + esc(r.name) + (r.loc ? ' <span class="muted small">📍' + esc(r.loc) + '</span>' : '') + '</span>' +
+      '<button class="icon-btn" data-act="tl-res-done" data-id="' + esc(r.id) + '" title="切换看完状态">' + (r.done ? '↺' : '✓ 已看完') + '</button>' +
+      '<button class="icon-btn" data-act="tl-res-del" data-id="' + esc(r.id) + '" title="删除">🗑</button>' +
+    '</div>'
+  ).join('') : (all.length ? empty('没有符合筛选条件的资料') : empty('还没有资料，把网课/讲义/真题都登记进来'));
+  return card('📚 资料索引',
+    '<div class="filter-bar">' +
+      '<input type="search" placeholder="搜索名称/位置…" value="' + esc(S._ui.tlResSearch || '') + '" data-input="tl-res-search">' +
+      '<select data-change="tl-res-subj">' + subOpts + '</select>' +
+      '<select data-change="tl-res-type">' + typeOpts + '</select>' +
+      '<span class="muted small">共 ' + all.length + ' 项</span>' +
+    '</div>' +
+    rows +
+    '<div class="mt8"><button class="btn sm" data-act="tl-res-add">+ 添加资料</button></div>');
+}
+Actions['tl-res-search'] = (d, el) => {
+  const pos = el.selectionStart;
+  S._ui.tlResSearch = el.value;
+  save(); rerender();
+  const box = document.querySelector('[data-input="tl-res-search"]');
+  if (box) { box.focus(); try { box.setSelectionRange(pos, pos); } catch (e) {} }
+};
+Actions['tl-res-subj'] = (d, el) => { S._ui.tlResSubj = el.value; tlResListRerender(); };
+Actions['tl-res-type'] = (d, el) => { S._ui.tlResType = el.value; tlResListRerender(); };
+function tlResListRerender() { save(); rerender(); }
+Actions['tl-res-add'] = () => {
+  Modal.form({
+    title: '添加资料',
+    wide: true,
+    fields: [
+      { key: 'subject', label: '科目', type: 'select', options: SUBJ_ORDER.map(k => ({ v: k, label: SUBJECTS[k].name })), value: 'ds' },
+      { key: 'type', label: '类型', type: 'select', options: TL_RES_TYPES, value: '网课' },
+      { key: 'name', label: '名称', type: 'text', required: true, placeholder: '如：王道数据结构习题课' },
+      { key: 'loc', label: '位置', type: 'text', placeholder: '如：B站收藏夹 / D盘XX文件夹' },
+      { key: 'note', label: '备注', type: 'textarea', rows: 2 }
+    ],
+    onSubmit(v) {
+      if (!v.name.trim()) { toast('请填写名称', 'err'); return false; }
+      (S.resources = S.resources || []).push({
+        id: uid(), subject: SUBJECTS[v.subject] ? v.subject : 'ds', type: TL_RES_TYPES.indexOf(v.type) >= 0 ? v.type : '其他',
+        name: v.name.trim(), loc: v.loc.trim(), note: v.note.trim(), done: false
+      });
+      save(); rerender(); toast('已添加资料');
+    }
+  });
+};
+Actions['tl-res-done'] = d => {
+  const r = (S.resources || []).find(x => x.id === d.id);
+  if (r) { r.done = !r.done; save(); rerender(); }
+};
+Actions['tl-res-del'] = d => {
+  Modal.confirm({
+    title: '删除资料',
+    message: '确定删除这条资料吗？',
+    onOk() {
+      S.resources = (S.resources || []).filter(x => x.id !== d.id);
+      save(); rerender(); toast('已删除');
+    }
+  });
+};
+
+/* ---------- 5. 护眼提醒 ---------- */
+function tlEyeCard() {
+  const r = S.reminders || { eyeOn: true, eyeMin: 45 };
+  return card('🌿 护眼提醒',
+    '<label class="chk"><input type="checkbox" data-change="tl-eye-on"' + (r.eyeOn ? ' checked' : '') + '> 开启护眼提醒</label>' +
+    '<div class="row mt8">' +
+      '间隔 <input type="number" id="tl-eye-min" value="' + clamp(Math.round(num(r.eyeMin, 45)) || 45, 5, 180) + '" min="5" max="180" style="width:80px" class="mono"> 分钟' +
+      '<button class="btn sm primary" data-act="tl-eye-save">保存</button>' +
+      '<button class="btn sm ghost" data-act="tl-eye-preview">预览提醒</button>' +
+    '</div>' +
+    '<p class="muted small mt8">每学习一段时间弹窗提醒你起身远眺，间隔可设 5–180 分钟。提醒需要页面保持打开才会触发。</p>');
+}
+Actions['tl-eye-on'] = (d, el) => {
+  S.reminders = S.reminders || { eyeOn: true, eyeMin: 45 };
+  S.reminders.eyeOn = el.checked;
+  save();
+  toast(el.checked ? '护眼提醒已开启' : '护眼提醒已关闭');
+};
+Actions['tl-eye-save'] = () => {
+  const box = document.getElementById('tl-eye-min');
+  if (!box) return;
+  S.reminders = S.reminders || { eyeOn: true, eyeMin: 45 };
+  S.reminders.eyeMin = clamp(Math.round(num(box.value, 45)), 5, 180);
+  save(); rerender();
+  toast('护眼间隔已设为 ' + S.reminders.eyeMin + ' 分钟');
+};
+Actions['tl-eye-preview'] = () => {
+  Modal.confirm({
+    title: '🌿 护眼提醒（预览）',
+    message: '已经连续学习 <b>' + (S.reminders ? S.reminders.eyeMin : 45) + '</b> 分钟啦～<br>起身活动一下，远眺 20 秒，保护眼睛。',
+    okText: '收到', danger: false
+  });
+};
+
+/* =====================================================================
+   Tab 2：背诵与刷题
+   ===================================================================== */
+function tlReciteHtml() {
+  return tlMemCard() + tlDailyQCard();
+}
+
+/* ---------- 6. 艾宾浩斯背诵计划 ---------- */
+function tlMemCard() {
+  const items = S.memItems || [];
+  const t = today();
+  const dueCnt = typeof dueMemItems === 'function' ? dueMemItems().length : 0;
+  const sorted = items.slice().sort((a, b) => {
+    const na = tlMemNextDate(a), nb = tlMemNextDate(b);
+    if (na === nb) return 0;
+    if (na === null) return 1;
+    if (nb === null) return -1;
+    return na < nb ? -1 : 1;
+  });
+  const rows = sorted.length ? sorted.map(it => {
+    const nd = tlMemNextDate(it);
+    const doneCnt = (it.reviews || []).filter(r => r.done).length;
+    let dueHtml;
+    if (!nd) dueHtml = '<span class="muted">已全部完成 🎉</span>';
+    else if (nd === t) dueHtml = '<span style="color:var(--warn,#e0a13c);font-weight:700">今天</span>';
+    else if (nd < t) dueHtml = '<span class="due">逾期 ' + diffDays(t, nd) + ' 天</span>';
+    else dueHtml = '<span class="muted">' + esc(nd.slice(5)) + '</span>';
+    const content = (it.content || '').replace(/\s+/g, ' ').trim();
+    return '<div class="row">' +
+      '<b>' + esc(it.name) + '</b>' + subBadge(it.subject) +
+      '<span class="grow muted small">' + esc(content.slice(0, 40)) + (content.length > 40 ? '…' : '') + '</span>' +
+      '<span class="small">已完成 ' + doneCnt + '/6</span>' + dueHtml +
+      '<button class="btn sm" data-act="tl-mem-ok" data-id="' + esc(it.id) + '">✓ 记住了</button>' +
+      '<button class="btn sm ghost" data-act="tl-mem-later" data-id="' + esc(it.id) + '">✗ 明天再说</button>' +
+      '<button class="icon-btn" data-act="tl-mem-del" data-id="' + esc(it.id) + '" title="删除">🗑</button>' +
+    '</div>';
+  }).join('') : empty('还没有背诵项，新增一个开始艾宾浩斯记忆');
+  return card('🧠 艾宾浩斯背诵计划',
+    '<p class="muted small">按 1/2/4/7/15/30 天间隔安排复习，今日到期（含逾期）<b>' + dueCnt + '</b> 项。</p>' +
+    rows +
+    '<div class="mt8"><button class="btn sm" data-act="tl-mem-add">+ 新增背诵项</button></div>');
+}
+function tlMemNextDate(it) {
+  const pend = (it.reviews || []).filter(r => !r.done);
+  if (!pend.length) return null;
+  return pend.map(r => r.date).sort()[0];
+}
+Actions['tl-mem-add'] = () => {
+  Modal.form({
+    title: '新增背诵项',
+    wide: true,
+    fields: [
+      { key: 'name', label: '名称', type: 'text', required: true, placeholder: '如：数据结构-排序算法总结' },
+      { key: 'subject', label: '科目', type: 'select', options: SUBJ_ORDER.map(k => ({ v: k, label: SUBJECTS[k].name })), value: 'ds' },
+      { key: 'content', label: '背诵内容', type: 'textarea', rows: 5, placeholder: '粘贴要背的要点…' },
+      { key: 'start', label: '开始日期', type: 'date', value: today(), required: true }
+    ],
+    onSubmit(v) {
+      if (!v.name.trim()) { toast('请填写名称', 'err'); return false; }
+      (S.memItems = S.memItems || []).push({
+        id: uid(), name: v.name.trim(), subject: SUBJECTS[v.subject] ? v.subject : 'ds',
+        content: v.content.trim(), date: v.start || today(),
+        reviews: [1, 2, 4, 7, 15, 30].map(n => ({ date: addDays(v.start || today(), n), done: false }))
+      });
+      save(); rerender(); toast('已新增，复习计划已生成');
+    }
+  });
+};
+Actions['tl-mem-ok'] = d => {
+  const it = (S.memItems || []).find(x => x.id === d.id);
+  if (!it) return;
+  const r = (it.reviews || []).find(x => !x.done);
+  if (!r) { toast('这一项已全部完成', 'err'); return; }
+  r.done = true;
+  save(); rerender(); toast('记住了！下一次复习已排好');
+};
+Actions['tl-mem-later'] = d => {
+  const it = (S.memItems || []).find(x => x.id === d.id);
+  if (!it) return;
+  const r = (it.reviews || []).find(x => !x.done);
+  if (!r) { toast('这一项已全部完成', 'err'); return; }
+  r.date = addDays(r.date, 1);
+  save(); rerender(); toast('已推迟到明天');
+};
+Actions['tl-mem-del'] = d => {
+  Modal.confirm({
+    title: '删除背诵项',
+    message: '删除后该条的复习计划也会一并删除，确定吗？',
+    onOk() {
+      S.memItems = (S.memItems || []).filter(x => x.id !== d.id);
+      save(); rerender(); toast('已删除');
+    }
+  });
+};
+
+/* ---------- 7. 每日一题 ---------- */
+function tlDailyQCard() {
+  const t = today();
+  const q = typeof todayQuestion === 'function' ? todayQuestion() : null;
+  const log = S.dailyQLog || [];
+  const todayLog = q ? log.find(l => l.date === t && l.qid === q.id) : null;
+  let qHtml;
+  if (!q) {
+    qHtml = empty('题库为空，无法出题');
+  } else {
+    const letters = ['A', 'B', 'C', 'D'];
+    if (todayLog) {
+      qHtml = '<div class="q-head">' + subBadge(q.subject) + '<span class="mono muted">' + esc(t) + '</span>' +
+        '<span class="tag">' + (todayLog.correct ? '✓ 已答对' : '✗ 已答错') + '</span></div>' +
+        '<p class="q-text">' + esc(q.q) + '</p>' +
+        q.options.map((o, i) => {
+          const letter = letters[i];
+          const isAns = letter === q.answer;
+          const isPick = letter === todayLog.choice;
+          let cls = 'q-opt';
+          if (isAns) cls += ' right';
+          else if (isPick) cls += ' wrong';
+          return '<button class="' + cls + '" disabled>' +
+            '<b>' + letter + '</b> ' + esc(o) +
+            (isAns ? ' <span class="muted small">← 答案 ' + esc(q.answer) + '</span>' : isPick ? ' <span class="muted small">← 你的选择</span>' : '') +
+          '</button>';
+        }).join('') +
+        '<div class="q-explain"><b>解析</b>' + esc(q.explain || '暂无解析') + '</div>';
+    } else {
+      qHtml = '<div class="q-head">' + subBadge(q.subject) + '<span class="mono muted">' + esc(t) + '</span></div>' +
+        '<p class="q-text">' + esc(q.q) + '</p>' +
+        q.options.map((o, i) =>
+          '<button class="q-opt" data-act="tl-q-answer" data-k="' + letters[i] + '"><b>' + letters[i] + '</b> ' + esc(o) + '</button>'
+        ).join('');
+    }
+  }
+  const hist = log.slice().sort((a, b) => a.date < b.date ? 1 : a.date > b.date ? -1 : 0).slice(0, 15);
+  const bank = S.dailyQBank || [];
+  const histRows = hist.length ? hist.map(l => {
+    const q2 = bank.find(x => x.id === l.qid);
+    return '<div class="row">' +
+      '<span class="mono muted">' + esc(l.date) + '</span>' +
+      (l.correct ? '<span style="color:var(--ok,#6fbf73)">✓</span>' : '<span style="color:var(--danger,#d9634f)">✗</span>') +
+      '<span class="grow small">' + esc(q2 ? (q2.q || '').slice(0, 30) + ((q2.q || '').length > 30 ? '…' : '') : '题目已更新') + '</span>' +
+      '<span class="small muted">答案 ' + esc(q2 ? q2.answer : (l.choice || '—')) + '</span>' +
+    '</div>';
+  }).join('') : empty('还没有答题记录');
+  const days = (function () { const seen = {}; log.forEach(l => { seen[l.date] = 1; }); return Object.keys(seen).length; })();
+  const correct = log.filter(l => l.correct).length;
+  const rate = log.length ? Math.round(correct / log.length * 100) : 0;
+  return card('❓ 每日一题',
+    qHtml +
+    '<div class="mt12"><h4>答题历史</h4>' +
+    '<p class="muted small">已打卡 <b>' + days + '</b> 天 · 正确率 <b>' + rate + '%</b>（' + correct + '/' + log.length + '）</p>' +
+    histRows + '</div>');
+}
+Actions['tl-q-answer'] = d => {
+  const t = today();
+  const q = typeof todayQuestion === 'function' ? todayQuestion() : null;
+  if (!q) return;
+  if ((S.dailyQLog || []).some(l => l.date === t && l.qid === q.id)) { toast('今天已经答过了', 'err'); rerender(); return; }
+  const correct = d.k === q.answer;
+  (S.dailyQLog = S.dailyQLog || []).push({ date: t, qid: q.id, choice: d.k, correct: correct });
+  save();
+  toast(correct ? '回答正确，稳！' : '答错了，看看解析', correct ? 'ok' : 'err');
+  rerender();
+};
+
+/* =====================================================================
+   Tab 3：数据管理
+   ===================================================================== */
+function tlDataHtml() {
+  return tlBackupCard() + tlExportTxtCard() + tlDangerCard() + tlHotkeyCard();
+}
+
+/* ---------- 8a. 备份与恢复 ---------- */
+function tlBackupCard() {
+  return card('💾 备份与恢复',
+    '<p class="muted small">所有数据只存在本机浏览器 localStorage 中，建议定期导出 JSON 备份。</p>' +
+    '<div class="row mt8">' +
+      '<button class="btn primary" data-act="tl-export-json">⬇ 导出全部数据(JSON)</button>' +
+    '</div>' +
+    '<div class="mt12">' +
+      '<label class="btn sm" style="cursor:pointer">⬆ 从 JSON 恢复' +
+        '<input type="file" accept=".json,application/json" data-change="tl-import" style="display:none">' +
+      '</label>' +
+      ' <button class="btn sm" data-act="tl-restore-bak">↩ 从 .bak 备份恢复</button>' +
+      '<p class="muted small mt8">.bak 是每次导入/恢复前自动留存的上一份数据，可在此一键回滚。</p>' +
+    '</div>');
+}
+Actions['tl-export-json'] = () => {
+  downloadText('研途408_备份_' + today() + '.json', JSON.stringify(S, null, 2));
+  toast('备份已导出');
+};
+Actions['tl-import'] = (d, el) => {
+  const file = el.files && el.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    let obj = null;
+    try { obj = JSON.parse(String(reader.result)); } catch (e) { obj = null; }
+    const NEED_ARR = ['tasks', 'milestones', 'realExam', 'algo', 'pitfalls', 'mathErrors', 'memItems',
+      'dailyQLog', 'mocks', 'resources', 'reviews', 'moods', 'keyNodes', 'stages', 'schedule'];
+    const bad = !obj || typeof obj !== 'object' || Array.isArray(obj) || obj.version == null ||
+      !Array.isArray(obj.tasks) ||
+      NEED_ARR.some(k => obj[k] !== undefined && !Array.isArray(obj[k]));
+    if (bad) {
+      toast('文件格式不正确或核心数据已损坏，导入失败', 'err');
+      el.value = '';
+      return;
+    }
+    Modal.confirm({
+      title: '⚠ 导入将覆盖现有数据',
+      message: '导入后<b>当前全部数据会被覆盖</b>（覆盖前会自动留存一份 .bak 备份）。<br>确定继续吗？',
+      okText: '覆盖导入',
+      onOk() {
+        try {
+          const cur = localStorage.getItem(DB_KEY);
+          if (cur) localStorage.setItem(DB_KEY + '.bak', cur);
+          DB.s = obj;
+          S = DB.s;
+          migrate(S);
+          save();
+          rerender();
+          toast('导入成功，数据已恢复');
+        } catch (e) {
+          toast('导入失败：' + e.message, 'err');
+        }
+      }
+    });
+  };
+  reader.onerror = () => toast('读取文件失败', 'err');
+  reader.readAsText(file);
+};
+Actions['tl-restore-bak'] = () => {
+  const raw = localStorage.getItem(DB_KEY + '.bak');
+  if (!raw) { toast('还没有 .bak 备份（导入/恢复时会自动生成）', 'err'); return; }
+  let obj = null;
+  try { obj = JSON.parse(raw); } catch (e) { obj = null; }
+  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) { toast('.bak 备份已损坏，无法恢复', 'err'); return; }
+  Modal.confirm({
+    title: '↩ 从 .bak 备份恢复',
+    message: '当前数据将被 <b>.bak 备份</b>覆盖（覆盖前当前状态会另存为新的 .bak）。确定继续吗？',
+    okText: '恢复',
+    onOk() {
+      try {
+        const cur = localStorage.getItem(DB_KEY);
+        if (cur) localStorage.setItem(DB_KEY + '.bak', cur);
+        DB.s = obj;
+        S = DB.s;
+        migrate(S);
+        save(); rerender();
+        toast('已从 .bak 备份恢复');
+      } catch (e) { toast('恢复失败：' + e.message, 'err'); }
+    }
+  });
+};
+
+/* ---------- 8b. 导出文本 ---------- */
+function tlExportTxtCard() {
+  return card('📄 导出文本',
+    '<div class="row">' +
+      '<button class="btn sm" data-act="tl-export-err-txt">导出错题本 TXT</button>' +
+      '<button class="btn sm" data-act="tl-export-rev-txt">导出复盘 TXT</button>' +
+    '</div>' +
+    '<p class="muted small mt8">错题本 = 数学错题 + 408 易错点合并为一份纯文本。</p>');
+}
+Actions['tl-export-err-txt'] = () => {
+  const L = [];
+  L.push('===== 错题本导出 ' + today() + ' =====', '');
+  L.push('【数学错题】');
+  const me = S.mathErrors || [];
+  if (!me.length) L.push('（暂无）');
+  me.forEach((m, i) => {
+    L.push((i + 1) + '. [' + (m.chap || '—') + '·' + (m.type || '—') + '] ' + (m.q || ''));
+    L.push('   方法：' + (m.method || '—') + '  错因：' + (m.reason || '—') + '  ' + (m.mastered ? '已掌握' : '未掌握') + '  ' + (m.date || ''));
+  });
+  L.push('', '【408 易错点】');
+  const pf = S.pitfalls || [];
+  if (!pf.length) L.push('（暂无）');
+  pf.forEach((p, i) => {
+    L.push((i + 1) + '. [' + (SUBJECTS[p.subject] ? SUBJECTS[p.subject].name : p.subject) + '] ' + (p.title || ''));
+    L.push('   ' + (p.content || '') + '  ' + (p.date || ''));
+  });
+  downloadText('错题本_' + today() + '.txt', L.join('\n'));
+  toast('错题本已导出');
+};
+Actions['tl-export-rev-txt'] = () => {
+  const rv = S.reviews || [];
+  const L = ['===== 复盘导出 ' + today() + ' =====', ''];
+  if (!rv.length) L.push('（暂无复盘记录）');
+  rv.forEach(r => {
+    const a = r.auto || {};
+    L.push('── [' + (r.kind === 'week' ? '周' : '月') + '复盘] ' + (r.period || '') + '  ' + (r.date || ''));
+    L.push('   任务 ' + (a.tasksDone || 0) + '/' + (a.tasksTotal || 0) + ' · 专注 ' + fmtMin(a.focusMin || 0) + ' · 刷题 ' + (a.qCount || 0));
+    if (r.text) L.push('   ' + r.text.replace(/\n/g, '\n   '));
+    L.push('');
+  });
+  downloadText('复盘_' + today() + '.txt', L.join('\n'));
+  toast('复盘已导出');
+};
+
+/* ---------- 8c. 危险区 ---------- */
+function tlDangerCard() {
+  return card('⚠ 危险区', '',
+    'danger-zone',
+    '<button class="btn danger" data-act="tl-reset">重置全部数据</button>');
+}
+Actions['tl-reset'] = () => {
+  Modal.confirm({
+    title: '⚠⚠ 重置全部数据',
+    message: '<b style="color:var(--danger,#d9634f)">此操作不可恢复！</b><br>所有任务、笔记、复盘、计时记录都会被清空。<br>强烈建议先「导出全部数据(JSON)」留一份备份。<br>确定要重置吗？',
+    okText: '全部重置',
+    onOk() {
+      try { localStorage.removeItem(DB_KEY); } catch (e) {}
+      location.reload();
+    }
+  });
+};
+
+/* ---------- 8d. 快捷键说明 ---------- */
+function tlHotkeyCard() {
+  const kbd = k => '<kbd>' + k + '</kbd>';
+  return card('⌨ 快捷键',
+    '<div class="row"><span>' + kbd('N') + '</span><span class="grow">新增任务</span></div>' +
+    '<div class="row"><span>' + kbd('P') + '</span><span class="grow">番茄开始 / 暂停</span></div>' +
+    '<div class="row"><span>' + kbd('T') + '</span><span class="grow">切换主题</span></div>' +
+    '<div class="row"><span>' + kbd('Esc') + '</span><span class="grow">关闭弹窗</span></div>');
+}
+
+</script>
+</body>
+</html>
