@@ -856,7 +856,7 @@ const DB = {
       this.save();
       setTimeout(() => toast('本地数据读取失败，已重置为初始状态；原数据备份在 ' + DB_KEY + '.corrupt', 'err'), 300);
     }
-    try { migrate(this.s); } catch (e) { console.warn('migrate', e); }
+    try { if (migrate(this.s)) this.save(); } catch (e) { console.warn('migrate', e); }
   },
   save() {
     try { localStorage.setItem(DB_KEY, JSON.stringify(this.s)); }
@@ -1671,13 +1671,14 @@ function migrate(s) {
   if (typeof s.examDate !== 'string' || isNaN(new Date(s.examDate).getTime())) s.examDate = d.examDate;
   if (typeof s.startDate !== 'string' || isNaN(parseDate(s.startDate).getTime())) s.startDate = d.startDate;
   // 修订（2026-09-05）：初试 2028-12-18 → 2027-12-18；仅迁移未自定义过的旧预置，改过的尊重用户数据
-  if (s.examDate === '2028-12-18T08:30') s.examDate = '2027-12-18T08:30';
+  let shifted = false;
+  if (s.examDate === '2028-12-18T08:30') { s.examDate = '2027-12-18T08:30'; shifted = true; }
   const NODE_SHIFT = {
     '2028-09-24': '2027-09-24', '2028-10-08': '2027-10-08', '2028-11-01': '2027-11-01',
     '2028-12-08': '2027-12-08', '2028-12-18': '2027-12-18', '2029-02-20': '2028-02-20',
     '2029-03-15': '2028-03-15', '2029-03-25': '2028-03-25'
   };
-  (s.keyNodes || []).forEach(n => { if (n && NODE_SHIFT[n.date]) n.date = NODE_SHIFT[n.date]; });
+  (s.keyNodes || []).forEach(n => { if (n && NODE_SHIFT[n.date]) { n.date = NODE_SHIFT[n.date]; shifted = true; } });
   const STAGE_SHIFT = {
     st1: { oe: '2027-08-31', ns: '2026-09-05', ne: '2027-04-30' },
     st2: { os: '2027-09-01', oe: '2028-06-30', ns: '2027-05-01', ne: '2027-08-31' },
@@ -1687,8 +1688,9 @@ function migrate(s) {
   (s.stages || []).forEach(st => {
     const m = st && STAGE_SHIFT[st.id];
     if (!m) return;
-    if ((!m.os || st.start === m.os) && st.end === m.oe) { st.start = m.ns; st.end = m.ne; }
+    if ((!m.os || st.start === m.os) && st.end === m.oe) { st.start = m.ns; st.end = m.ne; shifted = true; }
   });
+  return shifted;
 }
 
 </script>
