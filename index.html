@@ -1266,8 +1266,8 @@ const Pomo = {
 
 /* ---------------- 倒计时 / 状态栏 / 提醒 ---------------- */
 function countdownParts() {
-  let target = new Date(S.examDate || '2028-12-18T08:30');
-  if (isNaN(target.getTime())) target = new Date('2028-12-18T08:30');
+  let target = new Date(S.examDate || '2027-12-18T08:30');
+  if (isNaN(target.getTime())) target = new Date('2027-12-18T08:30');
   let diff = target - new Date();
   const neg = diff < 0;
   diff = Math.abs(diff);
@@ -1539,24 +1539,24 @@ function defaultState() {
   return {
     version: 1,
     theme: 'dark',
-    examDate: '2028-12-18T08:30',
+    examDate: '2027-12-18T08:30',
     startDate: td,
     _ui: {},
     keyNodes: [
-      { id: 'kn1', name: '预报名', date: '2028-09-24', note: '预计9月24-27日，以研招网公告为准' },
-      { id: 'kn2', name: '正式报名', date: '2028-10-08', note: '预计10月8日-25日，逾期不补' },
-      { id: 'kn3', name: '网上确认', date: '2028-11-01', note: '以各报考点公告为准，留意材料截止' },
-      { id: 'kn4', name: '打印准考证', date: '2028-12-08', note: '考前约10天开放下载' },
-      { id: 'kn5', name: '初试', date: '2028-12-18', note: '初步日期，Day1 政治+英语，Day2 数学+408' },
-      { id: 'kn6', name: '成绩公布', date: '2029-02-20', note: '预计2月下旬，各省不同' },
-      { id: 'kn7', name: '国家线', date: '2029-03-15', note: '预计3月中旬公布' },
-      { id: 'kn8', name: '复试调剂', date: '2029-03-25', note: '3月底-4月，关注院校通知' }
+      { id: 'kn1', name: '预报名', date: '2027-09-24', note: '预计9月24-27日，以研招网公告为准' },
+      { id: 'kn2', name: '正式报名', date: '2027-10-08', note: '预计10月8日-25日，逾期不补' },
+      { id: 'kn3', name: '网上确认', date: '2027-11-01', note: '以各报考点公告为准，留意材料截止' },
+      { id: 'kn4', name: '打印准考证', date: '2027-12-08', note: '考前约10天开放下载' },
+      { id: 'kn5', name: '初试', date: '2027-12-18', note: '初步日期，Day1 政治+英语，Day2 数学+408' },
+      { id: 'kn6', name: '成绩公布', date: '2028-02-20', note: '预计2月下旬，各省不同' },
+      { id: 'kn7', name: '国家线', date: '2028-03-15', note: '预计3月中旬公布' },
+      { id: 'kn8', name: '复试调剂', date: '2028-03-25', note: '3月底-4月，关注院校通知' }
     ],
     stages: [
-      { id: 'st1', name: '基础阶段', start: '2026-09-05', end: '2027-08-31', goal: '长线稳扎稳打：408四科教材/基础课过一遍并配套基础习题；数学教材+基础习题多轮；英语大纲单词滚动多轮+长难句；政治暂缓。' },
-      { id: 'st2', name: '强化阶段', start: '2027-09-01', end: '2028-06-30', goal: '408强化课+王道习题重点二刷；数学强化讲义+题库刷题；英语真题精读一刷（留最近3年）；政治精讲课+1000题启动。' },
-      { id: 'st3', name: '冲刺阶段', start: '2028-07-01', end: '2028-11-30', goal: '408/数学历年真题全真限时一刷+错题二刷；政治背诵手册+肖八；英语真题二刷+作文模板成文。' },
-      { id: 'st4', name: '模拟阶段', start: '2028-12-01', end: '2028-12-17', goal: '全真模拟卷限时训练（408/数学/肖四/英语）；回归错题与背诵清单，调整生物钟至考试节奏。' }
+      { id: 'st1', name: '基础阶段', start: '2026-09-05', end: '2027-04-30', goal: '稳扎稳打：408四科教材/基础课过一遍并配套基础习题；数学教材+基础习题多轮；英语大纲单词滚动多轮+长难句；政治暂缓。' },
+      { id: 'st2', name: '强化阶段', start: '2027-05-01', end: '2027-08-31', goal: '408强化课+王道习题重点二刷；数学强化讲义+题库刷题；英语真题精读一刷（留最近3年）；政治精讲课+1000题启动。' },
+      { id: 'st3', name: '冲刺阶段', start: '2027-09-01', end: '2027-11-30', goal: '408/数学历年真题全真限时一刷+错题二刷；政治背诵手册+肖八；英语真题二刷+作文模板成文。' },
+      { id: 'st4', name: '模拟阶段', start: '2027-12-01', end: '2027-12-17', goal: '全真模拟卷限时训练（408/数学/肖四/英语）；回归错题与背诵清单，调整生物钟至考试节奏。' }
     ],
     months: (function () {
       const o = {};
@@ -1670,6 +1670,25 @@ function migrate(s) {
   if (!Array.isArray(s.school.lines)) s.school.lines = [];
   if (typeof s.examDate !== 'string' || isNaN(new Date(s.examDate).getTime())) s.examDate = d.examDate;
   if (typeof s.startDate !== 'string' || isNaN(parseDate(s.startDate).getTime())) s.startDate = d.startDate;
+  // 修订（2026-09-05）：初试 2028-12-18 → 2027-12-18；仅迁移未自定义过的旧预置，改过的尊重用户数据
+  if (s.examDate === '2028-12-18T08:30') s.examDate = '2027-12-18T08:30';
+  const NODE_SHIFT = {
+    '2028-09-24': '2027-09-24', '2028-10-08': '2027-10-08', '2028-11-01': '2027-11-01',
+    '2028-12-08': '2027-12-08', '2028-12-18': '2027-12-18', '2029-02-20': '2028-02-20',
+    '2029-03-15': '2028-03-15', '2029-03-25': '2028-03-25'
+  };
+  (s.keyNodes || []).forEach(n => { if (n && NODE_SHIFT[n.date]) n.date = NODE_SHIFT[n.date]; });
+  const STAGE_SHIFT = {
+    st1: { oe: '2027-08-31', ns: '2026-09-05', ne: '2027-04-30' },
+    st2: { os: '2027-09-01', oe: '2028-06-30', ns: '2027-05-01', ne: '2027-08-31' },
+    st3: { os: '2028-07-01', oe: '2028-11-30', ns: '2027-09-01', ne: '2027-11-30' },
+    st4: { os: '2028-12-01', oe: '2028-12-17', ns: '2027-12-01', ne: '2027-12-17' }
+  };
+  (s.stages || []).forEach(st => {
+    const m = st && STAGE_SHIFT[st.id];
+    if (!m) return;
+    if ((!m.os || st.start === m.os) && st.end === m.oe) { st.start = m.ns; st.end = m.ne; }
+  });
 }
 
 </script>
@@ -1772,7 +1791,7 @@ function _dashCountdown() {
   }).join('');
   return card('⏳ 倒计时 · 关键节点',
     '<div class="big-count mono" id="dash-count">' + esc(big) + '</div>' +
-    '<div class="muted">距 <b>' + new Date(S.examDate || '2028-12-18T08:30').getFullYear() + '</b> 考研初试 <button class="btn ghost sm" data-act="dash-edit-exam">修改日期</button></div>' +
+    '<div class="muted">距 <b>' + new Date(S.examDate || '2027-12-18T08:30').getFullYear() + '</b> 考研初试 <button class="btn ghost sm" data-act="dash-edit-exam">修改日期</button></div>' +
     '<div class="sep"></div>' + (rows || empty('暂无关键节点，点右上 + 添加')) +
     '<div style="margin-top:8px"><button class="btn ghost sm" data-act="dash-node-add">＋ 添加节点</button></div>');
 }
@@ -2030,7 +2049,7 @@ function _goalsWeek() {
 
 /* ================= Actions：仪表盘 ================= */
 Actions['dash-edit-exam'] = () => {
-  const ed = S.examDate || '2028-12-18T08:30';
+  const ed = S.examDate || '2027-12-18T08:30';
   const dPart = ed.slice(0, 10), tPart = ed.slice(11, 16) || '08:30';
   Modal.form({
     title: '修改初试时间',
