@@ -1604,7 +1604,7 @@ function defaultState() {
     resources: [],
     reviews: [],
     moods: [],
-    progressManual: { math: 0, eng: 0, pol: 0 },
+    progressManual: { math: 0, gaoshu: 0, xiandai: 0, gailv: 0, eng: 0, pol: 0 },
     dailyQBank: qs,
     pomo: { focusMin: 45, breakMin: 10, autoNext: false, lastSub: 'ds', log: {} },
     schedule: [
@@ -1664,7 +1664,11 @@ function migrate(s) {
   s.reminders.eyeOn = !!s.reminders.eyeOn;
   const em = Math.round(num(s.reminders.eyeMin, 45));
   s.reminders.eyeMin = clamp(em || 45, 5, 180);
-  if (!s.progressManual || typeof s.progressManual !== 'object') s.progressManual = { math: 0, eng: 0, pol: 0 };
+  if (!s.progressManual || typeof s.progressManual !== 'object') s.progressManual = { math: 0, gaoshu: 0, xiandai: 0, gailv: 0, eng: 0, pol: 0 };
+  // 数学拆分为高数/线代/概率三个模块：老数据以原「数学」进度作为各模块初始值
+  if (s.progressManual.gaoshu === undefined) s.progressManual.gaoshu = clamp(num(s.progressManual.math, 0), 0, 100);
+  if (s.progressManual.xiandai === undefined) s.progressManual.xiandai = clamp(num(s.progressManual.math, 0), 0, 100);
+  if (s.progressManual.gailv === undefined) s.progressManual.gailv = clamp(num(s.progressManual.math, 0), 0, 100);
   ['math', 'eng', 'pol'].forEach(k => { s.progressManual[k] = clamp(num(s.progressManual[k], 0), 0, 100); });
   if (!s.school || typeof s.school !== 'object') s.school = d.school;
   if (!Array.isArray(s.school.lines)) s.school.lines = [];
@@ -1740,10 +1744,26 @@ function subjectProgress(k) {
   }
   return clamp(Math.round(num((S.progressManual || {})[k])), 0, 100);
 }
+// 数学一按模块拆分进度展示（番茄/任务的时间统计仍按「数学一」整体记录）
+const MATH_MODULES = [
+  { k: 'gaoshu',  name: '高等数学', badge: '高数' },
+  { k: 'xiandai', name: '线性代数', badge: '线代' },
+  { k: 'gailv',   name: '概率论',   badge: '概率' }
+];
+const PROGRESS_KEYS = ['ds', 'comp', 'os', 'net', 'gaoshu', 'xiandai', 'gailv', 'eng', 'pol'];
+function progName(k) {
+  const m = MATH_MODULES.find(x => x.k === k);
+  return m ? m.name : (SUBJECTS[k] ? SUBJECTS[k].name : k);
+}
+function progBadge(k) {
+  const m = MATH_MODULES.find(x => x.k === k);
+  if (m) return '<span class="badge" style="--b:var(--c-math)">' + esc(m.badge) + '</span>';
+  return subBadge(k);
+}
 function overallProgress() {
   let sum = 0;
-  SUBJ_ORDER.forEach(k => { sum += subjectProgress(k); });
-  return Math.round(sum / SUBJ_ORDER.length);
+  PROGRESS_KEYS.forEach(k => { sum += subjectProgress(k); });
+  return Math.round(sum / PROGRESS_KEYS.length);
 }
 function stageOfDate(dateStr) {
   return (S.stages || []).find(st => dateStr >= st.start && dateStr <= st.end) || null;
@@ -1819,12 +1839,13 @@ function _dashToday() {
 
 /* ---- 卡3 全科进度 ---- */
 function _dashProgress() {
-  const rows = SUBJ_ORDER.map(k => {
-    const p = subjectProgress(k);
-    const edit = (k === 'math' || k === 'eng' || k === 'pol')
-      ? ' <button class="icon-btn" data-act="dash-edit-prog" data-k="' + k + '" title="手动设置">✎</button>' : '';
-    return '<div class="sub-bar"><span class="sb-name">' + subBadge(k) + '</span>' +
-      '<span class="grow">' + progressBar(p, SUBJECTS[k].color) + '</span>' + edit + '</div>';
+  const manual = { math: 1, gaoshu: 1, xiandai: 1, gailv: 1, eng: 1, pol: 1 };
+  const rows = PROGRESS_KEYS.map(k => {
+    const isMathMod = MATH_MODULES.some(x => x.k === k);
+    const color = isMathMod ? 'var(--c-math)' : SUBJECTS[k].color;
+    const edit = manual[k] ? ' <button class="icon-btn" data-act="dash-edit-prog" data-k="' + k + '" title="手动设置">✎</button>' : '';
+    return '<div class="sub-bar"><span class="sb-name">' + progBadge(k) + '</span>' +
+      '<span class="grow">' + progressBar(subjectProgress(k), color) + '</span>' + edit + '</div>';
   }).join('');
   return card('📊 全科进度', rows +
     '<div class="sep"></div><div class="sub-bar"><b>总进度</b><span class="grow">' +
@@ -2132,12 +2153,12 @@ Actions['dash-task-del'] = d => {
 Actions['dash-go-daily'] = () => nav('daily');
 Actions['dash-edit-prog'] = d => {
   Modal.form({
-    title: '设置「' + SUBJECTS[d.k].name + '」进度',
+    title: '设置「' + progName(d.k) + '」进度',
     fields: [{ key: 'p', label: '进度（0-100）', type: 'number', value: S.progressManual[d.k] || 0, min: 0, max: 100 }],
     onSubmit(v) {
       const p = clamp(Math.round(num(v.p)), 0, 100);
       S.progressManual[d.k] = p;
-      save(); rerender(); toast(SUBJECTS[d.k].name + '进度已更新为 ' + p + '%');
+      save(); rerender(); toast(progName(d.k) + '进度已更新为 ' + p + '%');
     }
   });
 };
