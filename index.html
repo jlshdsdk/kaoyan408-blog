@@ -706,6 +706,13 @@ tbody tr:hover { background: var(--bg3); }
 /* ---------------- 模板按钮 ---------------- */
 .tpl-grid { display: flex; flex-wrap: wrap; gap: 6px; }
 
+/* ---------------- 阶段卡（目标规划 DIY） ---------------- */
+.stage-card { border-top: 3px solid var(--sc, var(--primary)); }
+.stage-card .card-h { border-bottom: none; padding-bottom: 0; }
+.stage-card .st-dates { font-size: 11px; color: var(--text2); font-family: ui-monospace, Consolas, monospace; }
+.stage-card .st-goal { font-size: 12.5px; color: var(--text); line-height: 1.6; margin-top: 6px; }
+.stage-card .st-foot { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+
 /* ---------------- 月历热力图 ---------------- */
 .cal-head { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 4px; }
 .cal-head span { text-align: center; font-size: 11px; color: var(--text2); }
@@ -2268,18 +2275,26 @@ function _dashHeat() {
     '<span>多</span></div>');
 }
 
-/* ================= 页面二：目标规划 ================= */
+/* ================= 页面二：目标规划（子标签：总览 / 月度计划 / 周计划） ================= */
+const STAGE_PAL = ['var(--c-ds)', 'var(--c-comp)', 'var(--c-os)', 'var(--c-net)', 'var(--c-math)', 'var(--c-eng)', 'var(--c-pol)'];
+function _sortedStages() { return (S.stages || []).slice().sort((a, b) => a.start < b.start ? -1 : a.start > b.start ? 1 : 0); }
+
 registerPage('goals', {
   name: '目标规划', icon: '🎯',
   render(el) {
     S._ui = S._ui || {};
+    if (!S._ui.goalsTab) S._ui.goalsTab = 'overview';
     if (!S._ui.goalMonth) S._ui.goalMonth = monthKey(today());
     if (!S._ui.goalWeek) S._ui.goalWeek = isoWeek(today());
-    el.innerHTML = pageHead('目标规划', '阶段 → 月 → 周 → 日，四级联动层层拆解') +
-      '<div class="grid-dash">' + [
-        _goalsTimeline(), _goalsStages(), _goalsMonth(), _goalsWeek(), _goalsTrend(),
-        card('🔗 联动说明', '<p class="muted">任务打勾 → 周完成率 → 月完成率 → 阶段进度，全部自动同步，无需手动更新。</p>')
-      ].join('') + '</div>';
+    const tab = S._ui.goalsTab;
+    const tabBar = '<div class="tabs">' + [
+      ['overview', '🗺 总览'], ['month', '🗓 月度计划'], ['week', '📅 周计划']
+    ].map(t => '<button class="tab' + (tab === t[0] ? ' active' : '') + '" data-act="goals-tab" data-t="' + t[0] + '">' + t[1] + '</button>').join('') + '</div>';
+    let body;
+    if (tab === 'month') body = _goalsMonthCard();
+    else if (tab === 'week') body = _goalsWeekCard();
+    else body = _goalsTimeline() + _stageCards() + _goalsTrend();
+    el.innerHTML = pageHead('目标规划', '四级联动：阶段 → 月 → 周 → 日，任务完成自动同步进度') + tabBar + body;
     try {
       const cv = $('#goals-trend-chart');
       if (cv) {
@@ -2296,23 +2311,23 @@ registerPage('goals', {
     } catch (e) {}
   }
 });
+Actions['goals-tab'] = d => { S._ui.goalsTab = d.t; rerender(); };
 
-/* ---- 卡0 阶段时间轴 ---- */
+/* ---- 总览 · 阶段时间轴（支持任意阶段数） ---- */
 function _goalsTimeline() {
-  const sts = (S.stages || []).slice().sort((a, b) => a.start < b.start ? -1 : 1);
-  if (!sts.length) return card('🗺 阶段时间轴', empty('还没有阶段信息'));
+  const sts = _sortedStages();
+  if (!sts.length) return card('🗺 阶段时间轴', empty('暂无阶段，先在下方添加一个'));
   const start = sts.reduce((m, st) => st.start < m ? st.start : m, sts[0].start);
   const end = sts.reduce((m, st) => st.end > m ? st.end : m, sts[0].end);
   const total = diffDays(end, start);
   if (total <= 0) return card('🗺 阶段时间轴', empty('阶段日期尚未配置'));
-  const colors = ['var(--c-ds)', 'var(--c-comp)', 'var(--c-os)', 'var(--c-net)'];
   const cur = stageOfDate(today());
   const bars = sts.map((st, i) => {
     const left = diffDays(st.start, start) / total * 100;
     const width = (diffDays(st.end, st.start) + 1) / total * 100;
     const nm = String(st.name || '');
     const label = esc(width < 12 ? nm.slice(0, 1) : nm);
-    return '<div class="tl-bar' + (cur && cur.id === st.id ? ' cur' : '') + '" style="left:' + left + '%;width:' + width + '%;background:' + colors[i % colors.length] + '">' + label + '</div>';
+    return '<div class="tl-bar' + (cur && cur.id === st.id ? ' cur' : '') + '" style="left:' + left + '%;width:' + width + '%;background:' + STAGE_PAL[i % STAGE_PAL.length] + '">' + label + '</div>';
   }).join('');
   const td = today();
   const now = (td >= start && td <= end)
@@ -2322,42 +2337,47 @@ function _goalsTimeline() {
     '<div class="tl-labels"><span>' + start.slice(0, 7) + '</span><span>' + end.slice(0, 7) + '</span></div></div>');
 }
 
-/* ---- 卡1 阶段总览 ---- */
-function _stageRate(st) {
-  const list = [];
-  let mk = monthKey(st.start);
-  const endMk = monthKey(st.end);
-  while (mk <= endMk) {
-    const m = (S.months || {})[mk];
-    if (m && m.items && m.items.length) list.push(rateOf(m.items));
-    const parts = mk.split('-');
-    const d = new Date(num(parts[0]), num(parts[1]) - 1, 1);
-    d.setMonth(d.getMonth() + 1);
-    mk = d.getFullYear() + '-' + pad2(d.getMonth() + 1);
-  }
-  if (!list.length) return null;
-  return Math.round(list.reduce((a, b) => a + b, 0) / list.length);
-}
-function _goalsStages() {
+/* ---- 总览 · DIY 阶段卡（自由添加 / 编辑 / 删除） ---- */
+function _stageCards() {
   const cur = stageOfDate(today());
-  const cards = (S.stages || []).map(st => {
-    const r = _stageRate(st);
-    const tag = cur && cur.id === st.id ? ' <span class="tag">当前</span>' : '';
-    return '<div class="card">' +
-      '<div class="card-b">' +
-      '<b>' + esc(st.name) + '</b>' + tag +
-      '<div class="muted mono">' + esc(st.start) + ' ~ ' + esc(st.end) + '</div>' +
-      '<div class="muted clamp2">' + esc(st.goal || '（未填写目标）') + '</div>' +
-      '<div style="margin:6px 0">' + (r == null ? '<span class="muted">进度 —</span>' : progressBar(r)) + '</div>' +
-      '<button class="btn ghost sm" data-act="goals-stage-edit" data-id="' + esc(st.id) + '">编辑</button>' +
+  const cards = _sortedStages().map((st, i) => {
+    const col = STAGE_PAL[i % STAGE_PAL.length];
+    // 阶段进度 = 日期范围内各月 monthKey 条目完成率的平均（沿用旧 _stageRate 口径）
+    const agg = { done: 0, total: 0, rates: [] };
+    let mk = monthKey(st.start);
+    const endMk = monthKey(st.end);
+    while (mk <= endMk) {
+      const m = (S.months || {})[mk];
+      if (m && m.items && m.items.length) {
+        agg.rates.push(rateOf(m.items));
+        agg.done += m.items.filter(x => x.done).length;
+        agg.total += m.items.length;
+      }
+      const p = mk.split('-');
+      const d = new Date(num(p[0]), num(p[1]) - 1, 1);
+      d.setMonth(d.getMonth() + 1);
+      mk = d.getFullYear() + '-' + pad2(d.getMonth() + 1);
+    }
+    const avg = agg.rates.length ? Math.round(agg.rates.reduce((a, b) => a + b, 0) / agg.rates.length) : 0;
+    return '<div class="card stage-card" style="--sc:' + col + '">' +
+      '<div class="card-h"><h3>' + esc(st.name) + '</h3>' +
+      (cur && cur.id === st.id ? '<span class="tag" style="color:var(--star)">当前</span>' : '') +
+      '<button class="icon-btn" data-act="goals-stage-edit" data-id="' + esc(st.id) + '" title="编辑">✎</button>' +
+      '<button class="icon-btn" data-act="goals-stage-del" data-id="' + esc(st.id) + '" title="删除">✕</button>' +
+      '</div><div class="card-b">' +
+      '<div class="st-dates">' + esc(st.start) + ' ~ ' + esc(st.end) + ' · 共 ' + (diffDays(st.end, st.start) + 1) + ' 天</div>' +
+      '<div class="st-goal">' + esc(st.goal || '（未填写目标）') + '</div>' +
+      '<div class="st-foot"><span class="muted">' +
+      (agg.rates.length ? '月计划完成 <b class="mono">' + agg.done + '/' + agg.total + '</b>' : '月计划完成 —') +
+      '</span><span class="grow">' + progressBar(avg, col) + '</span></div>' +
       '</div></div>';
   }).join('');
-  return card('🗺 阶段总览', '<div class="grid-dash">' + cards + '</div>',
-    '', '<span class="muted">四级联动：阶段→月→周→日</span>');
+  const addCard = '<div class="card stage-card" style="border:1.5px dashed var(--line);display:flex;align-items:center;justify-content:center;min-height:120px"><button class="btn ghost" data-act="goals-stage-add">＋ 添加阶段</button></div>';
+  return '<div class="grid-dash">' + cards + addCard + '</div>';
 }
 
-/* ---- 卡2 月度计划 ---- */
-function _goalsMonth() {
+/* ---- 子标签：月度计划 ---- */
+function _goalsMonthCard() {
   const mk = S._ui.goalMonth;
   const m = (S.months || {})[mk];
   const items = m ? m.items : [];
@@ -2395,8 +2415,8 @@ function _monthShift(mk, n) {
   return d.getFullYear() + '-' + pad2(d.getMonth() + 1);
 }
 
-/* ---- 卡3 周计划 ---- */
-function _goalsWeek() {
+/* ---- 子标签：周计划 ---- */
+function _goalsWeekCard() {
   const wkKey = S._ui.goalWeek;
   const w = (S.weeks || {})[wkKey];
   const items = w ? w.items : [];
@@ -2666,7 +2686,39 @@ Actions['dash-heat-day'] = d => {
   nav('daily');
 };
 
-/* ================= Actions：目标规划 ================= */
+/* ================= Actions：目标规划 · DIY 阶段 ================= */
+Actions['goals-stage-add'] = () => {
+  Modal.form({
+    title: '添加阶段',
+    fields: [
+      { key: 'name', label: '阶段名称', type: 'text', required: true, placeholder: '如：基础阶段' },
+      { key: 'start', label: '开始日期', type: 'date', required: true },
+      { key: 'end', label: '结束日期', type: 'date', required: true },
+      { key: 'goal', label: '阶段目标', type: 'textarea', rows: 3, placeholder: '这个阶段要达成什么？' }
+    ],
+    onSubmit(v) {
+      if (!v.name) { toast('阶段名称不能为空', 'err'); return false; }
+      if (!v.start || !v.end) { toast('起止日期必填', 'err'); return false; }
+      if (v.start > v.end) { toast('开始日期不能晚于结束日期', 'err'); return false; }
+      (S.stages = S.stages || []).push({ id: uid(), name: v.name, start: v.start, end: v.end, goal: v.goal || '' });
+      save(); rerender(); toast('阶段已添加');
+    }
+  });
+};
+Actions['goals-stage-del'] = d => {
+  const st = (S.stages || []).find(x => x.id === d.id);
+  if (!st) return;
+  if ((S.stages || []).length <= 1) { toast('至少保留一个阶段', 'err'); return; }
+  Modal.confirm({
+    title: '删除阶段',
+    message: '确定删除阶段「<b>' + esc(st.name) + '</b>」吗？其目标文字将一并删除。',
+    okText: '删除',
+    onOk() {
+      S.stages = S.stages.filter(x => x.id !== d.id);
+      save(); rerender(); toast('已删除');
+    }
+  });
+};
 Actions['goals-stage-edit'] = d => {
   const st = (S.stages || []).find(x => x.id === d.id);
   if (!st) return;
@@ -2679,7 +2731,8 @@ Actions['goals-stage-edit'] = d => {
       { key: 'goal', label: '阶段目标', type: 'textarea', value: st.goal, rows: 3 }
     ],
     onSubmit(v) {
-      if (!v.name || !v.start || !v.end) { toast('名称和起止日期必填', 'err'); return false; }
+      if (!v.name) { toast('阶段名称不能为空', 'err'); return false; }
+      if (!v.start || !v.end) { toast('起止日期必填', 'err'); return false; }
       if (v.start > v.end) { toast('开始日期不能晚于结束日期', 'err'); return false; }
       st.name = v.name; st.start = v.start; st.end = v.end; st.goal = v.goal || '';
       save(); rerender();
