@@ -621,6 +621,25 @@ tbody tr:hover { background: var(--bg3); }
 
 .date-strip button.on b { color: var(--primary); }
 
+.date-strip button.is-today { border-color: color-mix(in srgb, var(--c-eng) 60%, var(--line)); }
+
+/* 周条（span 版，目标规划页用） */
+.date-strip .ds-day {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 8px 4px; background: var(--bg3);
+  border: 1px solid var(--line); border-radius: 8px;
+  color: var(--text2); font-size: 11px; line-height: 1.4;
+}
+
+.date-strip .ds-day.on { background: var(--primary2); border-color: var(--primary); color: var(--primary); }
+.date-strip .ds-day b { font-size: 14px; color: var(--text); font-weight: 600; }
+.date-strip .ds-day.on b { color: var(--primary); }
+
+/* 任务完成态 */
+.row-text { flex: 1 1 auto; min-width: 0; overflow-wrap: anywhere; }
+.row.done { opacity: 0.6; }
+.row.done .grow, .row.done .row-text, .strike { text-decoration: line-through; color: var(--text2); }
+
 /* ---------------- 科目进度行 ---------------- */
 .sub-bar { display: flex; align-items: center; gap: 10px; }
 
@@ -1604,7 +1623,7 @@ function defaultState() {
     resources: [],
     reviews: [],
     moods: [],
-    progressManual: { math: 0, gaoshu: 0, xiandai: 0, gailv: 0, eng: 0, pol: 0 },
+    progressManual: { math: 0, gaoshu: 0, xiandai: 0, gailv: 0, eng: 0, pol: 0, ds: 0, comp: 0, os: 0, net: 0 },
     dailyQBank: qs,
     pomo: { focusMin: 45, breakMin: 10, autoNext: false, lastSub: 'ds', log: {} },
     schedule: [
@@ -1664,11 +1683,20 @@ function migrate(s) {
   s.reminders.eyeOn = !!s.reminders.eyeOn;
   const em = Math.round(num(s.reminders.eyeMin, 45));
   s.reminders.eyeMin = clamp(em || 45, 5, 180);
-  if (!s.progressManual || typeof s.progressManual !== 'object') s.progressManual = { math: 0, gaoshu: 0, xiandai: 0, gailv: 0, eng: 0, pol: 0 };
+  if (!s.progressManual || typeof s.progressManual !== 'object') s.progressManual = { math: 0, gaoshu: 0, xiandai: 0, gailv: 0, eng: 0, pol: 0, ds: 0, comp: 0, os: 0, net: 0 };
   // 数学拆分为高数/线代/概率三个模块：老数据以原「数学」进度作为各模块初始值
   if (s.progressManual.gaoshu === undefined) s.progressManual.gaoshu = clamp(num(s.progressManual.math, 0), 0, 100);
   if (s.progressManual.xiandai === undefined) s.progressManual.xiandai = clamp(num(s.progressManual.math, 0), 0, 100);
   if (s.progressManual.gailv === undefined) s.progressManual.gailv = clamp(num(s.progressManual.math, 0), 0, 100);
+  // 408 四科进度改手动：老数据若在知识点树里标过状态，按树推导一次作为初始值
+  ['ds', 'comp', 'os', 'net'].forEach(k => {
+    if (s.progressManual[k] === undefined) {
+      const W = { '已掌握': 1, '学习中': 0.4, '薄弱': 0.25, '未学': 0 };
+      let tot = 0, sum = 0;
+      ((s.knowledge && s.knowledge[k]) || []).forEach(c => (c.children || []).forEach(n => { tot++; sum += (W[n.status] || 0); }));
+      s.progressManual[k] = tot ? clamp(Math.round(sum / tot * 100), 0, 100) : 0;
+    }
+  });
   ['math', 'eng', 'pol'].forEach(k => { s.progressManual[k] = clamp(num(s.progressManual[k], 0), 0, 100); });
   if (!s.school || typeof s.school !== 'object') s.school = d.school;
   if (!Array.isArray(s.school.lines)) s.school.lines = [];
@@ -1727,24 +1755,10 @@ function focusSum(fromDateStr, toDateStr, subKey) {
   return sum;
 }
 function subjectProgress(k) {
-  if (SUBJ408.indexOf(k) >= 0) {
-    const W = { '已掌握': 1, '学习中': 0.4, '薄弱': 0.25, '未学': 0 };
-    const chs = (S.knowledge && S.knowledge[k]) || [];
-    if (!chs.length) return 0;
-    let sum = 0;
-    chs.forEach(c => {
-      const kids = c.children || [];
-      if (kids.length) {
-        sum += kids.reduce((s, x) => s + (W[x.status] || 0), 0) / kids.length * 100;
-      } else {
-        sum += (W[c.status] || 0) * 100;
-      }
-    });
-    return clamp(Math.round(sum / chs.length), 0, 100);
-  }
   return clamp(Math.round(num((S.progressManual || {})[k])), 0, 100);
 }
-// 数学一按模块拆分进度展示（番茄/任务的时间统计仍按「数学一」整体记录）
+// 全科进度：九项均为手动进度（原 408 知识点树推导已随树页面移除）
+const PROGRESS_MANUAL_KEYS = { math: 1, gaoshu: 1, xiandai: 1, gailv: 1, eng: 1, pol: 1, ds: 1, comp: 1, os: 1, net: 1 };
 const MATH_MODULES = [
   { k: 'gaoshu',  name: '高等数学', badge: '高数' },
   { k: 'xiandai', name: '线性代数', badge: '线代' },
@@ -1839,7 +1853,7 @@ function _dashToday() {
 
 /* ---- 卡3 全科进度 ---- */
 function _dashProgress() {
-  const manual = { math: 1, gaoshu: 1, xiandai: 1, gailv: 1, eng: 1, pol: 1 };
+  const manual = PROGRESS_MANUAL_KEYS;
   const rows = PROGRESS_KEYS.map(k => {
     const isMathMod = MATH_MODULES.some(x => x.k === k);
     const color = isMathMod ? 'var(--c-math)' : SUBJECTS[k].color;
@@ -2409,7 +2423,8 @@ Actions['goals-week-assign'] = () => {
 </script>
 <script>
 /* =====================================================================
-   研途408 · pages_b.js —— daily / exam / algo 三页
+   研途408 · pages_b.js —— 每日打卡
+   （408真题 / 算法刷题 / 错题本 / 知识点树 已按需求移除）
    ===================================================================== */
 
 /* ======================= 每日打卡 ======================= */
@@ -2424,14 +2439,14 @@ registerPage('daily', {
 
     const head =
       pageHead('每日打卡', '一天一小步，日拱一卒', '') +
-      '<div class="card"><div class="card-b">' +
-      '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
-      '<button class="icon-btn" data-act="daily-prev">‹</button>' +
-      '<span class="mono" style="font-size:16px;">' + esc(date) + ' ' + weekCN(date) + '</span>' +
-      (date === today() ? '<span class="tag">今天</span>' : '') +
-      '<button class="icon-btn" data-act="daily-next">›</button>' +
-      '<button class="btn sm ghost" data-act="daily-today">回到今天</button>' +
-      '</div>';
+      card(null,
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+        '<button class="icon-btn" data-act="daily-prev">‹</button>' +
+        '<span class="mono" style="font-size:16px;">' + esc(date) + ' ' + weekCN(date) + '</span>' +
+        (date === today() ? '<span class="tag">今天</span>' : '') +
+        '<button class="icon-btn" data-act="daily-next">›</button>' +
+        '<button class="btn sm ghost" data-act="daily-today">回到今天</button>' +
+        '</div>');
 
     // 周条
     const wd = weekDates(date);
@@ -2443,7 +2458,7 @@ registerPage('daily', {
         wd.map(d => {
           const ts = tasksOn(d);
           const dn = ts.filter(t => t.done).length;
-          return '<button class="ds-cell' + (d === date ? ' active' : '') + (d === today() ? ' is-today' : '') + '"' +
+          return '<button class="ds-cell' + (d === date ? ' on' : '') + (d === today() ? ' is-today' : '') + '"' +
             ' data-act="daily-jump" data-date="' + esc(d) + '">' +
             '<span class="ds-w">' + weekCN(d) + '</span>' +
             '<span class="ds-d mono">' + d.slice(8) + '</span>' +
@@ -2559,753 +2574,6 @@ Actions['quick-add-task'] = () => {
       rerender();
     }
   });
-};
-
-/* ======================= 408真题 ======================= */
-registerPage('exam', {
-  name: '408真题',
-  icon: '📘',
-  render(el) {
-    S._ui = S._ui || {};
-    const ui = S._ui;
-    ui.examFilter = ui.examFilter || { year: '', subject: '' };
-    ui.examOpen = ui.examOpen || {};
-
-    const all = S.realExam || [];
-    const years = Array.from(new Set(all.map(r => r.year))).sort((a, b) => b - a);
-    const EXAM_SUBJ = [{ v: 'ds', label: '数据结构' }, { v: 'comp', label: '组成原理' }, { v: 'os', label: '操作系统' }, { v: 'net', label: '计算机网络' }, { v: 'all', label: '综合' }];
-    const subjName = k => { const f = EXAM_SUBJ.find(x => x.v === k); return f ? f.label : k; };
-
-    const rows = all.filter(r =>
-      (!ui.examFilter.year || String(r.year) === String(ui.examFilter.year)) &&
-      (!ui.examFilter.subject || r.subject === ui.examFilter.subject)
-    );
-    const sorted = rows.slice().sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-
-    // 按年份分组
-    const byYear = {};
-    sorted.forEach(r => { (byYear[r.year] = byYear[r.year] || []).push(r); });
-    const yearKeys = Object.keys(byYear).sort((a, b) => b - a);
-
-    const errCount = all.reduce((s, r) => s + (r.errors || []).length, 0);
-    const latest = all.map(r => r.date).filter(Boolean).sort().pop();
-
-    let listHtml;
-    if (!yearKeys.length) {
-      listHtml = empty((ui.examFilter.year || ui.examFilter.subject)
-        ? '当前筛选条件下没有记录，试试清空筛选'
-        : '还没有刷题记录，点右上角记录一次吧');
-    } else {
-      listHtml = yearKeys.map(y =>
-        '<div class="year-head mono">' + esc(y) + ' 年 · ' + byYear[y].length + ' 次</div>' +
-        byYear[y].map(r => {
-          const rate = r.total ? Math.round((r.correct || 0) / r.total * 100) : 0;
-          const rateCls = rate >= 70 ? 'ok' : (rate < 50 ? 'bad' : '');
-          const open = !!ui.examOpen[r.id];
-          return '<div class="exam-item">' +
-            '<div class="row" style="cursor:pointer;" data-act="exam-toggle" data-id="' + esc(r.id) + '">' +
-            subBadge(r.subject) +
-            '<span class="mono muted">' + esc(r.date || '') + '</span>' +
-            '<span class="mono ' + rateCls + '">正确 ' + (r.correct || 0) + '/' + (r.total || 0) + '</span>' +
-            (r.note ? '<span class="muted row-note">' + esc(String(r.note).slice(0, 24)) + '</span>' : '') +
-            '<span style="flex:1;"></span>' +
-            '<button class="icon-btn" data-act="exam-edit" data-id="' + esc(r.id) + '" title="编辑">✎</button>' +
-            '<button class="icon-btn" data-act="exam-del" data-id="' + esc(r.id) + '" title="删除">🗑</button>' +
-            '<span class="muted">' + (open ? '▾' : '▸') + ' 错题 (' + (r.errors || []).length + ')</span>' +
-            '</div>' +
-            (open ?
-              '<div class="err-box">' +
-              (!(r.errors || []).length ? '<div class="muted" style="padding:6px 0;">这条记录暂无错题</div>' :
-                r.errors.map((e, i) =>
-                  '<div class="row err-row">' +
-                  '<span class="row-text">' + esc(e.q) + '</span>' +
-                  '<span class="muted">错因：' + esc(e.reason || '—') + '</span>' +
-                  '<span class="tag">' + esc(e.point || '未标考点') + '</span>' +
-                  '<button class="icon-btn" data-act="exam-err-del" data-id="' + esc(r.id) + '" data-idx="' + i + '" title="删除错题">🗑</button>' +
-                  '</div>').join('')) +
-              '<button class="btn sm ghost" data-act="exam-err-add" data-id="' + esc(r.id) + '">+ 补充错题</button>' +
-              '</div>' : '') +
-            '</div>';
-        }).join('')
-      ).join('');
-    }
-
-    el.innerHTML =
-      pageHead('408真题', '真题是最好的老师，一道一道吃透',
-        '<button class="btn primary" data-act="exam-add">+ 记录一次刷题</button>' +
-        '<button class="btn ghost" data-act="exam-export">导出 txt</button>') +
-      '<div class="card"><div class="card-b">' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">' +
-      '<select data-change="exam-filter" data-k="year">' +
-      '<option value="">全部年份</option>' +
-      years.map(y => '<option value="' + esc(y) + '"' + (String(ui.examFilter.year) === String(y) ? ' selected' : '') + '>' + esc(y) + ' 年</option>').join('') +
-      '</select>' +
-      '<select data-change="exam-filter" data-k="subject">' +
-      '<option value="">全部科目</option>' +
-      EXAM_SUBJ.map(s => '<option value="' + s.v + '"' + (ui.examFilter.subject === s.v ? ' selected' : '') + '>' + esc(s.label) + '</option>').join('') +
-      '</select></div>' + listHtml + '</div></div>' +
-      '<div class="grid3" style="margin-top:16px;">' +
-      statCard('累计刷题', all.length + ' 次', '', 'var(--primary)') +
-      statCard('覆盖错题', errCount + ' 道', '', 'var(--c-ds)') +
-      statCard('最近一次', latest ? fmtDateCN(latest) : '—', latest ? esc(latest) : '', 'var(--c-math)') +
-      '</div>';
-  }
-});
-
-Actions['exam-filter'] = (d, el) => {
-  S._ui = S._ui || {};
-  S._ui.examFilter = S._ui.examFilter || {};
-  S._ui.examFilter[d.k] = el.value || '';
-  rerender();
-};
-
-Actions['exam-toggle'] = d => {
-  S._ui = S._ui || {};
-  S._ui.examOpen = S._ui.examOpen || {};
-  S._ui.examOpen[d.id] = !S._ui.examOpen[d.id];
-  rerender();
-};
-
-Actions['exam-add'] = () => {
-  Modal.form({
-    title: '记录一次刷题',
-    wide: true,
-    fields: [
-      { key: 'year', label: '年份', type: 'number', value: new Date().getFullYear(), min: 2000, max: 2100 },
-      { key: 'subject', label: '科目', type: 'select', options: [{ v: 'ds', label: '数据结构' }, { v: 'comp', label: '组成原理' }, { v: 'os', label: '操作系统' }, { v: 'net', label: '计算机网络' }, { v: 'all', label: '综合' }] },
-      { key: 'correct', label: '对题数', type: 'number', min: 0 },
-      { key: 'total', label: '总题数', type: 'number', value: 100, min: 1 },
-      { key: 'date', label: '日期', type: 'date', value: today() },
-      { key: 'note', label: '笔记', type: 'textarea', rows: 2 }
-    ],
-    onSubmit(vals) {
-      S.realExam = S.realExam || [];
-      S.realExam.push({
-        id: uid(),
-        year: Math.round(num(vals.year, new Date().getFullYear())),
-        subject: vals.subject,
-        date: vals.date || today(),
-        correct: Math.round(num(vals.correct, 0)),
-        total: Math.round(num(vals.total, 100)),
-        note: vals.note || '',
-        errors: []
-      });
-      save(); rerender();
-      toast('已记录刷题');
-    }
-  });
-};
-
-Actions['exam-edit'] = d => {
-  const r = (S.realExam || []).find(x => x.id === d.id);
-  if (!r) return;
-  Modal.form({
-    title: '编辑刷题记录',
-    wide: true,
-    fields: [
-      { key: 'year', label: '年份', type: 'number', value: r.year },
-      { key: 'subject', label: '科目', type: 'select', options: [{ v: 'ds', label: '数据结构' }, { v: 'comp', label: '组成原理' }, { v: 'os', label: '操作系统' }, { v: 'net', label: '计算机网络' }, { v: 'all', label: '综合' }], value: r.subject },
-      { key: 'correct', label: '对题数', type: 'number', value: r.correct },
-      { key: 'total', label: '总题数', type: 'number', value: r.total },
-      { key: 'date', label: '日期', type: 'date', value: r.date },
-      { key: 'note', label: '笔记', type: 'textarea', rows: 2, value: r.note }
-    ],
-    onSubmit(vals) {
-      r.year = Math.round(num(vals.year, r.year));
-      r.subject = vals.subject;
-      r.correct = Math.round(num(vals.correct, 0));
-      r.total = Math.round(num(vals.total, 100));
-      r.date = vals.date || r.date;
-      r.note = vals.note || '';
-      save(); rerender();
-    }
-  });
-};
-
-Actions['exam-del'] = d => {
-  Modal.confirm({
-    title: '删除记录',
-    message: '确定删除这条刷题记录（含其错题）？',
-    onOk() { S.realExam = (S.realExam || []).filter(x => x.id !== d.id); save(); rerender(); }
-  });
-};
-
-Actions['exam-err-add'] = d => {
-  const r = (S.realExam || []).find(x => x.id === d.id);
-  if (!r) return;
-  Modal.form({
-    title: '补充错题',
-    wide: true,
-    fields: [
-      { key: 'q', label: '题干', type: 'textarea', required: true, rows: 3 },
-      { key: 'reason', label: '错因', type: 'text' },
-      { key: 'point', label: '考点', type: 'text' }
-    ],
-    onSubmit(vals) {
-      if (!vals.q || !vals.q.trim()) { toast('题干不能为空', 'err'); return false; }
-      r.errors = r.errors || [];
-      r.errors.push({ q: vals.q.trim(), reason: vals.reason || '', point: vals.point || '' });
-      save(); rerender();
-    }
-  });
-};
-
-Actions['exam-err-del'] = d => {
-  const r = (S.realExam || []).find(x => x.id === d.id);
-  if (!r) return;
-  const i = num(d.idx, -1);
-  Modal.confirm({
-    title: '删除错题',
-    message: '确定删除这道错题？',
-    onOk() { r.errors.splice(i, 1); save(); rerender(); }
-  });
-};
-
-Actions['exam-export'] = () => {
-  const EXAM_SUBJ = { ds: '数据结构', comp: '组成原理', os: '操作系统', net: '计算机网络', all: '综合' };
-  const lines = (S.realExam || []).slice().sort((a, b) => (a.date || '').localeCompare(b.date || '')).map(r => {
-    let s = '[' + r.year + '][' + (EXAM_SUBJ[r.subject] || r.subject) + '] 正确' + (r.correct || 0) + '/' + (r.total || 0);
-    if (r.note) s += '；笔记：' + r.note;
-    (r.errors || []).forEach(e => { s += '\n  错题：' + e.q + '→' + (e.reason || '未记错因') + '→' + (e.point || '未标考点'); });
-    return s;
-  }).join('\n');
-  downloadText('408真题打卡_' + today() + '.txt', lines || '暂无记录');
-  toast('已导出');
-};
-
-/* ======================= 算法刷题 ======================= */
-const ALGO_DIFF = ['简单', '中等', '困难'];
-const ALGO_DS = ['链表', '栈与队列', '二叉树', '图', '哈希表', '堆', '字符串', '双指针', '数组', '其他'];
-const ALGO_WAY = ['模拟', '双指针', '二分查找', 'BFS', 'DFS', '动态规划', '贪心', '分治', '回溯', '排序', '其他'];
-const ALGO_STATUS = ['未做', '有思路', '已AC', '卡壳'];
-
-registerPage('algo', {
-  name: '算法刷题',
-  icon: '💻',
-  render(el) {
-    S._ui = S._ui || {};
-    const ui = S._ui;
-    ui.algoFilter = ui.algoFilter || { diff: '', status: '', ds: '' };
-
-    const list = (S.algo || []).filter(a =>
-      (!ui.algoFilter.diff || a.diff === ui.algoFilter.diff) &&
-      (!ui.algoFilter.status || a.status === ui.algoFilter.status) &&
-      (!ui.algoFilter.ds || a.ds === ui.algoFilter.ds)
-    ).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
-
-    const cnt = st => (S.algo || []).filter(a => a.status === st).length;
-
-    let listHtml;
-    if (!list.length) {
-      listHtml = empty((ui.algoFilter.diff || ui.algoFilter.status || ui.algoFilter.ds)
-        ? '当前筛选条件下没有题目，试试清空筛选'
-        : '还没收录算法题，从一道链表题开始吧');
-    } else {
-      listHtml = '<div class="rowlist">' + list.map(a => {
-        const safeLink = /^(https?:\/\/|mailto:)/i.test(String(a.link || '')) ? String(a.link) : '';
-        const titleHtml = safeLink
-          ? '<a href="' + esc(safeLink) + '" target="_blank" rel="noopener" class="row-text">' + esc(a.title) + '</a>'
-          : '<span class="row-text">' + esc(a.title) + '</span>';
-        return '<div class="row">' +
-          '<span class="tag diff-' + esc(a.diff) + '">' + esc(a.diff) + '</span>' +
-          titleHtml +
-          '<span class="tag">' + esc(a.ds) + '</span>' +
-          '<span class="tag">' + esc(a.algo) + '</span>' +
-          '<span class="chip st-' + esc(a.status) + '">' + esc(a.status) + '</span>' +
-          '<button class="icon-btn" data-act="algo-cycle" data-id="' + esc(a.id) + '" title="切换状态">⇄</button>' +
-          '<span class="mono muted">' + esc(a.date || '') + '</span>' +
-          '<button class="icon-btn" data-act="algo-edit" data-id="' + esc(a.id) + '" title="编辑">✎</button>' +
-          '<button class="icon-btn" data-act="algo-del" data-id="' + esc(a.id) + '" title="删除">🗑</button>' +
-          '</div>';
-      }).join('') + '</div>';
-    }
-
-    el.innerHTML =
-      pageHead('算法刷题', '手撕代码，题感是刷出来的',
-        '<button class="btn primary" data-act="algo-add">+ 添加题目</button>') +
-      '<div class="card"><div class="card-b">' +
-      '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">' +
-      '<select data-change="algo-filter" data-k="diff">' +
-      '<option value="">全部难度</option>' +
-      ALGO_DIFF.map(x => '<option value="' + esc(x) + '"' + (ui.algoFilter.diff === x ? ' selected' : '') + '>' + esc(x) + '</option>').join('') +
-      '</select>' +
-      '<select data-change="algo-filter" data-k="status">' +
-      '<option value="">全部状态</option>' +
-      ALGO_STATUS.map(x => '<option value="' + esc(x) + '"' + (ui.algoFilter.status === x ? ' selected' : '') + '>' + esc(x) + '</option>').join('') +
-      '</select>' +
-      '<select data-change="algo-filter" data-k="ds">' +
-      '<option value="">全部数据结构</option>' +
-      ALGO_DS.map(x => '<option value="' + esc(x) + '"' + (ui.algoFilter.ds === x ? ' selected' : '') + '>' + esc(x) + '</option>').join('') +
-      '</select>' +
-      '<span class="muted" style="align-self:center;">已 AC：' + cnt('已AC') + ' / ' + (S.algo || []).length + '</span>' +
-      '</div>' + listHtml + '</div></div>' +
-      '<div class="grid-dash" style="margin-top:16px;">' +
-      statCard('总题数', (S.algo || []).length, '', 'var(--primary)') +
-      statCard('已 AC', cnt('已AC'), '', 'var(--ok, var(--primary))') +
-      statCard('有思路', cnt('有思路'), '', 'var(--c-ds)') +
-      statCard('卡壳', cnt('卡壳'), '', 'var(--c-math)') +
-      '</div>';
-  }
-});
-
-Actions['algo-filter'] = (d, el) => {
-  S._ui = S._ui || {};
-  S._ui.algoFilter = S._ui.algoFilter || {};
-  S._ui.algoFilter[d.k] = el.value || '';
-  rerender();
-};
-
-function algoFormFields(a) {
-  return [
-    { key: 'title', label: '题目名', type: 'text', value: a ? a.title : '', required: true },
-    { key: 'link', label: '链接（可选）', type: 'text', value: a ? a.link : '', placeholder: 'https://leetcode.cn/problems/...' },
-    { key: 'diff', label: '难度', type: 'select', options: ALGO_DIFF, value: a ? a.diff : '中等' },
-    { key: 'ds', label: '数据结构', type: 'select', options: ALGO_DS, value: a ? a.ds : '链表' },
-    { key: 'algo', label: '算法思想', type: 'select', options: ALGO_WAY, value: a ? a.algo : '模拟' },
-    { key: 'status', label: '状态', type: 'select', options: ALGO_STATUS, value: a ? a.status : '未做' },
-    { key: 'note', label: '笔记', type: 'textarea', rows: 2, value: a ? a.note : '' }
-  ];
-}
-
-Actions['algo-add'] = () => {
-  Modal.form({
-    title: '添加算法题',
-    wide: true,
-    fields: algoFormFields(null),
-    onSubmit(vals) {
-      if (!vals.title || !vals.title.trim()) { toast('题目名不能为空', 'err'); return false; }
-      S.algo = S.algo || [];
-      S.algo.push({
-        id: uid(),
-        title: vals.title.trim(),
-        link: (vals.link || '').trim(),
-        diff: vals.diff,
-        ds: vals.ds,
-        algo: vals.algo,
-        status: vals.status,
-        note: vals.note || '',
-        date: today()
-      });
-      save(); rerender();
-      toast('已收录');
-    }
-  });
-};
-
-Actions['algo-edit'] = d => {
-  const a = (S.algo || []).find(x => x.id === d.id);
-  if (!a) return;
-  Modal.form({
-    title: '编辑算法题',
-    wide: true,
-    fields: algoFormFields(a),
-    onSubmit(vals) {
-      if (!vals.title || !vals.title.trim()) { toast('题目名不能为空', 'err'); return false; }
-      a.title = vals.title.trim();
-      a.link = (vals.link || '').trim();
-      a.diff = vals.diff;
-      a.ds = vals.ds;
-      a.algo = vals.algo;
-      a.status = vals.status;
-      a.note = vals.note || '';
-      save(); rerender();
-    }
-  });
-};
-
-Actions['algo-cycle'] = d => {
-  const a = (S.algo || []).find(x => x.id === d.id);
-  if (!a) return;
-  const i = ALGO_STATUS.indexOf(a.status);
-  a.status = ALGO_STATUS[(i + 1) % ALGO_STATUS.length];
-  if (a.status === '已AC' && !a.date) a.date = today();
-  save(); rerender();
-  toast('「' + a.title + '」→ ' + a.status);
-};
-
-Actions['algo-del'] = d => {
-  const a = (S.algo || []).find(x => x.id === d.id);
-  if (!a) return;
-  Modal.confirm({
-    title: '删除题目',
-    message: '确定删除「' + esc(a.title) + '」？',
-    onOk() { S.algo = S.algo.filter(x => x.id !== d.id); save(); rerender(); }
-  });
-};
-
-</script>
-<script>
-/* =====================================================================
-   研途408 · pages_c.js —— 错题本 / 知识点树
-   ===================================================================== */
-
-/* ================= 错题本 ================= */
-registerPage('errors', {
-  name: '错题本',
-  icon: '🧾',
-  render(el) {
-    S._ui = S._ui || {};
-    const tab = S._ui.errTab || 'math';
-
-    let body = '<div class="tabs">' +
-      '<button class="tab' + (tab === 'math' ? ' active' : '') + '" data-act="err-tab" data-t="math">📐 数学错题</button>' +
-      '<button class="tab' + (tab === 'pit' ? ' active' : '') + '" data-act="err-tab" data-t="pit">⚠️ 408易错点</button>' +
-      '</div>';
-    body += tab === 'pit' ? errPitHtml() : errMathHtml();
-
-    el.innerHTML = pageHead('错题本', '数学错题与 408 易错点集中管理') + body;
-  }
-});
-
-function errMathHtml() {
-  S._ui = S._ui || {};
-  const kw = (S._ui.errSearch || '').toLowerCase();
-  const chap = S._ui.errChap || '';
-  const list = (S.mathErrors || []).filter(it => {
-    if (chap && it.chap !== chap) return false;
-    if (kw) {
-      const hay = ((it.q || '') + ' ' + (it.method || '') + ' ' + (it.reason || '')).toLowerCase();
-      if (hay.indexOf(kw) < 0) return false;
-    }
-    return true;
-  });
-  const mastered = list.filter(it => it.mastered).length;
-
-  let rows = list.map(it =>
-    '<div class="row"' + (it.mastered ? ' style="opacity:.5"' : '') + '>' +
-    '<div class="row-main">' +
-    '<div class="row-tags">' +
-    '<span class="badge">' + esc(it.chap) + '</span>' +
-    '<span class="badge">' + esc(it.type) + '</span>' +
-    (it.method ? '<span class="muted sm">方法：' + esc(it.method) + '</span>' : '') +
-    '</div>' +
-    '<div style="white-space:pre-wrap' + (it.mastered ? ';text-decoration:line-through' : '') + '">' + esc(it.q) + '</div>' +
-    (it.reason ? '<div class="muted sm" style="white-space:pre-wrap">错因：' + esc(it.reason) + '</div>' : '') +
-    '<div class="muted sm mono">' + esc(it.date || '') + '</div>' +
-    '</div>' +
-    '<div class="row-ops">' +
-    '<button class="btn sm' + (it.mastered ? ' primary' : ' ghost') + '" data-act="err-master" data-id="' + esc(it.id) + '">' + (it.mastered ? '✓ 已掌握' : '标记掌握') + '</button>' +
-    '<button class="icon-btn" data-act="err-edit" data-id="' + esc(it.id) + '" title="编辑">✏️</button>' +
-    '<button class="icon-btn" data-act="err-del" data-id="' + esc(it.id) + '" title="删除">🗑️</button>' +
-    '</div></div>'
-  ).join('');
-
-  const toolbar = card(null,
-    '<div class="toolbar">' +
-    '<input type="search" placeholder="搜题干/方法/错因" value="' + esc(S._ui.errSearch || '') + '" data-input="err-search">' +
-    '<select data-change="err-chap">' +
-    '<option value=""' + (chap === '' ? ' selected' : '') + '>全部章节</option>' +
-    ['高数', '线代', '概率'].map(c => '<option value="' + c + '"' + (chap === c ? ' selected' : '') + '>' + c + '</option>').join('') +
-    '</select>' +
-    '<button class="btn primary" data-act="err-add">＋ 记录错题</button>' +
-    '<button class="btn ghost" data-act="err-export">导出 txt</button>' +
-    '</div>');
-
-  const summary = '<div class="muted sm" style="margin:8px 4px">共 ' + list.length + ' 道 · 未掌握 ' + (list.length - mastered) + ' 道</div>';
-
-  return toolbar + summary +
-    card('📐 数学错题', list.length ? '<div class="rowlist">' + rows + '</div>' : empty('还没有数学错题，点「＋ 记录错题」开始积累'));
-}
-
-function errPitHtml() {
-  S._ui = S._ui || {};
-  const kw = (S._ui.errPitSearch || '').toLowerCase();
-  const sub = S._ui.errPitSub || '';
-  const list = (S.pitfalls || []).filter(it => {
-    if (sub && it.subject !== sub) return false;
-    if (kw) {
-      const hay = ((it.title || '') + ' ' + (it.content || '')).toLowerCase();
-      if (hay.indexOf(kw) < 0) return false;
-    }
-    return true;
-  });
-
-  let rows = list.map(it =>
-    '<div class="row">' +
-    '<div class="row-main">' +
-    '<div class="row-tags">' + subBadge(it.subject) +
-    '<b>' + esc(it.title) + '</b>' +
-    '<span class="muted sm mono">' + esc(it.date || '') + '</span>' +
-    '</div>' +
-    '<div style="white-space:pre-wrap">' + esc(it.content) + '</div>' +
-    '</div>' +
-    '<div class="row-ops">' +
-    '<button class="icon-btn" data-act="err-pit-edit" data-id="' + esc(it.id) + '" title="编辑">✏️</button>' +
-    '<button class="icon-btn" data-act="err-pit-del" data-id="' + esc(it.id) + '" title="删除">🗑️</button>' +
-    '</div></div>'
-  ).join('');
-
-  const toolbar = card(null,
-    '<div class="toolbar">' +
-    '<input type="search" placeholder="搜标题/内容" value="' + esc(S._ui.errPitSearch || '') + '" data-input="err-pit-search">' +
-    '<select data-change="err-pit-sub">' +
-    '<option value=""' + (sub === '' ? ' selected' : '') + '>全部科目</option>' +
-    SUBJ408.map(k => '<option value="' + k + '"' + (sub === k ? ' selected' : '') + '>' + esc(SUBJECTS[k].name) + '</option>').join('') +
-    '</select>' +
-    '<button class="btn primary" data-act="err-pit-add">＋ 添加易错点</button>' +
-    '<button class="btn ghost" data-act="err-pit-export">导出 txt</button>' +
-    '</div>');
-
-  return toolbar + '<div class="muted sm" style="margin:8px 4px">共 ' + list.length + ' 条</div>' +
-    card('⚠️ 408易错点', list.length ? '<div class="rowlist">' + rows + '</div>' : empty('还没有易错点记录'));
-}
-
-Actions['err-tab'] = (d) => { S._ui.errTab = d.t; save(); rerender(); };
-Actions['err-search'] = (d, el) => {
-  S._ui.errSearch = el.value;
-  const pos = el.selectionStart == null ? el.value.length : el.selectionStart;
-  rerender();
-  const n = document.querySelector('[data-input="err-search"]');
-  if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} }
-};
-Actions['err-chap'] = (d, el) => { S._ui.errChap = el.value; rerender(); };
-Actions['err-pit-search'] = (d, el) => {
-  S._ui.errPitSearch = el.value;
-  const pos = el.selectionStart == null ? el.value.length : el.selectionStart;
-  rerender();
-  const n = document.querySelector('[data-input="err-pit-search"]');
-  if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} }
-};
-Actions['err-pit-sub'] = (d, el) => { S._ui.errPitSub = el.value; rerender(); };
-
-function errMathForm(it) {
-  Modal.form({
-    title: it ? '编辑数学错题' : '记录错题',
-    wide: true,
-    fields: [
-      { key: 'chap', label: '章节', type: 'select', options: ['高数', '线代', '概率'], value: it ? it.chap : '高数' },
-      { key: 'type', label: '题型', type: 'text', value: it ? it.type : '', placeholder: '如：中值定理证明' },
-      { key: 'method', label: '所用方法', type: 'text', value: it ? it.method : '', placeholder: '如：构造辅助函数' },
-      { key: 'q', label: '题目内容', type: 'textarea', rows: 4, required: true, value: it ? it.q : '' },
-      { key: 'reason', label: '错因', type: 'textarea', rows: 2, value: it ? it.reason : '' }
-    ],
-    onSubmit(vals) {
-      if (!vals.q || !vals.q.trim()) { toast('题目内容不能为空', 'err'); return false; }
-      if (it) {
-        it.chap = vals.chap; it.type = vals.type.trim(); it.method = vals.method.trim();
-        it.q = vals.q.trim(); it.reason = vals.reason.trim();
-      } else {
-        S.mathErrors.push({
-          id: uid(), chap: vals.chap, type: vals.type.trim(), method: vals.method.trim(),
-          q: vals.q.trim(), reason: vals.reason.trim(), mastered: false, date: today()
-        });
-      }
-      save(); rerender();
-    }
-  });
-}
-
-Actions['err-add'] = () => errMathForm(null);
-Actions['err-edit'] = (d) => { const it = (S.mathErrors || []).find(x => x.id === d.id); if (it) errMathForm(it); };
-Actions['err-del'] = (d) => {
-  const i = (S.mathErrors || []).findIndex(x => x.id === d.id);
-  if (i < 0) return;
-  Modal.confirm({
-    title: '删除错题',
-    message: '确定删除这道错题吗？删除后不可恢复。',
-    onOk() { S.mathErrors.splice(i, 1); save(); rerender(); toast('已删除'); }
-  });
-};
-Actions['err-master'] = (d) => {
-  const it = (S.mathErrors || []).find(x => x.id === d.id);
-  if (!it) return;
-  it.mastered = !it.mastered;
-  save(); rerender();
-};
-Actions['err-export'] = () => {
-  const list = S.mathErrors || [];
-  if (!list.length) { toast('暂无错题可导出'); return; }
-  const txt = list.map(it =>
-    '【' + it.chap + '】' + it.type + (it.method ? '（方法：' + it.method + '）' : '') + '\n' +
-    it.q + '\n' +
-    (it.reason ? '错因：' + it.reason + '\n' : '') +
-    (it.mastered ? '[已掌握]' : '[未掌握]') + ' ' + (it.date || '')
-  ).join('\n\n————————\n\n');
-  downloadText('数学错题本_' + today() + '.txt', txt);
-};
-
-function errPitForm(it) {
-  Modal.form({
-    title: it ? '编辑易错点' : '添加易错点',
-    fields: [
-      { key: 'subject', label: '科目', type: 'select', options: SUBJ408.map(k => ({ v: k, label: SUBJECTS[k].name })), value: it ? it.subject : 'ds' },
-      { key: 'title', label: '标题', type: 'text', required: true, value: it ? it.title : '' },
-      { key: 'content', label: '内容', type: 'textarea', rows: 4, value: it ? it.content : '' }
-    ],
-    onSubmit(vals) {
-      if (!vals.title || !vals.title.trim()) { toast('标题不能为空', 'err'); return false; }
-      if (it) {
-        it.subject = vals.subject; it.title = vals.title.trim(); it.content = vals.content.trim();
-      } else {
-        S.pitfalls.push({ id: uid(), subject: vals.subject, title: vals.title.trim(), content: vals.content.trim(), date: today() });
-      }
-      save(); rerender();
-    }
-  });
-}
-
-Actions['err-pit-add'] = () => errPitForm(null);
-Actions['err-pit-edit'] = (d) => { const it = (S.pitfalls || []).find(x => x.id === d.id); if (it) errPitForm(it); };
-Actions['err-pit-del'] = (d) => {
-  const i = (S.pitfalls || []).findIndex(x => x.id === d.id);
-  if (i < 0) return;
-  const t = S.pitfalls[i].title;
-  Modal.confirm({
-    title: '删除易错点',
-    message: '确定删除「' + esc(t) + '」吗？',
-    onOk() { S.pitfalls.splice(i, 1); save(); rerender(); toast('已删除'); }
-  });
-};
-Actions['err-pit-export'] = () => {
-  const list = S.pitfalls || [];
-  if (!list.length) { toast('暂无易错点可导出'); return; }
-  const txt = list.map(it =>
-    '【' + (SUBJECTS[it.subject] ? SUBJECTS[it.subject].name : it.subject) + '】' + it.title + '\n' +
-    (it.content || '') + '\n' + (it.date || '')
-  ).join('\n\n————————\n\n');
-  downloadText('408易错点_' + today() + '.txt', txt);
-};
-
-/* ================= 知识点树 ================= */
-const TREE_CYCLE = ['未学', '学习中', '已掌握', '薄弱'];
-
-registerPage('tree', {
-  name: '知识点树',
-  icon: '🌳',
-  render(el) {
-    S._ui = S._ui || {};
-    const k = S._ui.treeSub || 'ds';
-    const chaps = S.knowledge[k] || [];
-
-    let html = pageHead('知识点树', '408 四科章-节掌握度管理') +
-      '<div class="tabs">' +
-      SUBJ408.map(sk =>
-        '<button class="tab' + (sk === k ? ' active' : '') + '" data-act="tree-sub" data-k="' + sk + '">' + esc(SUBJECTS[sk].name) + '</button>'
-      ).join('') +
-      '</div>';
-
-    let cM = 0, cL = 0, cW = 0, cN = 0;
-    chaps.forEach(ch => (ch.children || []).forEach(sec => {
-      if (sec.status === '已掌握') cM++;
-      else if (sec.status === '学习中') cL++;
-      else if (sec.status === '薄弱') cW++;
-      else cN++;
-    }));
-    const total = cM + cL + cW + cN;
-    html += card('📊 ' + esc(SUBJECTS[k].name) + ' 总览',
-      progressBar(subjectProgress(k), SUBJECTS[k].color) +
-      '<div class="muted sm" style="margin-top:6px">已掌握 ' + cM + ' / 学习中 ' + cL + ' / 薄弱 ' + cW + ' / 未学 ' + cN + '</div>' +
-      '<div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">' +
-      '<span class="chip st-已掌握">已掌握</span>' +
-      '<span class="chip st-学习中">学习中</span>' +
-      '<span class="chip st-薄弱">薄弱</span>' +
-      '<span class="chip st-未学">未学</span>' +
-      '</div>');
-
-    let body;
-    if (!chaps.length) {
-      body = empty('还没有章节，点「＋ 添加章节」开始搭建知识树');
-    } else {
-      body = '<div class="rowlist">' + chaps.map((ch, ci) => {
-        const secs = ch.children || [];
-        const m = secs.filter(s => s.status === '已掌握').length;
-        const rows = secs.map((sec, si) =>
-          '<div class="row tree-sec">' +
-          '<div class="row-main">' +
-          '<button class="chip st-' + esc(sec.status || '未学') + '" data-act="tree-cycle" data-ci="' + ci + '" data-si="' + si + '" title="点击切换状态">● ' + esc(sec.status || '未学') + '</button>' +
-          '<span>' + esc(sec.name) + '</span>' +
-          '</div>' +
-          '<div class="row-ops">' +
-          '<button class="icon-btn" data-act="tree-del-sec" data-ci="' + ci + '" data-si="' + si + '" title="删除节">🗑️</button>' +
-          '</div></div>'
-        ).join('');
-        return '<div class="row tree-ch">' +
-          '<div class="row-main"><b>' + esc(ch.name) + '</b>' +
-          '<span class="muted sm">已掌握 ' + m + '/' + secs.length + '</span></div>' +
-          '<div class="row-ops">' +
-          '<button class="btn sm ghost" data-act="tree-add-sec" data-ci="' + ci + '">＋ 添加节</button>' +
-          '<button class="icon-btn" data-act="tree-del-ch" data-ci="' + ci + '" title="删除章">🗑️</button>' +
-          '</div></div>' + rows;
-      }).join('') + '</div>';
-    }
-    html += card(null,
-      '<div class="toolbar">' +
-      '<button class="btn primary" data-act="tree-add-ch">＋ 添加章节</button>' +
-      '<span class="muted sm">共 ' + chaps.length + ' 章 · ' + total + ' 节</span>' +
-      '</div>' + body);
-
-    html += '<div class="muted sm" style="margin-top:10px">💡 408 四科掌握度会自动同步到「总览仪表盘」的全科进度条（408 部分由本树推导）。</div>';
-
-    el.innerHTML = html;
-  }
-});
-
-Actions['tree-sub'] = (d) => { S._ui.treeSub = d.k; save(); rerender(); };
-
-Actions['tree-add-ch'] = () => {
-  const k = S._ui.treeSub || 'ds';
-  Modal.form({
-    title: '添加章节',
-    fields: [{ key: 'name', label: '章节名', type: 'text', required: true, placeholder: '如：第一章 线性表' }],
-    onSubmit(vals) {
-      if (!vals.name || !vals.name.trim()) { toast('章节名不能为空', 'err'); return false; }
-      S.knowledge[k].push({ name: vals.name.trim(), children: [] });
-      save(); rerender();
-    }
-  });
-};
-
-Actions['tree-del-ch'] = (d) => {
-  const k = S._ui.treeSub || 'ds';
-  const ci = num(d.ci, -1);
-  const ch = (S.knowledge[k] || [])[ci];
-  if (!ch) return;
-  Modal.confirm({
-    title: '删除章节',
-    message: '确定删除章节「' + esc(ch.name) + '」吗？<br><b>会连带删除其下 ' + (ch.children || []).length + ' 个小节的状态记录！</b>',
-    onOk() { S.knowledge[k].splice(ci, 1); save(); rerender(); toast('已删除章节'); }
-  });
-};
-
-Actions['tree-add-sec'] = (d) => {
-  const k = S._ui.treeSub || 'ds';
-  const ci = num(d.ci, -1);
-  const ch = (S.knowledge[k] || [])[ci];
-  if (!ch) return;
-  Modal.form({
-    title: '添加小节 · ' + ch.name,
-    fields: [{ key: 'name', label: '小节名', type: 'text', required: true, placeholder: '如：顺序表与链表' }],
-    onSubmit(vals) {
-      if (!vals.name || !vals.name.trim()) { toast('小节名不能为空', 'err'); return false; }
-      if (!ch.children) ch.children = [];
-      ch.children.push({ name: vals.name.trim(), status: '未学' });
-      save(); rerender();
-    }
-  });
-};
-
-Actions['tree-del-sec'] = (d) => {
-  const k = S._ui.treeSub || 'ds';
-  const ci = num(d.ci, -1), si = num(d.si, -1);
-  const ch = (S.knowledge[k] || [])[ci];
-  const sec = ch && (ch.children || [])[si];
-  if (!sec) return;
-  Modal.confirm({
-    title: '删除小节',
-    message: '确定删除小节「' + esc(sec.name) + '」吗？',
-    onOk() { ch.children.splice(si, 1); save(); rerender(); toast('已删除小节'); }
-  });
-};
-
-Actions['tree-cycle'] = (d) => {
-  const k = S._ui.treeSub || 'ds';
-  const ci = num(d.ci, -1), si = num(d.si, -1);
-  const ch = (S.knowledge[k] || [])[ci];
-  const sec = ch && (ch.children || [])[si];
-  if (!sec) return;
-  const i = TREE_CYCLE.indexOf(sec.status || '未学');
-  sec.status = TREE_CYCLE[(i + 1) % TREE_CYCLE.length];
-  save(); rerender();
 };
 
 </script>
@@ -3583,10 +2851,7 @@ function revAutoStats(dates) {
   const tasks = [];
   dates.forEach(d => tasksOn(d).forEach(t => tasks.push(t)));
   const done = tasks.filter(t => t.done).length;
-  const qCount =
-    (S.algo || []).filter(a => inRange(a.date)).length +
-    (S.realExam || []).filter(r => inRange(r.date)).length +
-    (S.dailyQLog || []).filter(l => inRange(l.date)).length;
+  const qCount = (S.dailyQLog || []).filter(l => inRange(l.date)).length;
   const moods = (S.moods || []).filter(m => inRange(m.date));
   const moodAvg = moods.length
     ? Math.round(moods.reduce((s, m) => s + num(m.score, 3), 0) / moods.length * 10) / 10
@@ -3656,7 +2921,7 @@ registerPage('review', {
     const auto = '<div class="grid-dash">' +
       statCard('任务完成', st.tasksDone + '/' + st.tasksTotal, '完成率 ' + st.taskRate + '%', 'var(--primary)') +
       statCard('专注时长', fmtMin(st.focusMin), dates[0] + ' ~ ' + dates[dates.length - 1], 'var(--c-math)') +
-      statCard('刷题量', String(st.qCount), '算法+真题+每日一题', 'var(--c-ds)') +
+      statCard('刷题量', String(st.qCount), '每日一题打卡', 'var(--c-ds)') +
       statCard('心态均分', st.moodAvg == null ? '—' : String(st.moodAvg), moodsCount(dates) + ' 天记录', 'var(--c-eng)') +
       '</div>' +
       card('任务完成率', progressBar(st.taskRate)) +
@@ -3709,7 +2974,7 @@ registerPage('review', {
           '<div class="li-main">' +
           '<div class="li-title"><span class="badge">' + (r.kind === 'month' ? '月' : '周') + '</span> <b class="mono">' + esc(r.period) + '</b>' +
           ' <span class="muted">' + esc(r.date || '') + '</span></div>' +
-          '<div class="li-sub muted">完成 ' + num(a.tasksDone) + '/' + num(a.tasksTotal) + ' · 专注 ' + fmtMin(a.focusMin) + ' · 刷题 ' + num(a.qCount) + '</div>' +
+          '<div class="li-sub muted">完成 ' + num(a.tasksDone) + '/' + num(a.tasksTotal) + ' · 专注 ' + fmtMin(a.focusMin) + ' · 打卡 ' + num(a.qCount) + '</div>' +
           (brief ? '<div class="li-text muted">' + esc(brief) + '</div>' : '') +
           '</div>' +
           '<button class="icon-btn" data-act="rev-del" data-id="' + esc(r.id) + '" title="删除">🗑</button>' +
@@ -3858,7 +3123,7 @@ Actions['rev-export'] = () => {
     const seg = reviewParse(r.text);
     lines.push('========== ' + (r.kind === 'month' ? '【月复盘】' : '【周复盘】') + r.period + ' ==========');
     lines.push('记录日期：' + (r.date || ''));
-    lines.push('任务：' + num(a.tasksDone) + '/' + num(a.tasksTotal) + ' · 专注：' + fmtMin(a.focusMin) + ' · 刷题：' + num(a.qCount));
+    lines.push('任务：' + num(a.tasksDone) + '/' + num(a.tasksTotal) + ' · 专注：' + fmtMin(a.focusMin) + ' · 每日一题打卡：' + num(a.qCount));
     lines.push('【做得好的】' + (seg.good || '（空）'));
     lines.push('【不足与问题】' + (seg.bad || '（空）'));
     lines.push('【下期改进】' + (seg.next || '（空）'));
@@ -4529,31 +3794,10 @@ Actions['tl-restore-bak'] = () => {
 function tlExportTxtCard() {
   return card('📄 导出文本',
     '<div class="row">' +
-      '<button class="btn sm" data-act="tl-export-err-txt">导出错题本 TXT</button>' +
       '<button class="btn sm" data-act="tl-export-rev-txt">导出复盘 TXT</button>' +
     '</div>' +
-    '<p class="muted small mt8">错题本 = 数学错题 + 408 易错点合并为一份纯文本。</p>');
+    '<p class="muted small mt8">将全部周/月复盘导出为纯文本，便于归档或打印。</p>');
 }
-Actions['tl-export-err-txt'] = () => {
-  const L = [];
-  L.push('===== 错题本导出 ' + today() + ' =====', '');
-  L.push('【数学错题】');
-  const me = S.mathErrors || [];
-  if (!me.length) L.push('（暂无）');
-  me.forEach((m, i) => {
-    L.push((i + 1) + '. [' + (m.chap || '—') + '·' + (m.type || '—') + '] ' + (m.q || ''));
-    L.push('   方法：' + (m.method || '—') + '  错因：' + (m.reason || '—') + '  ' + (m.mastered ? '已掌握' : '未掌握') + '  ' + (m.date || ''));
-  });
-  L.push('', '【408 易错点】');
-  const pf = S.pitfalls || [];
-  if (!pf.length) L.push('（暂无）');
-  pf.forEach((p, i) => {
-    L.push((i + 1) + '. [' + (SUBJECTS[p.subject] ? SUBJECTS[p.subject].name : p.subject) + '] ' + (p.title || ''));
-    L.push('   ' + (p.content || '') + '  ' + (p.date || ''));
-  });
-  downloadText('错题本_' + today() + '.txt', L.join('\n'));
-  toast('错题本已导出');
-};
 Actions['tl-export-rev-txt'] = () => {
   const rv = S.reviews || [];
   const L = ['===== 复盘导出 ' + today() + ' =====', ''];
